@@ -1,11 +1,12 @@
 
-function App() {
+import AppRoutes from './routes/AppRoutes';
 
+function App() {
   return (
-    <>
-      <h1>tms frontend</h1>
-    </>
-  )
+    <div className="App">
+      <AppRoutes />
+    </div>
+  );
 }
 
-export default App
+export default App;
