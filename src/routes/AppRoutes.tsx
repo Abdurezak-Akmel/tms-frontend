@@ -43,6 +43,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/new-password" element={<NewPassword />} />
         
         {/* User Authentication Routes */}
         <Route path="/user-login" element={<UserLogin />} />
@@ -54,7 +55,6 @@ const AppRoutes: React.FC = () => {
           <Route path="/my-courses" element={<MyCourses />} />
           <Route path="/add-receipt" element={<AddReceipt />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/new-password" element={<NewPassword />} />
         </Route>
         
         {/* Protected Admin Routes */}
