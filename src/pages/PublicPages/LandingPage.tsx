@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   CheckCircle2, Play, Star, Shield,
   Zap, Users, BookOpen, Lock, LayoutDashboard, MonitorPlay,
-  CreditCard, ArrowRight, Globe, GraduationCap, Award,
+  CreditCard, ArrowRight, GraduationCap, Award,
   ChevronDown, Twitter, Linkedin, Facebook, Menu, X,
   Lightbulb, TrendingUp, Briefcase, Code, BarChart, Settings,
-  Smartphone, Bell, Heart, Link, Clock
+  Smartphone, Bell, Heart, Link as LinkIcon, Clock
 } from 'lucide-react';
 
 // ==========================================
@@ -23,7 +24,7 @@ const Navbar = () => {
               <GraduationCap className="text-white w-6 h-6" />
             </div>
             <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-indigo-500">
-              LuminaTMS
+              HabeshaTech
             </span>
           </div>
 
@@ -32,9 +33,9 @@ const Navbar = () => {
             <a href="#demo" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Demo</a>
             <a href="#pricing" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Pricing</a>
             <div className="flex items-center gap-4 ml-4">
-              <button className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Log In</button>
+              <Link to="/user-login" className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Log In</Link>
               <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-lg shadow-indigo-200">
-                Get Started
+                Sign Up
               </button>
             </div>
           </div>
@@ -53,7 +54,8 @@ const Navbar = () => {
             <a href="#features" className="text-slate-600 font-medium">Features</a>
             <a href="#demo" className="text-slate-600 font-medium">Demo</a>
             <a href="#pricing" className="text-slate-600 font-medium">Pricing</a>
-            <button className="w-full bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-medium">Get Started</button>
+            <Link to="/user-login" className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Log In</Link>
+            <button className="w-full bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-medium">Sign Up</button>
           </div>
         </div>
       )}
@@ -74,32 +76,32 @@ const HeroSection = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
       <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-sm font-semibold mb-8">
         <SparklesIcon className="w-4 h-4" />
-        <span>The Next-Gen Tutorial Management System</span>
+        <span>AI-Based Full Stack Website Development</span>
       </div>
 
-      <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 tracking-tight mb-8 leading-tight">
-        Master Your Courses. <br />
+      <h1 className="text-5xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-8 leading-tight">
+        Master Full Stack Web Systems Design and Development<br />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-          Empower Your Students.
+          From Software Requirements Specification (SRS) to Deployment
         </span>
       </h1>
 
       <p className="max-w-2xl mx-auto text-xl text-slate-600 mb-10 leading-relaxed">
-        An all-in-one platform for educators to create, manage, and scale their online academies with enterprise-grade tools and a beautiful student experience.
+        At HabeshaTech, you learn not how to write code in python or javascript, but you learn how to develop the entire web system your clients need.
       </p>
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
         <button className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2 group">
-          Start for Free
+          Sign Up
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </button>
         <button className="w-full sm:w-auto px-8 py-4 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 rounded-xl font-semibold text-lg transition-all flex items-center justify-center gap-2">
           <Play className="w-5 h-5 text-indigo-600" />
-          Watch Demo
+          Watch the Introduction
         </button>
       </div>
 
-      <p className="mt-6 text-sm text-slate-500">No credit card required. 14-day free trial.</p>
+      <p className="mt-6 text-md text-slate-500">Free HTML + CSS + Basic Javascript Course. Just sign up and get the courses.</p>
     </div>
   </section>
 );
@@ -113,21 +115,21 @@ const SparklesIcon = ({ className }: { className?: string }) => (
 // ==========================================
 // 3. Trusted By
 // ==========================================
-const TrustedBy = () => (
-  <section className="py-10 border-y border-slate-200 bg-white">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">Trusted by leading educators and institutions</p>
-      <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale">
-        {/* Placeholder Logos */}
-        {['Acme University', 'GlobalTech Tutors', 'CodeAcademy Pro', 'LinguaLearn', 'DesignMasters'].map((brand) => (
-          <div key={brand} className="text-xl font-bold font-serif text-slate-800 flex items-center gap-2">
-            <Globe className="w-6 h-6" /> {brand}
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-);
+// const TrustedBy = () => (
+//   <section className="py-10 border-y border-slate-200 bg-white">
+//     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+//       <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">Trusted by leading educators and institutions</p>
+//       <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale">
+//         {/* Placeholder Logos */}
+//         {['Acme University', 'GlobalTech Tutors', 'CodeAcademy Pro', 'LinguaLearn', 'DesignMasters'].map((brand) => (
+//           <div key={brand} className="text-xl font-bold font-serif text-slate-800 flex items-center gap-2">
+//             <Globe className="w-6 h-6" /> {brand}
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   </section>
+// );
 
 // ==========================================
 // 4. Product Demo
@@ -700,7 +702,7 @@ const DeepDive = () => (
 // ==========================================
 const PaymentFlow = () => {
   const flow = [
-    { icon: <Link />, title: '1. Share Link', desc: 'Send your checkout link or embed it on your site.' },
+    { icon: <LinkIcon />, title: '1. Share Link', desc: 'Send your checkout link or embed it on your site.' },
     { icon: <CreditCard />, title: '2. Secure Checkout', desc: 'Student pays via Stripe or PayPal instantly.' },
     { icon: <Lock />, title: '3. Auto-Access', desc: 'Account created and course unlocked automatically.' },
   ];
@@ -745,7 +747,7 @@ const LandingPage = () => {
 
       <main>
         <HeroSection />
-        <TrustedBy />
+        {/* <TrustedBy /> */}
         <KeyFeatures />
         <HowItWorks />
         <PaymentFlow />
