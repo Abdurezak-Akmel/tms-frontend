@@ -50,10 +50,10 @@ export default function UserLogin() {
           />
           <div className="flex justify-end pt-1">
             <Link
-              to="/forgot-password"
+              to="/forget-password"
               className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
             >
-              Forgot your password?
+              Forget your password?
             </Link>
           </div>
         </div>

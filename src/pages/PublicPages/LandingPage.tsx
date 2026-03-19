@@ -34,9 +34,7 @@ const Navbar = () => {
             <a href="#pricing" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Pricing</a>
             <div className="flex items-center gap-4 ml-4">
               <Link to="/user-login" className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Log In</Link>
-              <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-lg shadow-indigo-200">
-                Sign Up
-              </button>
+              <Link to="/register" className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-lg shadow-indigo-200">Sign Up</Link>
             </div>
           </div>
 
@@ -55,7 +53,7 @@ const Navbar = () => {
             <a href="#demo" className="text-slate-600 font-medium">Demo</a>
             <a href="#pricing" className="text-slate-600 font-medium">Pricing</a>
             <Link to="/user-login" className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Log In</Link>
-            <button className="w-full bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-medium">Sign Up</button>
+            <Link to="/register" className="w-full bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-medium">Sign Up</Link>
           </div>
         </div>
       )}
@@ -91,10 +89,10 @@ const HeroSection = () => (
       </p>
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <button className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2 group">
+        <Link to="/register" className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2 group">
           Sign Up
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-        </button>
+        </Link>
         <button className="w-full sm:w-auto px-8 py-4 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 rounded-xl font-semibold text-lg transition-all flex items-center justify-center gap-2">
           <Play className="w-5 h-5 text-indigo-600" />
           Watch the Introduction

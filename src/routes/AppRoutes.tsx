@@ -44,11 +44,11 @@ const AppRoutes: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/new-password" element={<NewPassword />} />
-        
+
         {/* User Authentication Routes */}
         <Route path="/user-login" element={<UserLogin />} />
         <Route path="/admin-login" element={<AdminLogin />} />
-        
+
         {/* Protected User Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/user-dashboard" element={<UserDashboard />} />
@@ -56,7 +56,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/add-receipt" element={<AddReceipt />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
-        
+
         {/* Protected Admin Routes */}
         <Route element={<AdminRoute />}>
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
@@ -67,7 +67,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/admin/add-video" element={<AddVideo />} />
           <Route path="/admin/add-file" element={<AddFile />} />
         </Route>
-        
+
         {/* Common Protected Routes (accessible to both users and admins) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/courses" element={<Courses />} />
@@ -78,7 +78,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/files/:id" element={<FilePreview />} />
           <Route path="/receipts/:id" element={<ReceiptPreview />} />
         </Route>
-        
+
         {/* Fallback Route */}
         <Route path="*" element={<div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
