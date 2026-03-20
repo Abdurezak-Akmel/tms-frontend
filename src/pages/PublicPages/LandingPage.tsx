@@ -33,7 +33,7 @@ const Navbar = () => {
             <a href="#demo" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Demo</a>
             <a href="#pricing" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Pricing</a>
             <div className="flex items-center gap-4 ml-4">
-              <Link to="/user-login" className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Log In</Link>
+              <Link to="/courses" className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Log In</Link>
               <Link to="/register" className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-lg shadow-indigo-200">Sign Up</Link>
             </div>
           </div>
@@ -52,7 +52,7 @@ const Navbar = () => {
             <a href="#features" className="text-slate-600 font-medium">Features</a>
             <a href="#demo" className="text-slate-600 font-medium">Demo</a>
             <a href="#pricing" className="text-slate-600 font-medium">Pricing</a>
-            <Link to="/user-login" className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Log In</Link>
+            <Link to="/courses" className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">Log In</Link>
             <Link to="/register" className="w-full bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-medium">Sign Up</Link>
           </div>
         </div>
