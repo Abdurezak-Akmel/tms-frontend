@@ -22,10 +22,6 @@ export interface LoginData {
   password: string;
 }
 
-export interface ForgotPasswordData {
-  email: string;
-}
-
 export interface ResetPasswordData {
   token: string;
   newPassword: string;
@@ -138,6 +134,40 @@ export const authService = {
     }
   },
 
+    // Request password reset
+  async forgetPassword(email: string): Promise<AuthResponse> {
+    try {
+      console.log('Making forget password request to:', API_BASE_URL);
+      console.log('Forget password email:', email);
+      const response = await api.post("/forget-password", { email });
+      console.log('Forget password response:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Forget password error details:', error);
+      console.error('Error response:', error.response);
+      console.error('Error data:', error.response?.data);
+      throw (
+        error.response?.data || { message: "Password reset request failed" }
+      );
+    }
+  },
+
+  // Reset password with token
+  async resetPassword(resetData: ResetPasswordData): Promise<AuthResponse> {
+    try {
+      console.log('Making reset password request to:', API_BASE_URL);
+      console.log('Reset password data:', { token: resetData.token, newPassword: '***' });
+      const response = await api.post("/reset-password", resetData);
+      console.log('Reset password response:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Reset password error details:', error);
+      console.error('Error response:', error.response);
+      console.error('Error data:', error.response?.data);
+      throw error.response?.data || { message: "Password reset failed" };
+    }
+  },
+
   // Refresh access token
   // async refreshToken(): Promise<AuthResponse> {
   //   try {
@@ -192,48 +222,6 @@ export const authService = {
     }
   },
 
-  // Change password
-  async changePassword(
-    passwordData: ChangePasswordData,
-  ): Promise<AuthResponse> {
-    try {
-      console.log('Making change password request to:', API_BASE_URL);
-      console.log('Password data:', { currentPassword: '***', newPassword: '***' });
-      const token = localStorage.getItem("accessToken");
-      console.log('Change password token exists:', !!token);
-      const response = await api.put("/change-password", passwordData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Change password response:', response.data);
-      return response.data;
-    } catch (error: any) {
-      console.error('Change password error details:', error);
-      console.error('Error response:', error.response);
-      console.error('Error data:', error.response?.data);
-      throw error.response?.data || { message: "Password change failed" };
-    }
-  },
-
-  // Request password reset
-  async forgotPassword(email: string): Promise<AuthResponse> {
-    try {
-      console.log('Making forgot password request to:', API_BASE_URL);
-      console.log('Forgot password email:', email);
-      const response = await api.post("/forgot-password", { email });
-      console.log('Forgot password response:', response.data);
-      return response.data;
-    } catch (error: any) {
-      console.error('Forgot password error details:', error);
-      console.error('Error response:', error.response);
-      console.error('Error data:', error.response?.data);
-      throw (
-        error.response?.data || { message: "Password reset request failed" }
-      );
-    }
-  },
-
   // Validate reset token
   async validateResetToken(token: string): Promise<AuthResponse> {
     try {
@@ -247,22 +235,6 @@ export const authService = {
       console.error('Error response:', error.response);
       console.error('Error data:', error.response?.data);
       throw error.response?.data || { message: "Invalid reset token" };
-    }
-  },
-
-  // Reset password with token
-  async resetPassword(resetData: ResetPasswordData): Promise<AuthResponse> {
-    try {
-      console.log('Making reset password request to:', API_BASE_URL);
-      console.log('Reset password data:', { token: resetData.token, newPassword: '***' });
-      const response = await api.post("/reset-password", resetData);
-      console.log('Reset password response:', response.data);
-      return response.data;
-    } catch (error: any) {
-      console.error('Reset password error details:', error);
-      console.error('Error response:', error.response);
-      console.error('Error data:', error.response?.data);
-      throw error.response?.data || { message: "Password reset failed" };
     }
   },
 
