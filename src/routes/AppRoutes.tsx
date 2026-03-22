@@ -18,6 +18,9 @@ import AddReceipt from '../pages/UserPages/AddReceipt';
 
 // Admin Pages
 import AdminDashboard from '../pages/AdminPages/AdminDashboard';
+import Analytics from '../pages/AdminPages/Analytics';
+import Reports from '../pages/AdminPages/Reports';
+import Settings from '../pages/AdminPages/Settings';
 import Users from '../pages/AdminPages/Users';
 import Roles from '../pages/AdminPages/Roles';
 import AccessRequests from '../pages/AdminPages/AccessRequests';
@@ -60,6 +63,9 @@ const AppRoutes: React.FC = () => {
 
         {/* Protected Admin Routes */}
         <Route element={<AdminRoute />}>
+          <Route path="/admin/analytics" element={<Analytics />} />
+          <Route path="/admin/reports" element={<Reports />} />
+          <Route path="/admin/settings" element={<Settings />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<Users />} />
           <Route path="/admin/roles" element={<Roles />} />

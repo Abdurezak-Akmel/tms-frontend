@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/access-requests";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -46,7 +46,7 @@ export const accessRequestService = {
   async createAccessRequest(requestData: CreateAccessRequestData): Promise<AccessRequestResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.post('/access-requests/access-requests', requestData, {
+      const response = await api.post('/access-requests', requestData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

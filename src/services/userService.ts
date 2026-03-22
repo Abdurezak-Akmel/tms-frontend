@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/users";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -37,6 +37,8 @@ export interface UserResponse {
   message?: string;
   user?: User;
   users?: User[];
+  count?: number;
+  status?: string;
   error?: string;
 }
 
@@ -46,7 +48,7 @@ export const userService = {
   async getAllUsers(): Promise<UserResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('/users/get-all-users', {
+      const response = await api.get('/get-all-users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,7 +63,7 @@ export const userService = {
   async getUserById(id: number): Promise<UserResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/users/get-user-by-id/${id}`, {
+      const response = await api.get(`/get-user-by-id/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -72,11 +74,26 @@ export const userService = {
     }
   },
 
+  // Admin: get users by status
+  async getUsersByStatus(status: string): Promise<UserResponse> {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await api.get(`/get-user-by-status/${status}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { message: 'Failed to get users by status' };
+    }
+  },
+
   // Admin: update a user
   async updateUser(id: number, updateData: UpdateUserData): Promise<UserResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.put(`/users/update-user-by-id/${id}`, updateData, {
+      const response = await api.put(`/update-user-by-id/${id}`, updateData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -91,7 +108,7 @@ export const userService = {
   async deleteUser(id: number): Promise<UserResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.delete(`/users/delete-user-by-id/${id}`, {
+      const response = await api.delete(`/delete-user-by-id/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
