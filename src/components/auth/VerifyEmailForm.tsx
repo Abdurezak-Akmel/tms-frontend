@@ -1,5 +1,6 @@
 import { type FormEvent, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
 import { BadgeCheck, KeyRound } from 'lucide-react';
 import { Callout } from '../feedback';
 import { FormFieldSlot } from '../forms';
@@ -24,6 +25,7 @@ const initialValues: VerifyEmailValues = {
   token: '',
 };
 
+// Token Validation
 function validate(values: VerifyEmailValues): VerifyEmailErrors {
   const errors: VerifyEmailErrors = {};
   if (!values.token.trim()) {
@@ -39,9 +41,12 @@ export type VerifyEmailLocationState = {
   reason?: 'unverified' | 'registered';
 };
 
+// Main Verification Handler
 export function VerifyEmailForm() {
   const location = useLocation();
+  const navigate = useNavigate();
   const navState = location.state as VerifyEmailLocationState | null;
+
   const fromLogin = navState?.reason === 'unverified';
   const fromRegister = navState?.reason === 'registered';
   const contextEmail = navState?.email;
@@ -62,6 +67,7 @@ export function VerifyEmailForm() {
     setSuccessMessage('');
   }
 
+  // Submit Handler - API Call
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const validationErrors = validate(values);
@@ -79,12 +85,18 @@ export function VerifyEmailForm() {
       setSuccessMessage(response.message || 'Email verified successfully.');
       setValues(initialValues);
       setErrors({});
+
+      // Redirect to login after a brief delay
+      setTimeout(() => {
+        navigate('/user-login');
+      }, 2000);
+
     } catch (error: unknown) {
       const message =
         typeof error === 'object' &&
-        error !== null &&
-        'message' in error &&
-        typeof error.message === 'string'
+          error !== null &&
+          'message' in error &&
+          typeof error.message === 'string'
           ? error.message
           : 'Email verification failed. Please check your token and try again.';
       setServerError(message);

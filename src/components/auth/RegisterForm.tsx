@@ -31,6 +31,7 @@ const initialValues: RegisterFormValues = {
   confirmPassword: '',
 };
 
+// Password Acceptance Criteria 
 const passwordRules = [
   {
     key: 'length',
@@ -59,6 +60,7 @@ const passwordRules = [
   },
 ] as const;
 
+// Password Validation agains Rules
 function validate(values: RegisterFormValues): RegisterFormErrors {
   const errors: RegisterFormErrors = {};
 
@@ -88,6 +90,7 @@ function validate(values: RegisterFormValues): RegisterFormErrors {
   return errors;
 }
 
+// Main Registration Handler
 export function RegisterForm() {
   const navigate = useNavigate();
   const [values, setValues] = useState<RegisterFormValues>(initialValues);

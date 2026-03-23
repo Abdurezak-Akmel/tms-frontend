@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { MailCheck, ShieldAlert } from 'lucide-react';
 import { Callout } from '../feedback';
@@ -37,6 +38,7 @@ function validate(values: ForgetPasswordValues): ForgetPasswordErrors {
 }
 
 export function ForgetPasswordForm() {
+  const navigate = useNavigate();
   const [values, setValues] = useState<ForgetPasswordValues>(initialValues);
   const [errors, setErrors] = useState<ForgetPasswordErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,12 +74,15 @@ export function ForgetPasswordForm() {
       );
       setValues(initialValues);
       setErrors({});
+      setTimeout(() => {
+        navigate('/new-password');
+      }, 2000);
     } catch (error: unknown) {
       const message =
         typeof error === 'object' &&
-        error !== null &&
-        'message' in error &&
-        typeof error.message === 'string'
+          error !== null &&
+          'message' in error &&
+          typeof error.message === 'string'
           ? error.message
           : 'Failed to request password reset. Please try again.';
       setServerError(message);

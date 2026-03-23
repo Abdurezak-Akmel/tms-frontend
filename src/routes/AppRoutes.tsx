@@ -12,7 +12,8 @@ import UserLogin from '../pages/PublicPages/UserLogin';
 import VerifyEmail from '../pages/PublicPages/VerifyEmail';
 
 // Layout
-import { UserShell } from '../components/dashboard';
+import { UserShell, AdminShell } from '../components/dashboard';
+
 
 // User Pages
 import UserDashboard from '../pages/UserPages/UserDachboard';
@@ -76,17 +77,25 @@ const AppRoutes: React.FC = () => {
 
         {/* Protected Admin Routes */}
         <Route element={<AdminRoute />}>
-          <Route path="/admin/analytics" element={<Analytics />} />
-          <Route path="/admin/reports" element={<Reports />} />
-          <Route path="/admin/settings" element={<Settings />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/users" element={<Users />} />
-          <Route path="/admin/roles" element={<Roles />} />
-          <Route path="/admin/access-requests" element={<AccessRequests />} />
-          <Route path="/admin/add-course" element={<AddCourse />} />
-          <Route path="/admin/add-video" element={<AddVideo />} />
-          <Route path="/admin/add-file" element={<AddFile />} />
+          <Route element={<AdminShell />}>
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/analytics" element={<Analytics />} />
+            <Route path="/admin/reports" element={<Reports />} />
+            <Route path="/admin/settings" element={<Settings />} />
+            <Route path="/admin/users" element={<Users />} />
+            <Route path="/admin/roles" element={<Roles />} />
+            <Route path="/admin/access-requests" element={<AccessRequests />} />
+            <Route path="/admin/add-course" element={<AddCourse />} />
+            <Route path="/admin/add-video" element={<AddVideo />} />
+            <Route path="/admin/add-file" element={<AddFile />} />
+            <Route path="/admin/courses" element={<Courses />} />
+            <Route path="/admin/videos" element={<Videos />} />
+            <Route path="/admin/files" element={<Files />} />
+            <Route path="/admin/profile" element={<Profile />} />
+          </Route>
+
         </Route>
+
 
         {/* Fallback Route */}
         <Route path="*" element={<div className="min-h-screen flex items-center justify-center">

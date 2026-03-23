@@ -4,12 +4,16 @@ import {
   Calendar,
   CheckCircle2,
   Clock,
+  LogOut,
   Sparkles,
   Target,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+
+import { Link, useNavigate } from 'react-router-dom';
+
 import {
   Badge,
+  Button,
   ButtonLink,
   Card,
   CardContent,
@@ -17,7 +21,10 @@ import {
   CardHeader,
   CardTitle,
 } from '../../components/ui';
+
 import { PageHeader, Stack } from '../../components/layout';
+import { authService } from '../../services/authService';
+
 
 const statCards = [
   { label: 'Enrolled courses', value: '4', hint: 'Active this term', tone: 'default' as const },
@@ -61,17 +68,43 @@ const activity = [
 ];
 
 const UserDashboard = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      authService.clearTokens();
+      navigate('/user-login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Even if API fails, clear tokens and redirect
+      authService.clearTokens();
+      navigate('/user-login');
+    }
+  };
+
   return (
     <Stack gap="lg" className="pb-8">
       <PageHeader
         title="Dashboard"
         description="Pick up where you left off, track progress, and jump into courses, videos, and files from one place."
         actions={
-          <ButtonLink to="/courses" variant="primary" size="md" rightIcon={<ArrowRight className="size-4" />}>
-            Browse courses
-          </ButtonLink>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="md"
+              leftIcon={<LogOut className="size-4" />}
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+            <ButtonLink to="/courses" variant="primary" size="md" rightIcon={<ArrowRight className="size-4" />}>
+              Browse courses
+            </ButtonLink>
+          </div>
         }
       />
+
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {statCards.map((s) => (

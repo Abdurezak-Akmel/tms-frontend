@@ -99,6 +99,11 @@ export function UserLoginForm() {
         password: values.password,
       });
 
+      if (response.user?.role_id === 1) {
+        navigate('/admin-login');
+        return;
+      }
+
       if (response.token) {
         authService.setTokens(response.token);
       }
