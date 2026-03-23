@@ -9,7 +9,10 @@ import Register from '../pages/PublicPages/Register';
 import ForgetPassword from '../pages/PublicPages/ForgetPassword';
 import AdminLogin from '../pages/PublicPages/AdminLogin';
 import UserLogin from '../pages/PublicPages/UserLogin';
-import VerifyEmail from '../pages/PublicPages/VerifyEmail'
+import VerifyEmail from '../pages/PublicPages/VerifyEmail';
+
+// Layout
+import { UserShell } from '../components/dashboard';
 
 // User Pages
 import UserDashboard from '../pages/UserPages/UserDachboard';
@@ -53,12 +56,22 @@ const AppRoutes: React.FC = () => {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
 
-        {/* Protected User Routes */}
+        {/* Authenticated learner workspace (sidebar + content) */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/user-dashboard" element={<UserDashboard />} />
-          <Route path="/my-courses" element={<MyCourses />} />
-          <Route path="/add-receipt" element={<AddReceipt />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route element={<UserShell />}>
+            <Route path="/user-dashboard" element={<UserDashboard />} />
+            <Route path="/my-courses" element={<MyCourses />} />
+            <Route path="/add-receipt" element={<AddReceipt />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/new-password" element={<NewPassword />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/:id" element={<CoursePreview />} />
+            <Route path="/videos" element={<Videos />} />
+            <Route path="/videos/:id" element={<VideoDisplay />} />
+            <Route path="/files" element={<Files />} />
+            <Route path="/files/:id" element={<FilePreview />} />
+            <Route path="/receipts/:id" element={<ReceiptPreview />} />
+          </Route>
         </Route>
 
         {/* Protected Admin Routes */}
@@ -73,18 +86,6 @@ const AppRoutes: React.FC = () => {
           <Route path="/admin/add-course" element={<AddCourse />} />
           <Route path="/admin/add-video" element={<AddVideo />} />
           <Route path="/admin/add-file" element={<AddFile />} />
-        </Route>
-
-        {/* Common Protected Routes (accessible to both users and admins) */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/new-password" element={<NewPassword />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/courses/:id" element={<CoursePreview />} />
-          <Route path="/videos" element={<Videos />} />
-          <Route path="/videos/:id" element={<VideoDisplay />} />
-          <Route path="/files" element={<Files />} />
-          <Route path="/files/:id" element={<FilePreview />} />
-          <Route path="/receipts/:id" element={<ReceiptPreview />} />
         </Route>
 
         {/* Fallback Route */}

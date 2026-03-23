@@ -1,3 +1,12 @@
-const UserLogin = () => <div>User Login Page</div>
+import { UserLoginForm } from '../../components/auth';
+import { Container, Surface } from '../../components/layout';
+
+const UserLogin = () => (
+  <Surface variant="brand" className="flex min-h-dvh items-center py-10">
+    <Container size="md" className="flex justify-center">
+      <UserLoginForm />
+    </Container>
+  </Surface>
+);
 
 export default UserLogin

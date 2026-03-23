@@ -1,3 +1,12 @@
-const AdminLogin = () => <div>Admin Login Page</div>
+import { AdminLoginForm } from '../../components/auth';
+import { Container, Surface } from '../../components/layout';
 
-export default AdminLogin
+const AdminLogin = () => (
+  <Surface variant="brand" className="flex min-h-dvh items-center py-10">
+    <Container size="md" className="flex justify-center">
+      <AdminLoginForm />
+    </Container>
+  </Surface>
+);
+
+export default AdminLogin;
