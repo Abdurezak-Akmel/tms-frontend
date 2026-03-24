@@ -113,6 +113,21 @@ export const roleCourseService = {
     }
   },
 
+  // Admin: sync courses to a role
+  async syncCoursesToRole(syncData: AssignMultipleCoursesData): Promise<RoleCourseResponse> {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await api.post('role-course/sync-courses', syncData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { message: 'Failed to sync courses to role' };
+    }
+  },
+
   // Admin: get all role-course assignments
   async getAllRoleCourseAssignments(): Promise<RoleCourseResponse> {
     try {

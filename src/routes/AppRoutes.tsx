@@ -44,6 +44,8 @@ import AdminVideoDisplay from '../pages/AdminPages/VideoDisplay';
 import AdminFiles from '../pages/AdminPages/Files';
 import AdminFilePreview from '../pages/AdminPages/FilePreview';
 import UserUpdate from '../pages/AdminPages/UserUpdate';
+import CreateRole from '../pages/AdminPages/CreateRole';
+import UpdateRole from '../pages/AdminPages/UpdateRole';
 
 
 // Common Pages
@@ -105,6 +107,8 @@ const AppRoutes: React.FC = () => {
             <Route path="/admin/files" element={<AdminFiles />} />
             <Route path="/admin/files/:id" element={<AdminFilePreview />} />
             <Route path="/admin/user-update/:id" element={<UserUpdate />} />
+            <Route path="/admin/create-role" element={<CreateRole />} />
+            <Route path="/admin/update-role/:id" element={<UpdateRole />} />
           </Route>
         </Route>
 

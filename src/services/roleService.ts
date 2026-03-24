@@ -11,7 +11,7 @@ const api = axios.create({
 });
 
 // Types for role data
-export interface CreateRoleData {
+export interface RoleData {
   role_name: string;
   description?: string;
 }
@@ -50,7 +50,7 @@ export const roleService = {
   },
 
   // Admin: create new role
-  async createRole(roleData: CreateRoleData): Promise<RoleResponse> {
+  async createRole(roleData: RoleData): Promise<RoleResponse> {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await api.post('/roles/create-new-role', roleData, {
@@ -64,8 +64,38 @@ export const roleService = {
     }
   },
 
+  // Admin: update existing role
+  async updateRole(id: number, roleData: RoleData): Promise<RoleResponse> {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await api.put(`/roles/update-role-by-id/${id}`, roleData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { message: 'Failed to update role' };
+    }
+  },
+
+  // Admin: get role by ID
+  async getRoleById(id: number): Promise<RoleResponse> {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await api.get(`/roles/get-role-by-id/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { message: 'Failed to get role' };
+    }
+  },
+
   // Helper function to validate role data
-  validateRoleData(roleData: CreateRoleData): { isValid: boolean; errors: string[] } {
+  validateRoleData(roleData: RoleData): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 
     if (!roleData.role_name || roleData.role_name.trim() === '') {
@@ -152,7 +182,7 @@ export const roleService = {
     }
 
     const term = searchTerm.toLowerCase().trim();
-    return roles.filter(role => 
+    return roles.filter(role =>
       role.role_name.toLowerCase().includes(term) ||
       (role.description && role.description.toLowerCase().includes(term))
     );
@@ -185,7 +215,7 @@ export const roleService = {
       //   headers: { Authorization: `Bearer ${token}` }
       // });
       // return response.data;
-      
+
       // Placeholder implementation
       return {
         success: true,

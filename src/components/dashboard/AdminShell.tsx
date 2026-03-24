@@ -57,14 +57,14 @@ const adminNav: NavItem[] = [
     icon: <UsersIcon className="size-5 shrink-0 opacity-80" aria-hidden />,
   },
   {
-    to: '/admin/access-requests',
-    label: 'Access Requests',
-    icon: <ClipboardList className="size-5 shrink-0 opacity-80" aria-hidden />,
-  },
-  {
     to: '/admin/roles',
     label: 'Roles',
     icon: <ShieldCheck className="size-5 shrink-0 opacity-80" aria-hidden />,
+  },
+  {
+    to: '/admin/access-requests',
+    label: 'Access Requests',
+    icon: <ClipboardList className="size-5 shrink-0 opacity-80" aria-hidden />,
   },
   {
     to: '/admin/analytics',
