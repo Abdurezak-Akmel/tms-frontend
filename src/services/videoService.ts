@@ -81,6 +81,21 @@ export const videoService = {
     }
   },
 
+  // Admin/User: get single video by ID
+  async getVideoById(id: number): Promise<VideoResponse> {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await api.get(`/videos/get-video/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { message: 'Failed to get video' };
+    }
+  },
+
   // User: get videos by course ID
   async getVideosByCourseId(course_id: number): Promise<VideoResponse> {
     try {
@@ -220,7 +235,7 @@ export const videoService = {
   // Helper function to format duration for display
   formatDuration(seconds: number | null): string {
     if (!seconds) return 'Unknown';
-    
+
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
@@ -244,6 +259,56 @@ export const videoService = {
     });
   },
 
+  // Helper function to fetch YouTube metadata (Title and Duration)
+  async fetchYouTubeMetadata(url: string, apiKey?: string): Promise<{ title: string | null; duration: number | null }> {
+    const videoId = this.extractYouTubeId(url);
+    if (!videoId) return { title: null, duration: null };
+
+    let title: string | null = null;
+    let duration: number | null = null;
+
+    try {
+      // 1. Fetch Title using oEmbed (free, no key needed, generally CORS-friendly or manageable)
+      const oEmbedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+      const oEmbedRes = await axios.get(oEmbedUrl);
+      if (oEmbedRes.data && oEmbedRes.data.title) {
+        title = oEmbedRes.data.title;
+      }
+    } catch (error) {
+      console.warn('Failed to fetch YouTube title via oEmbed:', error);
+    }
+
+    // 2. Fetch Duration using YouTube Data API if API Key is provided
+    if (apiKey) {
+      try {
+        const dataApiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=contentDetails`;
+        const dataRes = await axios.get(dataApiUrl);
+        if (dataRes.data.items && dataRes.data.items.length > 0) {
+          const isoDuration = dataRes.data.items[0].contentDetails.duration;
+          // Parse ISO 8601 duration (e.g., PT15M33S)
+          duration = this.parseISODuration(isoDuration);
+        }
+      } catch (error) {
+        console.warn('Failed to fetch YouTube duration via Data API:', error);
+      }
+    }
+
+    return { title, duration };
+  },
+
+  // Helper to parse ISO 8601 duration to seconds
+  parseISODuration(isoDuration: string): number {
+    const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+    const matches = isoDuration.match(regex);
+    if (!matches) return 0;
+
+    const hours = parseInt(matches[1] || '0');
+    const minutes = parseInt(matches[2] || '0');
+    const seconds = parseInt(matches[3] || '0');
+
+    return hours * 3600 + minutes * 60 + seconds;
+  },
+
   // Helper function to sort videos by order_index
   sortVideosByOrder(videos: Video[]): Video[] {
     return [...videos].sort((a, b) => {
@@ -262,7 +327,7 @@ export const videoService = {
     }
 
     const term = searchTerm.toLowerCase().trim();
-    return videos.filter(video => 
+    return videos.filter(video =>
       (video.title && video.title.toLowerCase().includes(term)) ||
       (video.description && video.description.toLowerCase().includes(term))
     );
@@ -282,7 +347,7 @@ export const videoService = {
       //   headers: { Authorization: `Bearer ${token}` }
       // });
       // return response.data;
-      
+
       // Placeholder implementation
       return {
         success: true,

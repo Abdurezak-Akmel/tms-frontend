@@ -4,9 +4,10 @@ import type { CourseSummary } from './types';
 
 export type CourseListProps = {
   courses: CourseSummary[];
+  linkPrefix?: string;
 };
 
-export function CourseList({ courses }: CourseListProps) {
+export function CourseList({ courses, linkPrefix }: CourseListProps) {
   if (courses.length === 0) {
     return (
       <EmptyState
@@ -20,9 +21,13 @@ export function CourseList({ courses }: CourseListProps) {
     <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {courses.map((course) => (
         <li key={course.id}>
-          <CourseCard course={course} />
+          <CourseCard 
+            course={course} 
+            href={linkPrefix ? `${linkPrefix}/${course.id}` : undefined} 
+          />
         </li>
       ))}
     </ul>
   );
 }
+

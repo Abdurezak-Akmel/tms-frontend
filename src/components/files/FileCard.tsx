@@ -9,15 +9,16 @@ import { fileKindAccent, fileKindIcon } from './fileKindMeta';
 export type FileCardProps = {
   file: FileCatalogItem;
   className?: string;
+  basePath?: string;
 };
 
-export function FileCard({ file, className }: FileCardProps) {
+export function FileCard({ file, className, basePath = '/files' }: FileCardProps) {
   const Icon = fileKindIcon(file.kind);
   const accent = fileKindAccent(file.kind);
 
   return (
     <Link
-      to={`/files/${file.id}`}
+      to={`${basePath}/${file.id}`}
       className={cn(
         'group block rounded-2xl outline-none transition-[transform,box-shadow] focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2',
         className,

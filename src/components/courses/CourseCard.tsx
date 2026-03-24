@@ -14,12 +14,15 @@ const levelVariant: Record<CourseSummary['level'], 'success' | 'warning' | 'dang
 export type CourseCardProps = {
   course: CourseSummary;
   className?: string;
+  href?: string;
 };
 
-export function CourseCard({ course, className }: CourseCardProps) {
+export function CourseCard({ course, className, href }: CourseCardProps) {
+  const destination = href || `/courses/${course.id}`;
+  
   return (
     <Link
-      to={`/courses/${course.id}`}
+      to={destination}
       className={cn(
         'group block rounded-2xl outline-none transition-[transform,box-shadow] focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2',
         className,

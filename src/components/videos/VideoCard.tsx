@@ -12,12 +12,13 @@ function youtubeThumbnailUrl(youtubeId: string): string {
 export type VideoCardProps = {
   video: VideoCatalogItem;
   className?: string;
+  basePath?: string;
 };
 
-export function VideoCard({ video, className }: VideoCardProps) {
+export function VideoCard({ video, className, basePath = '/videos' }: VideoCardProps) {
   return (
     <Link
-      to={`/videos/${video.id}`}
+      to={`${basePath}/${video.id}`}
       className={cn(
         'group block rounded-2xl outline-none transition-[transform,box-shadow] focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2',
         className,

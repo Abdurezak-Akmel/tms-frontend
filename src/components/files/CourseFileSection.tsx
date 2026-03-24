@@ -5,9 +5,10 @@ export type CourseFileSectionProps = {
   courseId: string;
   courseName: string;
   files: FileCatalogItem[];
+  basePath?: string;
 };
 
-export function CourseFileSection({ courseId, courseName, files }: CourseFileSectionProps) {
+export function CourseFileSection({ courseId, courseName, files, basePath }: CourseFileSectionProps) {
   const headingId = `files-course-${courseId}`;
 
   return (
@@ -26,7 +27,7 @@ export function CourseFileSection({ courseId, courseName, files }: CourseFileSec
       <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {files.map((file) => (
           <li key={file.id}>
-            <FileCard file={file} />
+            <FileCard file={file} basePath={basePath} />
           </li>
         ))}
       </ul>

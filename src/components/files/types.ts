@@ -19,4 +19,6 @@ export type FileCatalogItem = {
   kind: FileKind;
   /** Shown as “last updated” */
   updatedLabel: string;
+  url: string;
+  uploadedAt?: string;
 };

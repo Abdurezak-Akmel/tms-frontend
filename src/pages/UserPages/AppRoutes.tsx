@@ -23,8 +23,6 @@ import Courses from '../pages/UserPages/Courses';
 import CoursePreview from '../pages/UserPages/CoursePreview';
 import Videos from '../pages/UserPages/Videos';
 import VideoDisplay from '../pages/UserPages/VideoDisplay';
-import Files from '../pages/UserPages/Files';
-import FilePreview from '../pages/UserPages/FilePreview';
 
 // Admin Pages
 import AdminDashboard from '../pages/AdminPages/AdminDashboard';
@@ -41,11 +39,12 @@ import AdminCourses from '../pages/AdminPages/Courses';
 import AdminCoursePreview from '../pages/AdminPages/CoursePreview';
 import AdminVideos from '../pages/AdminPages/Videos';
 import AdminVideoDisplay from '../pages/AdminPages/VideoDisplay';
-import AdminFiles from '../pages/AdminPages/Files';
-import AdminFilePreview from '../pages/AdminPages/FilePreview';
 
 
 // Common Pages
+
+import Files from '../pages/AdminPages/Files';
+import FilePreview from '../pages/AdminPages/FilePreview';
 import Profile from '../pages/CommonPages/Profile';
 import ReceiptPreview from '../pages/CommonPages/ReceiptPreview';
 import NewPassword from '../pages/CommonPages/NewPassword';
@@ -98,11 +97,10 @@ const AppRoutes: React.FC = () => {
             <Route path="/admin/add-file" element={<AddFile />} />
             <Route path="/admin/courses" element={<Courses />} />
             <Route path="/admin/videos" element={<AdminVideos />} />
+            <Route path="/admin/files" element={<Files />} />
             <Route path="/admin/profile" element={<Profile />} />
             <Route path="/admin/courses/:id" element={<AdminCoursePreview />} />
             <Route path="/admin/videos/:id" element={<AdminVideoDisplay />} />
-            <Route path="/admin/files" element={<AdminFiles />} />
-            <Route path="/admin/files/:id" element={<AdminFilePreview />} />
           </Route>
 
         </Route>

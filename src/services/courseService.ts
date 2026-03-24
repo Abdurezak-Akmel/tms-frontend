@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/courses";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -49,7 +49,7 @@ export const courseService = {
   async createCourse(courseData: CreateCourseData): Promise<CourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.post('/courses/create-course', courseData, {
+      const response = await api.post('/create-course', courseData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -64,7 +64,7 @@ export const courseService = {
   async getAllCourses(): Promise<CourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('/courses/get-all-courses', {
+      const response = await api.get('/get-all-courses', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -79,7 +79,7 @@ export const courseService = {
   async getCourseById(id: number): Promise<CourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/courses/get-course/${id}`, {
+      const response = await api.get(`/get-course/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -94,7 +94,7 @@ export const courseService = {
   async updateCourse(id: number, updateData: UpdateCourseData): Promise<CourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.put(`/courses/update-course/${id}`, updateData, {
+      const response = await api.put(`/update-course/${id}`, updateData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -109,7 +109,7 @@ export const courseService = {
   async deleteCourse(id: number): Promise<CourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.delete(`/courses/delete-course/${id}`, {
+      const response = await api.delete(`/delete-course/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -182,7 +182,7 @@ export const courseService = {
       //   headers: { Authorization: `Bearer ${token}` }
       // });
       // return response.data;
-      
+
       // Placeholder implementation
       return {
         success: true,

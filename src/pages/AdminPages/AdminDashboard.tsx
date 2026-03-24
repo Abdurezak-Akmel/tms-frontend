@@ -1,27 +1,9 @@
-import { BarChart3, Users, BookOpen, ShieldCheck, ClipboardList, LogOut } from 'lucide-react';
+import { BarChart3, Users, BookOpen, ShieldCheck, ClipboardList } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
 import { PageHeader, Stack } from '../../components/layout';
-import { useNavigate } from 'react-router-dom';
-import authService from '../../services/authService';
 
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-      authService.clearTokens();
-      navigate('/admin-login'); // Redirect to admin login
-    } catch (error) {
-      console.error('Logout failed:', error);
-      authService.clearTokens();
-      navigate('/admin-login');
-    }
-
-  };
-
   const stats = [
     { label: 'Total Users', value: '1,284', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
     { label: 'Active Courses', value: '42', icon: BookOpen, color: 'text-emerald-600', bg: 'bg-emerald-50' },
@@ -35,16 +17,6 @@ const AdminDashboard = () => {
       <PageHeader
         title="Admin Dashboard"
         description="Monitor system performance, manage user access, and oversee course content from a single interface."
-        actions={
-          <Button
-            variant="outline"
-            size="md"
-            leftIcon={<LogOut className="size-4" />}
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
-        }
       />
 
 
