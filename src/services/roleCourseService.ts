@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/role-course";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -55,7 +55,7 @@ export const roleCourseService = {
   async assignCourseToRole(assignData: AssignCourseData): Promise<RoleCourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.post('role-course/assign-course', assignData, {
+      const response = await api.post('/assign-course', assignData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,7 +70,7 @@ export const roleCourseService = {
   async removeCourseFromRole(removeData: RemoveCourseData): Promise<RoleCourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.delete('role-course/remove-course', {
+      const response = await api.delete('/remove-course', {
         data: removeData,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ export const roleCourseService = {
   async assignMultipleCoursesToRole(assignData: AssignMultipleCoursesData): Promise<RoleCourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.post('role-course/assign-multiple-courses', assignData, {
+      const response = await api.post('/assign-multiple-courses', assignData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -101,7 +101,7 @@ export const roleCourseService = {
   async removeMultipleCoursesFromRole(removeData: RemoveMultipleCoursesData): Promise<RoleCourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.delete('role-course/remove-multiple-courses', {
+      const response = await api.delete('/remove-multiple-courses', {
         data: removeData,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -117,7 +117,7 @@ export const roleCourseService = {
   async syncCoursesToRole(syncData: AssignMultipleCoursesData): Promise<RoleCourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.post('role-course/sync-courses', syncData, {
+      const response = await api.post('/sync-courses', syncData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -132,7 +132,7 @@ export const roleCourseService = {
   async getAllRoleCourseAssignments(): Promise<RoleCourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('role-course/get-all-assignments', {
+      const response = await api.get('/get-all-assignments', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -147,7 +147,7 @@ export const roleCourseService = {
   async getCoursesByRoleId(role_id: number): Promise<RoleCourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`role-course/role/${role_id}/courses`, {
+      const response = await api.get(`/role/${role_id}/courses`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -162,7 +162,7 @@ export const roleCourseService = {
   async getRolesByCourseId(course_id: number): Promise<RoleCourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`role-course/course/${course_id}/roles`, {
+      const response = await api.get(`/course/${course_id}/roles`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

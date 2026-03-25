@@ -1,39 +1,79 @@
-import { useMemo, useState } from 'react';
-import { BookOpen, GraduationCap } from 'lucide-react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { GraduationCap, Loader2 } from 'lucide-react';
 import {
   CourseList,
   CoursesToolbar,
-  MOCK_COURSES,
 } from '../../components/courses';
+import type { CourseSummary, CourseLevel } from '../../components/courses/types';
 import { Callout } from '../../components/feedback';
 import { PageHeader, Stack } from '../../components/layout';
-
-
-// Mock list of bought courses by selecting some IDs from MOCK_COURSES
-const BOUGHT_COURSE_IDS = ['1', '3', '6'];
-
-function useBoughtCourses() {
-  return useMemo(() => {
-    return MOCK_COURSES.filter((course) => BOUGHT_COURSE_IDS.includes(course.id));
-  }, []);
-}
-
-function useUniqueCategories(courses: typeof MOCK_COURSES) {
-  return useMemo(() => {
-    const set = new Set(courses.map((c) => c.category));
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, [courses]);
-}
+import { roleCourseService } from '../../services/roleCourseService';
+import { useAuth } from '../../hooks/useAuth';
 
 const MyCourses = () => {
-  const boughtCourses = useBoughtCourses();
-  const categories = useUniqueCategories(boughtCourses);
+  const { user } = useAuth();
+  const [courses, setCourses] = useState<CourseSummary[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
+  const fetchMyCourses = useCallback(async () => {
+    if (!user?.role_id) {
+      setIsLoading(false);
+      return;
+    }
+
+    // Manual code
+    if (user?.role_id === 1) {
+      console.log(user);
+    }
+
+    setIsLoading(true);
+    setError(null);
+    try {
+      // Fetch only courses assigned to the user's role
+      const response = await roleCourseService.getCoursesByRoleId(user.role_id);
+
+      if (!response.success || !response.courses) {
+        setError(response.message || 'Failed to fetch your courses.');
+        return;
+      }
+
+      // Map matching courses to the UI summary format
+      const mappedCourses: CourseSummary[] = response.courses.map((c: any) => ({
+        id: c.course_id.toString(),
+        title: c.title,
+        shortDescription: c.description || 'No description provided.',
+        category: c.category || 'Uncategorized',
+        level: (c.level
+          ? c.level.charAt(0).toUpperCase() + c.level.slice(1).toLowerCase()
+          : 'Beginner') as CourseLevel,
+        duration: '8 weeks', // Placeholder
+        moduleCount: 10,     // Placeholder
+        locked: false,       // Since they are assigned, they are not locked
+      }));
+
+      setCourses(mappedCourses);
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user?.role_id]);
+
+  useEffect(() => {
+    fetchMyCourses();
+  }, [fetchMyCourses]);
+
+  const categories = useMemo(() => {
+    const set = new Set(courses.map((c) => c.category));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [courses]);
+
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    return boughtCourses.filter((course) => {
+    return courses.filter((course) => {
       if (activeCategory && course.category !== activeCategory) return false;
       if (!q) return true;
       return (
@@ -42,35 +82,65 @@ const MyCourses = () => {
         course.category.toLowerCase().includes(q)
       );
     });
-  }, [searchQuery, activeCategory, boughtCourses]);
+  }, [searchQuery, activeCategory, courses]);
 
   return (
     <Stack gap="lg" className="pb-10">
       <PageHeader
         title="My Courses"
-        description="View all the courses you have purchased. Continue learning where you left off or explore content at your own pace."
+        description="Continue learning from the courses assigned to your professional role."
         actions={
-          <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 shadow-sm">
-            <GraduationCap className="size-4 text-[var(--color-brand)]" aria-hidden />
-            {boughtCourses.length} courses
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 shadow-sm">
+              <GraduationCap className="size-4 text-[var(--color-brand)]" aria-hidden />
+              {courses.length} {courses.length === 1 ? 'course' : 'courses'}
+            </span>
+          </div>
         }
       />
 
-      <Callout variant="info" title="My purchased courses">
-        This page shows courses you have already bought. In a real application, this would be
-        fetched from the backend based on your user ID.
-      </Callout>
+      {error && (
+        <Callout variant="danger" title="Error loading your courses">
+          {error}
+        </Callout>
+      )}
 
-      <CoursesToolbar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        categories={categories}
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-      />
+      {user?.role_id === 1 && (
+        <Callout variant="info" title="Administrator view">
+          As an administrator, you can view all courses in the catalog, but this page only shows those explicitly assigned to your admin role.
+        </Callout>
+      )}
 
-      <CourseList courses={filtered} />
+      {!error && (
+        <>
+          <CoursesToolbar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            categories={categories}
+            activeCategory={activeCategory}
+            onCategoryChange={setActiveCategory}
+          />
+
+          {isLoading ? (
+            <div className="flex h-64 items-center justify-center">
+              <Loader2 className="size-8 animate-spin text-slate-300" />
+            </div>
+          ) : (
+            <CourseList courses={filtered} linkPrefix="/courses" />
+          )}
+
+          {!isLoading && courses.length === 0 && (
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 py-20 text-center">
+              <GraduationCap className="mb-4 size-12 text-slate-300" />
+              <h3 className="text-lg font-semibold text-slate-900">No courses assigned yet</h3>
+              <p className="max-w-xs text-sm text-slate-500">
+                You haven't been assigned any courses for your current role. Please check the main
+                catalog to request access or contact your admin.
+              </p>
+            </div>
+          )}
+        </>
+      )}
     </Stack>
   );
 };

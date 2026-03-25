@@ -1,6 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { BookOpen, Plus, Loader2 } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { BookOpen, Loader2 } from 'lucide-react';
 import {
   CourseList,
   CoursesToolbar,
@@ -10,45 +9,72 @@ import { Callout } from '../../components/feedback';
 import { PageHeader, Stack } from '../../components/layout';
 import { Button } from '../../components/ui/Button';
 import { courseService } from '../../services/courseService';
+import { roleCourseService } from '../../services/roleCourseService';
 import { useAuth } from '../../hooks/useAuth';
 
 const Courses = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { isAdmin } = useAuth();
+  const { user } = useAuth();
   const [courses, setCourses] = useState<CourseSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  const isAdminView = location.pathname.startsWith('/admin') || (isAdmin && isAdmin());
+  // role_id 1 is admin — admins have full access to all courses
+  const isAdmin = user?.role_id === 1;
 
   const fetchCourses = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await courseService.getAllCourses();
-      if (response.success && response.courses) {
-        const mappedCourses: CourseSummary[] = response.courses.map((c) => ({
-          id: c.course_id.toString(),
-          title: c.title,
-          shortDescription: c.description || 'No description provided.',
-          category: c.category || 'Uncategorized',
-          level: (c.level ? (c.level.charAt(0).toUpperCase() + c.level.slice(1).toLowerCase()) : 'Beginner') as CourseLevel,
-          duration: '8 weeks', // Mocked as requested
-          moduleCount: 10,     // Mocked as requested
-        }));
-        setCourses(mappedCourses);
-      } else {
-        setError(response.message || 'Failed to fetch courses');
+      // 1. Fetch all courses from the database
+      const allCoursesRes = await courseService.getAllCourses();
+
+      if (!allCoursesRes.success || !allCoursesRes.courses) {
+        setError(allCoursesRes.message || 'Failed to fetch courses.');
+        return;
       }
+
+      // 2. Fetch courses assigned to the user's role (unless admin)
+      let assignedIds = new Set<number>();
+      if (isAdmin) {
+        // Admins see everything as unlocked
+        assignedIds = new Set(allCoursesRes.courses.map((c) => c.course_id));
+      } else if (user?.role_id) {
+        try {
+          const roleCoursesRes = await roleCourseService.getCoursesByRoleId(user.role_id);
+          if (roleCoursesRes.success && roleCoursesRes.courses) {
+            assignedIds = new Set<number>(
+              roleCoursesRes.courses.map((c: any) => c.course_id),
+            );
+          }
+        } catch (roleErr) {
+          console.error("Failed to fetch role-assigned courses:", roleErr);
+          // If role fetch fails, we continue with empty assignedIds (all locked)
+        }
+      }
+
+      // 3. Map database courses to the UI summary format
+      const mappedCourses: CourseSummary[] = allCoursesRes.courses.map((c) => ({
+        id: c.course_id.toString(),
+        title: c.title,
+        shortDescription: c.description || 'No description provided.',
+        category: c.category || 'Uncategorized',
+        level: (c.level
+          ? c.level.charAt(0).toUpperCase() + c.level.slice(1).toLowerCase()
+          : 'Beginner') as CourseLevel,
+        duration: '8 weeks', // Placeholder as not in DB
+        moduleCount: 10,     // Placeholder as not in DB
+        locked: !assignedIds.has(c.course_id),
+      }));
+
+      setCourses(mappedCourses);
     } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred');
+      setError(err.message || 'An unexpected error occurred.');
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [user?.role_id, isAdmin]);
 
   useEffect(() => {
     fetchCourses();
@@ -72,31 +98,22 @@ const Courses = () => {
     });
   }, [searchQuery, activeCategory, courses]);
 
+  const accessibleCount = courses.filter((c) => !c.locked).length;
+
   return (
     <Stack gap="lg" className="pb-10">
       <PageHeader
         title="Courses"
-        description="Browse the catalog and open any course for a full overview, modules, and next steps. All links stay inside your workspace sidebar."
+        description="Browse the full catalog. Courses assigned to your role are fully accessible; others require admin access."
         actions={
           <div className="flex items-center gap-3">
-            {isAdminView && (
-              <Button 
-                onClick={() => navigate('/admin/add-course')}
-                leftIcon={<Plus className="size-4" />}
-                variant="primary"
-                size="sm"
-              >
-                Create Course
-              </Button>
-            )}
             <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 shadow-sm">
               <BookOpen className="size-4 text-[var(--color-brand)]" aria-hidden />
-              {courses.length} courses
+              {accessibleCount} / {courses.length} accessible
             </span>
           </div>
         }
       />
-
 
       {error && (
         <Callout variant="danger" title="Error loading courses">
@@ -133,4 +150,3 @@ const Courses = () => {
 };
 
 export default Courses;
-

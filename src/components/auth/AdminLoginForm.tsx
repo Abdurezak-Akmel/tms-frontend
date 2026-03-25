@@ -13,7 +13,6 @@ import {
   Input,
 } from '../ui';
 import { useAuth } from '../../hooks/useAuth';
-import type { User } from '../../context/AuthContext';
 import authService from '../../services/authService';
 
 type AdminLoginValues = {
@@ -44,36 +43,6 @@ function validate(values: AdminLoginValues): AdminLoginErrors {
   return errors;
 }
 
-function toAuthUser(raw: unknown): User | null {
-  if (!raw || typeof raw !== 'object') return null;
-  const u = raw as Record<string, unknown>;
-  const userId = typeof u.user_id === 'number' ? u.user_id : Number(u.user_id);
-  const roleId = typeof u.role_id === 'number' ? u.role_id : Number(u.role_id);
-  if (
-    Number.isFinite(userId) &&
-    typeof u.name === 'string' &&
-    typeof u.email === 'string' &&
-    Number.isFinite(roleId) &&
-    typeof u.status === 'string' &&
-    typeof u.email_verified === 'boolean' &&
-    typeof u.created_at === 'string'
-  ) {
-    return {
-      user_id: userId,
-      name: u.name,
-      email: u.email,
-      role_id: roleId,
-      status: u.status,
-      email_verified: u.email_verified,
-      registration_device:
-        u.registration_device === null || typeof u.registration_device === 'string'
-          ? (u.registration_device as string | null)
-          : null,
-      created_at: u.created_at,
-    };
-  }
-  return null;
-}
 
 export function AdminLoginForm() {
   const navigate = useNavigate();
@@ -109,25 +78,18 @@ export function AdminLoginForm() {
         password: values.password,
       });
 
-      if (!response.token) {
+      if (!response.token || !response.user) {
         setServerError('Login did not return a session. Please try again.');
         return;
       }
 
-      const user = toAuthUser(response.user);
-      if (!user) {
-        setServerError('Could not read account information. Please try again.');
+      // Check specifically if this is an admin
+      if (response.user.role_id !== 1) {
+        setServerError('This account does not have administrator access. Use the user sign-in instead.');
         return;
       }
 
-      if (user.role_id !== 1) {
-        setServerError(
-          'This account does not have administrator access. Use the user sign-in instead.',
-        );
-        return;
-      }
-
-      login(response.token, user);
+      login(response.token, response.user as any);
       navigate('/admin-dashboard');
     } catch (error: unknown) {
       const message =

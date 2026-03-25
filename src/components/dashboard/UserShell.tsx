@@ -30,15 +30,15 @@ const mainNav: NavItem[] = [
     end: true,
   },
   {
-    to: '/my-courses',
-    label: 'My courses',
-    icon: <BookMarked className="size-4 shrink-0 opacity-80" aria-hidden />,
-    end: true,
-  },
-  {
     to: '/courses',
     label: 'Courses',
     icon: <BookOpen className="size-4 shrink-0 opacity-80" aria-hidden />,
+  },
+  {
+    to: '/my-courses',
+    label: 'My Courses',
+    icon: <BookMarked className="size-4 shrink-0 opacity-80" aria-hidden />,
+    end: true,
   },
   {
     to: '/videos',

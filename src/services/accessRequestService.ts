@@ -14,6 +14,7 @@ const api = axios.create({
 export interface CreateAccessRequestData {
   course_id: number;
   receipt_id?: number;
+  payment_amount: number;
 }
 
 export interface UpdateAccessRequestStatusData {
@@ -26,9 +27,12 @@ export interface AccessRequest {
   user_id: number;
   course_id: number;
   receipt_id: number | null;
+  payment_amount: number;
   status: 'pending' | 'approved' | 'rejected';
   requested_at: string;
   reviewed_at: string | null;
+  email?: string;
+  course_title?: string;
 }
 
 export interface AccessRequestResponse {
@@ -61,7 +65,7 @@ export const accessRequestService = {
   async getUserAccessRequests(): Promise<AccessRequestResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('/access-requests/access-requests', {
+      const response = await api.get('/access-requests', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -88,7 +92,7 @@ export const accessRequestService = {
       if (filters?.course_id) params.append('course_id', filters.course_id.toString());
       if (filters?.user_id) params.append('user_id', filters.user_id.toString());
 
-      const response = await api.get(`/access-requests/admin/access-requests?${params}`, {
+      const response = await api.get(`/admin/access-requests?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -103,7 +107,7 @@ export const accessRequestService = {
   async getPendingRequests(): Promise<AccessRequestResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('/access-requests/admin/access-requests/pending', {
+      const response = await api.get('/admin/access-requests/pending', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -118,7 +122,7 @@ export const accessRequestService = {
   async getRequestsByCourseId(course_id: number): Promise<AccessRequestResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/access-requests/admin/access-requests/course/${course_id}`, {
+      const response = await api.get(`/admin/access-requests/course/${course_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -133,7 +137,7 @@ export const accessRequestService = {
   async getRequestsByStatus(status: string): Promise<AccessRequestResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/access-requests/admin/access-requests/status/${status}`, {
+      const response = await api.get(`/admin/access-requests/status/${status}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -148,7 +152,7 @@ export const accessRequestService = {
   async getAccessRequestById(request_id: number): Promise<AccessRequestResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/access-requests/admin/access-requests/${request_id}`, {
+      const response = await api.get(`/admin/access-requests/${request_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -163,7 +167,7 @@ export const accessRequestService = {
   async updateAccessRequestStatus(request_id: number, statusData: UpdateAccessRequestStatusData): Promise<AccessRequestResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.put(`/access-requests/admin/access-requests/${request_id}/status`, statusData, {
+      const response = await api.put(`/admin/access-requests/${request_id}/status`, statusData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -178,7 +182,7 @@ export const accessRequestService = {
   async deleteAccessRequest(request_id: number): Promise<AccessRequestResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.delete(`/access-requests/admin/access-requests/${request_id}`, {
+      const response = await api.delete(`/admin/access-requests/${request_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/videos";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -55,7 +55,7 @@ export const videoService = {
   async createVideo(videoData: CreateVideoData): Promise<VideoResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.post('/videos/create-video', videoData, {
+      const response = await api.post('/create-video', videoData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,7 +70,7 @@ export const videoService = {
   async getAllVideos(): Promise<VideoResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('/videos/get-all-videos', {
+      const response = await api.get('/get-all-videos', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -85,7 +85,7 @@ export const videoService = {
   async getVideoById(id: number): Promise<VideoResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/videos/get-video/${id}`, {
+      const response = await api.get(`/get-video/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -100,7 +100,7 @@ export const videoService = {
   async getVideosByCourseId(course_id: number): Promise<VideoResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/videos/get-videos/${course_id}`, {
+      const response = await api.get(`/get-videos/${course_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -115,7 +115,7 @@ export const videoService = {
   async updateVideo(id: number, updateData: UpdateVideoData): Promise<VideoResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.put(`/videos/update-video/${id}`, updateData, {
+      const response = await api.put(`/update-video/${id}`, updateData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -130,7 +130,7 @@ export const videoService = {
   async deleteVideo(id: number): Promise<VideoResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.delete(`/videos/delete-video/${id}`, {
+      const response = await api.delete(`/delete-video/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Shield } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 import { Callout } from '../feedback';
 import { FormFieldSlot } from '../forms';
 import {
@@ -44,6 +45,7 @@ function validate(values: UserLoginValues): UserLoginErrors {
 
 export function UserLoginForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [values, setValues] = useState<UserLoginValues>(initialValues);
   const [errors, setErrors] = useState<UserLoginErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -104,11 +106,12 @@ export function UserLoginForm() {
         return;
       }
 
-      if (response.token) {
-        authService.setTokens(response.token);
+      if (response.token && response.user) {
+        login(response.token, response.user as any);
+        navigate('/user-dashboard');
+      } else {
+        setServerError('Login did not return a session. Please try again.');
       }
-
-      navigate('/user-dashboard');
     } catch (error: unknown) {
       const message = getErrorMessage(error);
       if (shouldRedirectToVerifyEmail(message)) {

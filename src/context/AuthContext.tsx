@@ -58,6 +58,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const logout = () => {
+    // Clear localStorage (authService.logout also does this, but we do it here for redundancy/consistency)
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userInfo');
     localStorage.removeItem('refreshToken');

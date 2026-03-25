@@ -60,7 +60,7 @@ export const courseService = {
     }
   },
 
-  // Admin: get all courses
+  // User: get all courses
   async getAllCourses(): Promise<CourseResponse> {
     try {
       const token = localStorage.getItem('accessToken');

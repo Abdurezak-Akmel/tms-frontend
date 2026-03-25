@@ -100,6 +100,12 @@ export const authService = {
       console.log('Login credentials:', { email: credentials.email, password: '***' });
       const response = await api.post("/login", credentials);
       console.log('Login response:', response.data);
+
+      if (response.data.success && response.data.token && response.data.user) {
+        localStorage.setItem("accessToken", response.data.token);
+        localStorage.setItem("userInfo", JSON.stringify(response.data.user));
+      }
+
       return response.data;
     } catch (error: any) {
       console.error('Login error details:', error);
@@ -125,6 +131,13 @@ export const authService = {
         }
       );
       console.log('Logout response:', response.data);
+
+      if (response.data.success) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("userInfo");
+        localStorage.removeItem("refreshToken");
+      }
+
       return response.data;
     } catch (error: any) {
       console.error('Logout error details:', error);
@@ -134,7 +147,7 @@ export const authService = {
     }
   },
 
-    // Request password reset
+  // Request password reset
   async forgetPassword(email: string): Promise<AuthResponse> {
     try {
       console.log('Making forget password request to:', API_BASE_URL);

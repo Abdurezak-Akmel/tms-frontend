@@ -20,7 +20,7 @@ import UserDashboard from '../pages/UserPages/UserDachboard';
 import MyCourses from '../pages/UserPages/MyCourses';
 import AddReceipt from '../pages/UserPages/AddReceipt';
 import Courses from '../pages/UserPages/Courses';
-import CoursePreview from '../pages/UserPages/CoursePreview';
+import UserCoursePreview from '../pages/UserPages/UserCoursePreview';
 import Videos from '../pages/UserPages/Videos';
 import VideoDisplay from '../pages/UserPages/VideoDisplay';
 import Files from '../pages/UserPages/Files';
@@ -76,7 +76,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/new-password" element={<NewPassword />} />
             <Route path="/courses" element={<Courses />} />
-            <Route path="/courses/:id" element={<CoursePreview />} />
+            <Route path="/courses/:id" element={<UserCoursePreview />} />
             <Route path="/videos" element={<Videos />} />
             <Route path="/videos/:id" element={<VideoDisplay />} />
             <Route path="/files" element={<Files />} />

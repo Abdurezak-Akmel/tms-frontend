@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/course-materials";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -55,7 +55,7 @@ export const courseMaterialService = {
   async createMaterial(materialData: CreateMaterialData): Promise<CourseMaterialResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      
+
       // Create FormData for file upload
       const formData = new FormData();
       formData.append('course_id', materialData.course_id.toString());
@@ -65,7 +65,7 @@ export const courseMaterialService = {
       }
       formData.append('file', materialData.file);
 
-      const response = await api.post('/course-materials/create-course-material', formData, {
+      const response = await api.post('/create-course-material', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -81,7 +81,7 @@ export const courseMaterialService = {
   async getAllMaterials(): Promise<CourseMaterialResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('/course-materials/all-course-materials', {
+      const response = await api.get('/all-course-materials', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -96,7 +96,7 @@ export const courseMaterialService = {
   async getMaterialById(id: number): Promise<CourseMaterialResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/course-materials/course-material/${id}`, {
+      const response = await api.get(`/course-material/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -111,7 +111,7 @@ export const courseMaterialService = {
   async getMaterialsByCourseId(course_id: number): Promise<CourseMaterialResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/course-materials/course/${course_id}/materials`, {
+      const response = await api.get(`/course/${course_id}/materials`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -126,7 +126,7 @@ export const courseMaterialService = {
   async getMaterialsByTitle(title: string): Promise<CourseMaterialResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('/course-materials/search-by-title', {
+      const response = await api.get('/search-by-title', {
         params: { title },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -142,7 +142,7 @@ export const courseMaterialService = {
   async getMaterialsByFilename(file_name: string): Promise<CourseMaterialResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('/course-materials/search-by-filename', {
+      const response = await api.get('/search-by-filename', {
         params: { file_name },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -158,7 +158,7 @@ export const courseMaterialService = {
   async getMaterialsByFileType(file_type: string): Promise<CourseMaterialResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get('/course-materials/search-by-filetype', {
+      const response = await api.get('/search-by-filetype', {
         params: { file_type },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -174,7 +174,7 @@ export const courseMaterialService = {
   async updateMaterial(id: number, updateData: UpdateMaterialData): Promise<CourseMaterialResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.put(`/course-materials/update-course-material/${id}`, updateData, {
+      const response = await api.put(`/update-course-material/${id}`, updateData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -189,7 +189,7 @@ export const courseMaterialService = {
   async deleteMaterial(id: number): Promise<CourseMaterialResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.delete(`/course-materials/delete-course-material/${id}`, {
+      const response = await api.delete(`/delete-course-material/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -202,7 +202,10 @@ export const courseMaterialService = {
 
   // Helper function to get file download URL
   getFileUrl(material: CourseMaterial): string {
-    return `${API_BASE_URL.replace('/api', '')}${material.file_url}`;
+    // VITE_API_BASE_URL is http://localhost:3000/api
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+    const serverUrl = baseUrl.replace('/api', '');
+    return `${serverUrl}${material.file_url}`;
   },
 
   // Helper function to format file size
