@@ -33,6 +33,7 @@ export interface AccessRequest {
   reviewed_at: string | null;
   email?: string;
   course_title?: string;
+  role_id?: number;
 }
 
 export interface AccessRequestResponse {
@@ -87,7 +88,7 @@ export const accessRequestService = {
     try {
       const token = localStorage.getItem('accessToken');
       const params = new URLSearchParams();
-      
+
       if (filters?.status) params.append('status', filters.status);
       if (filters?.course_id) params.append('course_id', filters.course_id.toString());
       if (filters?.user_id) params.append('user_id', filters.user_id.toString());
@@ -148,11 +149,11 @@ export const accessRequestService = {
     }
   },
 
-  // Get a specific access request by ID (admin only)
+  // Get a specific access request by ID
   async getAccessRequestById(request_id: number): Promise<AccessRequestResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await api.get(`/admin/access-requests/${request_id}`, {
+      const response = await api.get(`/access-requests/${request_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

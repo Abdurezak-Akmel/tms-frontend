@@ -1,17 +1,41 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, BookOpen } from 'lucide-react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, BookOpen, Trash2 } from 'lucide-react';
 import { FilePreviewContent } from '../../components/files';
 import { EmptyState } from '../../components/feedback';
 import { Stack } from '../../components/layout';
 import { ButtonLink } from '../../components/ui/ButtonLink';
+import { Button } from '../../components/ui/Button';
 import { courseMaterialService } from '../../services/courseMaterialService';
 
 const FilePreview = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [file, setFile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!id || !window.confirm('Are you sure you want to delete this material? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      setError(null);
+      const res = await courseMaterialService.deleteMaterial(parseInt(id));
+      if (res.success) {
+        navigate('/admin/files');
+      } else {
+        setError(res.message || 'Failed to delete material');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete material');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   useEffect(() => {
     const fetchFileData = async () => {
@@ -81,6 +105,15 @@ const FilePreview = () => {
         <ButtonLink to={`/admin/courses/${file.courseId}`} variant="outline" size="md" leftIcon={<BookOpen className="size-4" />}>
           View course
         </ButtonLink>
+        <Button
+          variant="danger"
+          size="md"
+          leftIcon={<Trash2 className="size-4" />}
+          onClick={handleDelete}
+          isLoading={isDeleting}
+        >
+          Delete material
+        </Button>
         <ButtonLink to="/admin/files" variant="ghost" size="md">
           Back to library
         </ButtonLink>

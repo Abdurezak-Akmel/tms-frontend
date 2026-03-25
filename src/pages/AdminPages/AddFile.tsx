@@ -34,7 +34,14 @@ const AddFile: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
+
+      if (selectedFile.type !== 'application/pdf') {
+        setError('Only PDF files are allowed.');
+        return;
+      }
+
       setFile(selectedFile);
+      setError(null);
 
       // Auto-fill title with filename (minus extension) if title is currently empty
       if (!formData.title) {
@@ -101,7 +108,14 @@ const AddFile: React.FC = () => {
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const selectedFile = e.dataTransfer.files[0];
+      
+      if (selectedFile.type !== 'application/pdf') {
+        setError('Only PDF files are allowed.');
+        return;
+      }
+
       setFile(selectedFile);
+      setError(null);
 
       // Auto-fill title if empty (using same logic as handleFileChange)
       if (!formData.title) {
@@ -126,7 +140,7 @@ const AddFile: React.FC = () => {
         </Link>
         <PageHeader
           title="Add Course Material"
-          description="Upload slides, PDFs, or other resources for your students."
+          description="Upload PDF documents or other resources for your students."
         />
       </div>
 
@@ -197,6 +211,7 @@ const AddFile: React.FC = () => {
                     id="file"
                     name="file"
                     type="file"
+                    accept=".pdf,application/pdf"
                     onChange={handleFileChange}
                     required
                     className="absolute opacity-0 w-0 h-0 pointer-events-none"

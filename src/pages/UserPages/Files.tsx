@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { 
-  FileText, 
-  Loader2, 
-  ExternalLink, 
-  File, 
-  FileImage, 
-  FileArchive, 
+import {
+  FileText,
+  Loader2,
+  ExternalLink,
+  File,
+  FileImage,
+  FileArchive,
   Search,
   BookOpen,
   Calendar,
@@ -41,7 +41,7 @@ const Files = () => {
     try {
       // 1. Get all courses assigned to this role
       const roleCoursesRes = await roleCourseService.getCoursesByRoleId(user.role_id);
-      
+
       if (!roleCoursesRes.success || !roleCoursesRes.courses) {
         setMaterials([]);
         return;
@@ -68,10 +68,10 @@ const Files = () => {
 
       const results = await Promise.all(materialPromises);
       const allMaterials = results.flat();
-      
+
       // Sort by upload date (newest first)
       allMaterials.sort((a, b) => new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime());
-      
+
       setMaterials(allMaterials);
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred while loading materials.');
@@ -87,8 +87,8 @@ const Files = () => {
   const filteredMaterials = useMemo(() => {
     if (!searchQuery.trim()) return materials;
     const q = searchQuery.toLowerCase();
-    return materials.filter(m => 
-      m.title.toLowerCase().includes(q) || 
+    return materials.filter(m =>
+      m.title.toLowerCase().includes(q) ||
       m.file_name.toLowerCase().includes(q) ||
       m.courseName.toLowerCase().includes(q)
     );
@@ -145,20 +145,20 @@ const Files = () => {
           title={searchQuery ? "No matching files" : "No resources found"}
           description={searchQuery ? `No files found for "${searchQuery}".` : "You don't have access to any downloadable materials yet."}
           action={searchQuery ? (
-             <button onClick={() => setSearchQuery('')} className="text-[var(--color-brand)] font-semibold hover:underline">
-               Clear search
-             </button>
+            <button onClick={() => setSearchQuery('')} className="text-[var(--color-brand)] font-semibold hover:underline">
+              Clear search
+            </button>
           ) : (
-             <button onClick={() => fetchMaterialsForUnlockedCourses()} className="text-[var(--color-brand)] font-semibold hover:underline">
-               Reload library
-             </button>
+            <button onClick={() => fetchMaterialsForUnlockedCourses()} className="text-[var(--color-brand)] font-semibold hover:underline">
+              Reload library
+            </button>
           )}
         />
       ) : (
         /* Grid Layout */
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredMaterials.map((material) => (
-            <div 
+            <div
               key={material.material_id}
               onClick={() => openFile(material)}
               className="group cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 transition-all duration-200 hover:border-[var(--color-brand)] hover:shadow-md hover:shadow-[var(--color-brand)]/5"
@@ -187,12 +187,12 @@ const Files = () => {
                   </div>
                   <div className="flex items-center justify-between text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
                     <span className="flex items-center gap-1">
-                       <Calendar className="size-3" />
-                       {new Date(material.uploaded_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      <Calendar className="size-3" />
+                      {new Date(material.uploaded_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </span>
                     <span className="flex items-center gap-1">
-                       <Layers className="size-3" />
-                       {courseMaterialService.formatFileSize(material.file_size)} 
+                      <Layers className="size-3" />
+                      {courseMaterialService.formatFileSize(material.file_size)}
                     </span>
                   </div>
                 </div>

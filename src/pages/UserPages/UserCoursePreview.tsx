@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft,
+  ArrowRight,
   CheckCircle2,
   Film,
   FileText,
@@ -14,7 +15,7 @@ import {
 import type { CourseDetail, CourseVideoItem, CourseFileItem } from '../../components/coursePreview/types';
 import { Callout, EmptyState } from '../../components/feedback';
 import { PageHeader, Stack } from '../../components/layout';
-import { Badge } from '../../components/ui';
+import { Badge, ButtonLink } from '../../components/ui';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui';
 import { courseService } from '../../services/courseService';
 import { videoService } from '../../services/videoService';
@@ -205,18 +206,22 @@ const UserCoursePreview = () => {
               <h3 className="text-lg font-semibold text-slate-900">Content Locked</h3>
               <p className="text-sm text-slate-500">
                 The resources for this course are not assigned to your current role.
-                Please complete the enrollment form below to request access.
+                Please enroll to gain full access to all materials.
               </p>
             </div>
 
-            {/* Enrollment Form Placeholder */}
-            <div className="mt-6 w-full max-w-lg border border-slate-200 bg-white p-6 rounded-2xl shadow-sm">
-              <p className="text-xs font-mono text-slate-400 uppercase tracking-widest text-center">
-                Enrollment Form Placeholder
+            <div className="mt-4 flex flex-col items-center gap-4">
+              <ButtonLink
+                to={`/buy-course/${course.id}`}
+                variant="primary"
+                size="lg"
+                rightIcon={<ArrowRight className="size-4" />}
+              >
+                Enroll in this course
+              </ButtonLink>
+              <p className="text-xs text-slate-400">
+                Unlock all videos, files, and assignments instantly.
               </p>
-              <div className="mt-4 h-48 rounded bg-slate-50 animate-pulse flex items-center justify-center">
-                <p className="text-xs text-slate-400">USER FORM WILL BE IMPLEMENTED HERE</p>
-              </div>
             </div>
           </div>
         </Card>

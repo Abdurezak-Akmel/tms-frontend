@@ -83,8 +83,8 @@ export const receiptService = {
 
   // Helper function to validate receipt file type
   validateReceiptFileType(file: File): boolean {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'application/pdf'];
-    const allowedExtensions = ['.jpeg', '.jpg', '.png', '.gif', '.pdf'];
+    const allowedTypes = ['application/pdf'];
+    const allowedExtensions = ['.pdf'];
     
     const hasValidType = allowedTypes.includes(file.type);
     const hasValidExtension = allowedExtensions.some(ext => 

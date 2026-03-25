@@ -25,6 +25,7 @@ import Videos from '../pages/UserPages/Videos';
 import VideoDisplay from '../pages/UserPages/VideoDisplay';
 import Files from '../pages/UserPages/Files';
 import FilePreview from '../pages/UserPages/FilePreview';
+import BuyCourse from '../pages/UserPages/BuyCourse';
 
 // Admin Pages
 import AdminDashboard from '../pages/AdminPages/AdminDashboard';
@@ -82,6 +83,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/files" element={<Files />} />
             <Route path="/files/:id" element={<FilePreview />} />
             <Route path="/receipts/:id" element={<ReceiptPreview />} />
+            <Route path="/buy-course/:id" element={<BuyCourse />} />
           </Route>
         </Route>
 

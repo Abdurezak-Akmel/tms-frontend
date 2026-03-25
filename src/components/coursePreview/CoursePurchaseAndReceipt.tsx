@@ -89,7 +89,7 @@ export function CoursePurchaseAndReceipt({ course }: CoursePurchaseAndReceiptPro
               <div className="min-w-0 space-y-1">
                 <p className="text-sm font-medium text-slate-800">Payment receipt</p>
                 <p className="text-sm text-slate-600">
-                  After paying through your agreed channel, upload a screenshot or PDF here. Click a
+                  After paying through your agreed channel, upload your PDF receipt here. Click a
                   submitted receipt to open its preview page.
                 </p>
               </div>
@@ -101,14 +101,14 @@ export function CoursePurchaseAndReceipt({ course }: CoursePurchaseAndReceiptPro
                 <Input
                   id={inputId}
                   type="file"
-                  accept="image/*,.pdf"
+                  accept=".pdf"
                   onChange={handleFile}
                   className="cursor-pointer file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200"
                 />
               </div>
               <div className="flex items-center gap-2 text-xs text-slate-500">
                 <Upload className="size-4" aria-hidden />
-                PDF or image · demo only
+                PDF only · demo only
               </div>
             </div>
           </div>

@@ -1,9 +1,11 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { Check, X, Clock, Search, BookOpen, User, CreditCard, Hash, Calendar } from 'lucide-react';
-import { Badge, Button, Card, Input } from '../../components/ui';
+import { Check, X, Clock, Search, BookOpen, User, CreditCard } from 'lucide-react';
+import { Badge, Button, Card, CardContent, Input, Separator } from '../../components/ui';
 import { PageHeader, Stack } from '../../components/layout';
 import { EmptyState } from '../../components/feedback';
 import accessRequestService, { type AccessRequest } from '../../services/accessRequestService';
+import { roleService, type Role } from '../../services/roleService';
+import { userService } from '../../services/userService';
 
 type StatusVariant = 'warning' | 'success' | 'danger';
 
@@ -15,8 +17,10 @@ const statusVariant: Record<string, StatusVariant> = {
 
 const AccessRequests = () => {
   const [requests, setRequests] = useState<AccessRequest[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [updatingRoleFor, setUpdatingRoleFor] = useState<number | null>(null); // request_id currently being updated
 
   const fetchRequests = useCallback(async () => {
     try {
@@ -32,9 +36,21 @@ const AccessRequests = () => {
     }
   }, []);
 
+  const fetchRoles = useCallback(async () => {
+    try {
+      const res = await roleService.getAllRoles();
+      if (res.success && Array.isArray(res.roles)) {
+        setRoles(res.roles);
+      }
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchRequests();
-  }, [fetchRequests]);
+    fetchRoles();
+  }, [fetchRequests, fetchRoles]);
 
   const filteredRequests = useMemo(() => {
     const q = searchQuery.toLowerCase();
@@ -57,6 +73,18 @@ const AccessRequests = () => {
     } catch (error) {
       console.error('Error updating status:', error);
       fetchRequests(); // Revert back if error
+    }
+  };
+
+  const handleRoleChange = async (request_id: number, user_id: number, role_id: number) => {
+    try {
+      setUpdatingRoleFor(request_id);
+      await userService.updateUser(user_id, { role_id });
+      await fetchRequests(); // Refresh data
+    } catch (error) {
+      console.error('Error updating user role:', error);
+    } finally {
+      setUpdatingRoleFor(null);
     }
   };
 
@@ -92,111 +120,131 @@ const AccessRequests = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto min-w-full custom-scrollbar">
+          <div className="p-5">
             {loading ? (
               <div className="py-24 flex flex-col justify-center items-center text-slate-400 gap-3">
                 <div className="size-8 border-3 border-primary/20 border-t-primary rounded-full animate-spin" />
                 <span className="text-sm font-medium animate-pulse">Fetching latest requests...</span>
               </div>
             ) : filteredRequests.length > 0 ? (
-              <table className="w-full text-left text-sm border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/30 text-slate-500 uppercase tracking-wider text-[11px]">
-                    <th className="px-6 py-4 font-bold"><Hash className="size-3.5 inline mr-1 mb-0.5" />ID</th>
-                    <th className="px-6 py-4 font-bold"><User className="size-3.5 inline mr-1 mb-0.5" />Customer Info</th>
-                    <th className="px-6 py-4 font-bold"><BookOpen className="size-3.5 inline mr-1 mb-0.5" />Course Product</th>
-                    <th className="px-6 py-4 font-bold"><CreditCard className="size-3.5 inline mr-1 mb-0.5" />Payment Details</th>
-                    <th className="px-6 py-4 font-bold"><Clock className="size-3.5 inline mr-1 mb-0.5" />Processing Timeline</th>
-                    <th className="px-6 py-4 font-bold">Status</th>
-                    <th className="px-6 py-4 font-bold text-right">Review Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100/50">
-                  {filteredRequests.map((req) => (
-                    <tr key={req.request_id} className="group hover:bg-slate-50/80 transition-all duration-200">
-                      <td className="px-6 py-5">
-                        <span className="px-2 py-1 rounded bg-slate-100 text-slate-600 font-mono text-[10px] font-bold">#{req.request_id}</span>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="font-bold text-slate-900 leading-tight">User #{req.user_id}</span>
-                          <span className="text-xs text-slate-500 flex items-center gap-1">
-                            {req.email}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="font-semibold text-slate-800 line-clamp-1">{req.course_title || 'Unknown Course'}</span>
-                          <span className="text-[10px] text-slate-400 uppercase font-bold tabular-nums">ID: {req.course_id}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex flex-col gap-1">
-                          <div className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md self-start font-bold text-xs ring-1 ring-emerald-100">
-                            ${req.payment_amount}
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-medium">Receipt: {req.receipt_id || 'Not provided'}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5 text-slate-500 whitespace-nowrap">
-                        <div className="flex flex-col gap-1.5">
-                          <div className="flex items-center gap-2 text-[11px]">
-                            <Calendar className="size-3 text-slate-300" />
-                            <span className="text-slate-400 font-medium w-14">Submitted:</span>
-                            <span className="text-slate-600 font-semibold">{new Date(req.requested_at).toLocaleDateString()}</span>
-                          </div>
-                          {req.reviewed_at && (
-                            <div className="flex items-center gap-2 text-[11px]">
-                              <Check className="size-3 text-slate-300" />
-                              <span className="text-slate-400 font-medium w-14">Reviewed:</span>
-                              <span className="text-slate-600 font-semibold">{new Date(req.reviewed_at).toLocaleDateString()}</span>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredRequests.map((req) => (
+                  <Card key={req.request_id} className="group flex flex-col border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-300" padding="none">
+                    {/* Card Header: Request ID & Status */}
+                    <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 rounded bg-slate-100 text-slate-600 font-mono text-xs font-bold">#{req.request_id}</span>
                         <Badge
                           variant={statusVariant[req.status] || 'warning'}
-                          className="capitalize px-2.5 py-0.5 font-bold tracking-wide rounded-full text-[10px]"
+                          className="capitalize px-2 py-0.5 font-bold tracking-wide rounded-full text-[10px]"
                         >
                           {req.status}
                         </Badge>
-                      </td>
-                      <td className="px-6 py-5 text-right">
-                        <div className="flex items-center justify-end gap-2 opacity-90 group-hover:opacity-100 transition-opacity">
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                        <Clock className="size-3.5" />
+                        {new Date(req.requested_at).toLocaleDateString()}
+                      </div>
+                    </div>
+
+                    <CardContent className="p-5 flex-1 space-y-4">
+                      {/* User Info */}
+                      <div className="flex items-start gap-4">
+                        <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                          <User className="size-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-base font-bold text-slate-900 truncate">{req.email}</p>
+                          <p className="text-xs uppercase tracking-wider font-bold text-slate-400">User ID: {req.user_id}</p>
+                        </div>
+                      </div>
+
+                      {/* Course Product */}
+                      <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-100/50">
+                        <div className="flex items-center gap-2 mb-1">
+                          <BookOpen className="size-4 text-slate-400" />
+                          <span className="text-xs uppercase font-bold text-slate-400">Enrolling in</span>
+                        </div>
+                        <p className="text-sm font-semibold text-slate-800 line-clamp-1">{req.course_title || 'Unknown Course'}</p>
+                      </div>
+
+                      {/* Payment Amount */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CreditCard className="size-5 text-emerald-500" />
+                          <span className="text-sm font-bold text-slate-700">Amount Paid</span>
+                        </div>
+                        <span className="text-base font-black text-emerald-600">${req.payment_amount}</span>
+                      </div>
+
+                      <Separator className="bg-slate-100" />
+
+                      {/* Role ID Dropdown */}
+                      <div className="space-y-2">
+                        <label className="text-xs uppercase font-black text-slate-400 flex items-center gap-1.5">
+                          Assign Permission Role
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <select
+                            defaultValue={req.role_id}
+                            id={`role-select-${req.request_id}`}
+                            className="flex-1 h-10 pl-3 pr-8 rounded-lg border-slate-200 bg-white text-sm font-medium focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_0.5rem_center] bg-no-repeat"
+                          >
+                            {roles.map((role) => (
+                              <option key={role.role_id} value={role.role_id}>
+                                {role.role_name}
+                              </option>
+                            ))}
+                          </select>
                           <Button
                             size="sm"
-                            variant={req.status === 'approved' ? 'primary' : 'outline'}
-                            className={`h-8 px-3 text-xs font-bold transition-all shadow-sm ${req.status === 'approved'
-                              ? 'bg-emerald-600 hover:bg-emerald-700 border-none ring-2 ring-emerald-500/20'
-                              : 'text-emerald-600 border-emerald-100 hover:bg-emerald-50'
-                              }`}
-                            onClick={() => handleStatusChange(req.request_id, 'approved')}
-                            disabled={req.status === 'approved'}
+                            className="h-10 px-4 text-xs font-bold"
+                            isLoading={updatingRoleFor === req.request_id}
+                            onClick={() => {
+                              const select = document.getElementById(`role-select-${req.request_id}`) as HTMLSelectElement;
+                              handleRoleChange(req.request_id, req.user_id, parseInt(select.value));
+                            }}
                           >
-                            <Check className={`size-3.5 mr-1 ${req.status === 'approved' ? 'text-white' : 'text-emerald-500'}`} />
-                            {req.status === 'approved' ? 'Approved' : 'Approve'}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant={req.status === 'rejected' ? 'danger' : 'outline'}
-                            className={`h-8 px-3 text-xs font-bold transition-all shadow-sm ${req.status === 'rejected'
-                              ? 'bg-rose-600 hover:bg-rose-700 border-none ring-2 ring-rose-500/20'
-                              : 'text-rose-600 border-rose-100 hover:bg-rose-50'
-                              }`}
-                            onClick={() => handleStatusChange(req.request_id, 'rejected')}
-                            disabled={req.status === 'rejected'}
-                          >
-                            <X className={`size-3.5 mr-1 ${req.status === 'rejected' ? 'text-white' : 'text-rose-500'}`} />
-                            {req.status === 'rejected' ? 'Rejected' : 'Reject'}
+                            Update
                           </Button>
                         </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </CardContent>
+
+                    <Separator className="bg-slate-100" />
+
+                    {/* Footer: Approve/Reject Actions */}
+                    <div className="p-4 bg-slate-50/20 grid grid-cols-2 gap-3 mt-auto">
+                      <Button
+                        size="sm"
+                        variant={req.status === 'approved' ? 'primary' : 'outline'}
+                        className={`h-10 text-xs font-black transition-all shadow-sm ${req.status === 'approved'
+                          ? 'bg-emerald-600 hover:bg-emerald-700 border-none ring-2 ring-emerald-500/20'
+                          : 'text-emerald-600 border-emerald-100 hover:bg-emerald-50'
+                          }`}
+                        onClick={() => handleStatusChange(req.request_id, 'approved')}
+                        disabled={req.status === 'approved'}
+                      >
+                        <Check className={`size-3.5 mr-1 ${req.status === 'approved' ? 'text-white' : 'text-emerald-500'}`} />
+                        {req.status === 'approved' ? 'Approved' : 'Approve'}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={req.status === 'rejected' ? 'danger' : 'outline'}
+                        className={`h-10 text-xs font-black transition-all shadow-sm ${req.status === 'rejected'
+                          ? 'bg-rose-600 hover:bg-rose-700 border-none ring-2 ring-rose-500/20'
+                          : 'text-rose-600 border-rose-100 hover:bg-rose-50'
+                          }`}
+                        onClick={() => handleStatusChange(req.request_id, 'rejected')}
+                        disabled={req.status === 'rejected'}
+                      >
+                        <X className={`size-3.5 mr-1 ${req.status === 'rejected' ? 'text-white' : 'text-rose-500'}`} />
+                        {req.status === 'rejected' ? 'Rejected' : 'Reject'}
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
             ) : (
               <div className="py-20">
                 <EmptyState
