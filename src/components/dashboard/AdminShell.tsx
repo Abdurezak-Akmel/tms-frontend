@@ -17,8 +17,8 @@ import {
 
 import { AppNavLink } from '../navigation';
 import { cn } from '../../utils/cn';
-import AdminHeader from './AdminHeader';
-import AdminFooter from './AdminFooter';
+import AppHeader from '../layout/AppHeader';
+import AppFooter from '../layout/AppFooter';
 
 const navClass = 'group flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200';
 
@@ -95,16 +95,16 @@ export function AdminShell() {
       {/* Sidebar Sidebar sidebar */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-slate-200 bg-white transition-all duration-300 lg:flex lg:w-72',
+          'fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 lg:flex lg:w-72',
         )}
       >
-        <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-5">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-slate-900 text-white shadow-lg shadow-slate-200 ring-4 ring-slate-50">
+        <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 px-6 py-5 transition-colors">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-slate-900 dark:bg-slate-800 text-white shadow-lg shadow-slate-200 dark:shadow-none ring-4 ring-slate-50 dark:ring-slate-900">
             <ShieldCheck className="size-6" aria-hidden />
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-base font-bold tracking-tight text-slate-900">TMS Admin</h1>
-            <p className="truncate text-[11px] font-bold uppercase tracking-wider text-slate-400">System Management</p>
+            <h1 className="truncate text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">TMS Admin</h1>
+            <p className="truncate text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">System Management</p>
           </div>
         </div>
 
@@ -132,10 +132,10 @@ export function AdminShell() {
         </nav>
 
         <div className="p-4">
-          <div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-inset ring-slate-100">
+          <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 ring-1 ring-inset ring-slate-100 dark:ring-slate-800">
             <Link
               to="/"
-              className="group flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-900 hover:text-white hover:shadow-md"
+              className="group flex items-center justify-center gap-2 rounded-xl bg-white dark:bg-slate-800 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-sm transition-all hover:bg-slate-900 dark:hover:bg-slate-700 hover:text-white dark:hover:text-slate-100 hover:shadow-md"
             >
               <span>View Main Website</span>
               <ChevronRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -145,18 +145,18 @@ export function AdminShell() {
       </aside>
 
       {/* Main Content Areas */}
-      <div className="flex flex-1 flex-col lg:pl-72">
-        <AdminHeader />
+      <div className="flex flex-1 flex-col lg:pl-72 transition-all">
+        <AppHeader isAdmin />
 
-        <main className="flex-1">
+        <main className="flex-1 bg-slate-50/50 dark:bg-slate-900/50 transition-colors">
           <div className="mx-auto max-w-7xl">
-            <div className="px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+            <div className="px-4 py-6 sm:px-6 sm:py-8 lg:px-8 text-slate-900 dark:text-slate-100">
               <Outlet />
             </div>
           </div>
         </main>
 
-        <AdminFooter />
+        <AppFooter isAdmin />
       </div>
     </div>
   );

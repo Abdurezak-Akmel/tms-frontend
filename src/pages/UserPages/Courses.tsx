@@ -107,8 +107,8 @@ const Courses = () => {
         description="Browse the full catalog. Courses assigned to your role are fully accessible; others require admin access."
         actions={
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 shadow-sm">
-              <BookOpen className="size-4 text-[var(--color-brand)]" aria-hidden />
+            <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-600 dark:text-slate-400 shadow-sm transition-colors">
+              <BookOpen className="size-4 text-[var(--color-brand)] dark:text-brand-400" aria-hidden />
               {accessibleCount} / {courses.length} accessible
             </span>
           </div>

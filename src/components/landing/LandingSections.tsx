@@ -266,9 +266,9 @@ export function LandingHero() {
           </Badge>
           <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
             Learn modern skills with{' '}
-            <span className="gradient-text">clarity and momentum</span>
+            <span className="gradient-text dark:from-indigo-400 dark:to-violet-400">clarity and momentum</span>
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-slate-600 sm:text-xl">
+          <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300 sm:text-xl">
             Short lessons, guided projects, and instructor feedback—so you move from
             theory to shipped work without losing the thread.
           </p>
@@ -292,8 +292,8 @@ export function LandingHero() {
               I already have an account
             </ButtonLink>
           </Stack>
-          <Callout variant="info" className="mx-auto max-w-xl text-left shadow-sm">
-            <strong className="font-semibold text-sky-950">Starter is free.</strong>{' '}
+          <Callout variant="info" className="mx-auto max-w-xl text-left shadow-sm dark:bg-sky-900/40 dark:border-sky-800/60 dark:text-sky-100">
+            <strong className="font-semibold text-sky-950 dark:text-sky-300">Starter is free.</strong>{' '}
             No credit card required—upgrade when you want full courses and feedback.
           </Callout>
         </Stack>
@@ -319,12 +319,12 @@ export function TechStackSection() {
           >
             <CardHeader className="border-0 pb-0">
               <Stack direction="row" gap="sm" align="center">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-[var(--color-brand)]">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-900/50 text-[var(--color-brand)] dark:text-brand-400">
                   <Layers className="size-5" strokeWidth={1.75} />
                 </span>
                 <div className="min-w-0">
-                  <CardTitle className="text-base">{t.name}</CardTitle>
-                  <CardDescription>{t.detail}</CardDescription>
+                  <CardTitle className="text-base dark:text-slate-100">{t.name}</CardTitle>
+                  <CardDescription className="dark:text-slate-400">{t.detail}</CardDescription>
                 </div>
               </Stack>
             </CardHeader>
@@ -348,17 +348,17 @@ export function FeaturedCoursesSection() {
           <Card
             key={c.title}
             padding="none"
-            className="flex flex-col overflow-hidden border-slate-200/80 bg-white shadow-sm transition-shadow hover:shadow-md"
+            className="flex flex-col overflow-hidden border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-shadow hover:shadow-md"
           >
-            <div className="border-b border-slate-100 bg-gradient-to-r from-indigo-50/90 to-violet-50/60 px-6 py-5">
-              <Badge variant="outline" className="mb-3 bg-white/80">
+            <div className="border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-indigo-50/90 to-violet-50/60 dark:from-indigo-900/20 dark:to-violet-900/10 px-6 py-5">
+              <Badge variant="outline" className="mb-3 bg-white/80 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-300">
                 {c.path}
               </Badge>
-              <CardTitle className="text-xl">{c.title}</CardTitle>
-              <p className="mt-2 text-sm text-slate-600">{c.blurb}</p>
+              <CardTitle className="text-xl dark:text-slate-100">{c.title}</CardTitle>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{c.blurb}</p>
             </div>
             <CardContent className="flex flex-1 flex-col px-6 pt-5">
-              <ul className="flex list-none flex-col gap-2 text-sm text-slate-600">
+              <ul className="flex list-none flex-col gap-2 text-sm text-slate-600 dark:text-slate-300">
                 <li className="flex gap-2">
                   <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
                   {c.level}
@@ -369,7 +369,7 @@ export function FeaturedCoursesSection() {
                 </li>
               </ul>
             </CardContent>
-            <CardFooter className="mt-auto border-t border-slate-100 px-6 pb-6">
+            <CardFooter className="mt-auto border-t border-slate-100 dark:border-slate-800 px-6 pb-6">
               <ButtonLink
                 to="/register"
                 variant="outline"
@@ -403,11 +403,11 @@ export function WhyChooseUsSection() {
               padding="md"
               className="border-slate-200/80 shadow-sm transition-shadow hover:shadow-md"
             >
-              <div className="flex size-11 items-center justify-center rounded-xl bg-slate-900 text-white">
+              <div className="flex size-11 items-center justify-center rounded-xl bg-slate-900 dark:bg-slate-800 text-white dark:text-brand-400">
                 <Icon className="size-5" strokeWidth={1.75} />
               </div>
-              <CardTitle className="mt-4 text-lg">{b.title}</CardTitle>
-              <CardDescription className="mt-2 leading-relaxed">
+              <CardTitle className="mt-4 text-lg dark:text-slate-100">{b.title}</CardTitle>
+              <CardDescription className="mt-2 leading-relaxed dark:text-slate-400">
                 {b.description}
               </CardDescription>
             </Card>
@@ -428,12 +428,12 @@ export function HowItWorksSection() {
       />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {STEPS.map((s) => (
-          <Card key={s.step} padding="md" className="border-slate-200/80 shadow-sm">
-            <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand)]">
+          <Card key={s.step} padding="md" className="border-slate-200/80 dark:border-slate-800 shadow-sm dark:bg-slate-900">
+            <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand)] dark:text-brand-400">
               {s.step}
             </span>
-            <CardTitle className="mt-3 text-lg">{s.title}</CardTitle>
-            <CardDescription className="mt-2 leading-relaxed">{s.text}</CardDescription>
+            <CardTitle className="mt-3 text-lg dark:text-slate-100">{s.title}</CardTitle>
+            <CardDescription className="mt-2 leading-relaxed dark:text-slate-400">{s.text}</CardDescription>
           </Card>
         ))}
       </div>
@@ -459,15 +459,15 @@ export function ProjectShowcaseSection() {
             <CardHeader className="border-0 pb-2">
               <Stack direction="row" gap="sm" wrap className="flex-wrap">
                 {p.tags.map((t) => (
-                  <Badge key={t} variant="outline">
+                  <Badge key={t} variant="outline" className="dark:border-slate-700 dark:text-slate-300">
                     {t}
                   </Badge>
                 ))}
               </Stack>
-              <CardTitle className="pt-2 text-lg">{p.title}</CardTitle>
+              <CardTitle className="pt-2 text-lg dark:text-slate-100">{p.title}</CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-              <p className="text-sm text-slate-600">{p.summary}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300">{p.summary}</p>
             </CardContent>
           </Card>
         ))}
@@ -489,16 +489,16 @@ export function TestimonialsSection() {
           <Card
             key={t.name}
             padding="md"
-            className="border-slate-200/80 bg-gradient-to-b from-white to-slate-50/50"
+            className="border-slate-200/80 dark:border-slate-800 bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-800/50"
           >
             <CardContent className="pt-2">
-              <p className="text-slate-700">&ldquo;{t.quote}&rdquo;</p>
-              <Separator className="my-6" />
+              <p className="text-slate-700 dark:text-slate-300">&ldquo;{t.quote}&rdquo;</p>
+              <Separator className="my-6 dark:bg-slate-700" />
               <Stack direction="row" gap="md" align="center">
                 <Avatar fallback={t.name} size="md" />
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-slate-900">{t.name}</p>
-                  <p className="text-xs text-slate-500">{t.role}</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.name}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{t.role}</p>
                 </div>
               </Stack>
             </CardContent>
@@ -587,9 +587,9 @@ export function PricingSection() {
             key={plan.name}
             padding="md"
             className={cn(
-              'flex flex-col border-slate-200/80',
+              'flex flex-col border-slate-200/80 dark:border-slate-800 dark:bg-slate-900',
               plan.highlighted &&
-                'relative border-indigo-300 shadow-lg ring-2 ring-[var(--color-brand)]/25',
+                'relative border-indigo-300 dark:border-indigo-700 shadow-lg ring-2 ring-[var(--color-brand)]/25 dark:ring-[var(--color-brand)]/50',
             )}
           >
             {plan.highlighted ? (
@@ -598,19 +598,19 @@ export function PricingSection() {
               </Badge>
             ) : null}
             <CardHeader className="border-0 pb-2">
-              <CardTitle className="text-xl">{plan.name}</CardTitle>
-              <CardDescription>{plan.description}</CardDescription>
+              <CardTitle className="text-xl dark:text-slate-100">{plan.name}</CardTitle>
+              <CardDescription className="dark:text-slate-400">{plan.description}</CardDescription>
               <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-semibold tracking-tight text-slate-900">
+                <span className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                   {plan.price}
                 </span>
                 {plan.period ? (
-                  <span className="text-sm text-slate-500">/{plan.period}</span>
+                  <span className="text-sm text-slate-500 dark:text-slate-400">/{plan.period}</span>
                 ) : null}
               </div>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col gap-3">
-              <ul className="space-y-2.5 text-sm text-slate-600">
+              <ul className="space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
                 {plan.features.map((f) => (
                   <li key={f} className="flex gap-2">
                     <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
@@ -644,20 +644,20 @@ export function FaqSection() {
         title="Answers before you enroll"
         description="Still unsure? These cover the most common questions."
       />
-      <Card padding="none" className="mx-auto max-w-3xl divide-y divide-slate-200 border-slate-200/80 shadow-sm">
+      <Card padding="none" className="mx-auto max-w-3xl divide-y divide-slate-200 dark:divide-slate-800 border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
         {FAQS.map((item) => (
           <details
             key={item.q}
             className="group px-4 py-1 [&_summary::-webkit-details-marker]:hidden"
           >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-slate-900">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">
               {item.q}
               <ChevronDown
                 className="size-4 shrink-0 text-slate-400 transition group-open:rotate-180"
                 aria-hidden
               />
             </summary>
-            <p className="pb-4 text-sm leading-relaxed text-slate-600">{item.a}</p>
+            <p className="pb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{item.a}</p>
           </details>
         ))}
       </Card>

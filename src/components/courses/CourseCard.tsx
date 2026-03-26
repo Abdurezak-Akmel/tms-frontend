@@ -35,10 +35,10 @@ export function CourseCard({ course, className, href }: CourseCardProps) {
       <Card
         padding="none"
         className={cn(
-          'relative h-full overflow-hidden border-slate-200/90 shadow-sm transition-shadow',
+          'relative h-full overflow-hidden border-slate-200/90 dark:border-slate-800 shadow-sm transition-shadow dark:bg-slate-900',
           isLocked
-            ? 'group-hover:border-red-200 group-hover:shadow-md'
-            : 'group-hover:border-slate-300/90 group-hover:shadow-md',
+            ? 'group-hover:border-red-200 dark:group-hover:border-red-900 group-hover:shadow-md'
+            : 'group-hover:border-slate-300/90 dark:group-hover:border-slate-700 group-hover:shadow-md',
         )}
       >
         {/* Lock overlay badge */}
@@ -51,10 +51,10 @@ export function CourseCard({ course, className, href }: CourseCardProps) {
 
         <CardHeader
           className={cn(
-            'border-b border-slate-100 px-5 pb-4 pt-5',
+            'border-b border-slate-100 dark:border-slate-800 px-5 pb-4 pt-5 transition-colors',
             isLocked
-              ? 'bg-gradient-to-br from-red-50/60 to-white'
-              : 'bg-gradient-to-br from-slate-50/90 to-white',
+              ? 'bg-gradient-to-br from-red-50/60 to-white dark:from-red-950/40 dark:to-slate-900'
+              : 'bg-gradient-to-br from-slate-50/90 to-white dark:from-slate-800/50 dark:to-slate-900',
           )}
         >
           <div className="flex flex-wrap items-start justify-between gap-2">
@@ -65,30 +65,30 @@ export function CourseCard({ course, className, href }: CourseCardProps) {
           </div>
           <CardTitle
             className={cn(
-              'mt-3 text-lg leading-snug',
+              'mt-3 text-lg leading-snug dark:text-slate-100',
               isLocked
-                ? 'text-slate-500 group-hover:text-red-600'
-                : 'group-hover:text-[var(--color-brand)]',
+                ? 'text-slate-500 dark:text-slate-400 group-hover:text-red-600 dark:group-hover:text-red-500'
+                : 'group-hover:text-[var(--color-brand)] dark:group-hover:text-brand-400',
             )}
           >
             {course.title}
           </CardTitle>
-          <CardDescription className="line-clamp-2 text-sm">{course.shortDescription}</CardDescription>
+          <CardDescription className="line-clamp-2 text-sm dark:text-slate-400">{course.shortDescription}</CardDescription>
         </CardHeader>
 
-        <CardContent className="px-5 py-4">
-          <dl className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600">
+        <CardContent className="px-5 py-4 dark:bg-slate-900/50">
+          <dl className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-1.5">
-              <Clock className="size-4 shrink-0 text-slate-400" aria-hidden />
+              <Clock className="size-4 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden />
               <dt className="sr-only">Duration</dt>
-              <dd>{course.duration}</dd>
+              <dd className="dark:text-slate-300">{course.duration}</dd>
             </div>
             <div className="flex items-center gap-1.5">
-              <Layers className="size-4 shrink-0 text-slate-400" aria-hidden />
+              <Layers className="size-4 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden />
               <dt className="sr-only">Modules</dt>
-              <dd>{course.moduleCount} modules</dd>
+              <dd className="dark:text-slate-300">{course.moduleCount} modules</dd>
             </div>
-            <div className="flex w-full items-center justify-between border-t border-slate-100 pt-3 sm:w-auto sm:border-0 sm:pt-0">
+            <div className="flex w-full items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3 sm:w-auto sm:border-0 sm:pt-0">
               {isLocked ? (
                 <span className="inline-flex items-center gap-1 text-sm font-medium text-red-500">
                   <Lock className="size-4" aria-hidden />
