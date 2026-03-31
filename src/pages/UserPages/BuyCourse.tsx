@@ -178,7 +178,7 @@ const BuyCourse = () => {
                                 <Badge variant="success">Safe & Secure</Badge>
                             </div>
                             <CardDescription>
-                                Review your selection and choose your enrollment method.
+                                Put your payment receipt below and let the admin review it. Once approved you get full access to the course.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6 space-y-8">
@@ -186,9 +186,9 @@ const BuyCourse = () => {
                             <div className="grid gap-4 sm:grid-cols-2">
                                 {[
                                     { icon: <Zap className="size-4" />, text: "Instant full access" },
-                                    { icon: <ShieldCheck className="size-4" />, text: "Verified certificate" },
+                                    { icon: <ShieldCheck className="size-4" />, text: "Tutorial videos" },
                                     { icon: <CheckCircle2 className="size-4" />, text: "Downloadable files" },
-                                    { icon: <Lock className="size-4" />, text: "Lifetime updates" }
+                                    { icon: <Lock className="size-4" />, text: "Lifetime skills" }
                                 ].map((item, i) => (
                                     <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
                                         <div className="p-1.5 rounded-lg bg-white text-[var(--color-brand)] shadow-sm">
@@ -204,11 +204,11 @@ const BuyCourse = () => {
                                 <div className="space-y-2">
                                     <Label htmlFor="payment_amount">Payment Amount</Label>
                                     <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium"></span>
                                         <Input
                                             id="payment_amount"
                                             type="number"
-                                            placeholder="Enter amount paid"
+                                            placeholder="Enter amount paid (ETB)"
                                             value={paymentAmount}
                                             onChange={(e) => setPaymentAmount(e.target.value)}
                                             className="pl-7"
@@ -250,7 +250,7 @@ const BuyCourse = () => {
                                             </div>
                                             <div className="space-y-1">
                                                 <p className="text-sm font-semibold text-slate-700">
-                                                    {file ? file.name : (isDragging ? "Drop to upload" : "Click or drag to upload receipt")}
+                                                    {file ? `${file.name} (${receiptService.formatFileSize(file.size)})` : (isDragging ? "Drop to upload" : "Click or drag to upload receipt")}
                                                 </p>
                                                 <p className="text-xs text-slate-500">Only PDF files are supported (max 1MB)</p>
                                             </div>
@@ -291,12 +291,8 @@ const BuyCourse = () => {
 
                     <div className="flex items-center justify-center gap-6 text-slate-400">
                         <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider">
-                            <ShieldCheck className="size-4" />
-                            SSL Encrypted
-                        </div>
-                        <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider">
                             <CheckCircle2 className="size-4" />
-                            24/7 Support
+                            24/7 Availability
                         </div>
                     </div>
                 </div>
@@ -308,20 +304,17 @@ const BuyCourse = () => {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <p className="text-sm text-slate-600">
-                                Facing issues with enrollment or have questions about the curriculum? Our team is here to guide you.
+                                Facing issues with enrollment or have questions about the curriculum? Our support is here to guide you.
                             </p>
-                            <Button variant="outline" className="w-full bg-white">
+                            <Button
+                                variant="outline"
+                                className="w-full bg-white"
+                                onClick={() => window.location.href = "mailto:support@tms.com?subject=Enrollment%20Support%20Request"}
+                            >
                                 Contact Instructor
                             </Button>
                         </CardContent>
                     </Card>
-
-                    <div className="p-6 rounded-2xl border border-[var(--color-brand)]/10 bg-[var(--color-brand)]/5 space-y-3">
-                        <p className="text-sm font-bold text-[var(--color-brand)]">Scholarship Available</p>
-                        <p className="text-xs text-slate-600 leading-relaxed">
-                            We offer limited spots for learners who cannot afford the course. Reach out to verify your eligibility for a 100% discount.
-                        </p>
-                    </div>
                 </div>
             </div>
 

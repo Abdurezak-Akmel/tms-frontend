@@ -12,7 +12,6 @@ const NAV = [
   { label: 'Why us', href: '#why' },
   { label: 'How it works', href: '#how' },
   { label: 'Projects', href: '#projects' },
-  { label: 'Pricing', href: '#pricing' },
   { label: 'FAQ', href: '#faq' },
 ] as const;
 
@@ -31,7 +30,7 @@ export function LandingHeader() {
             className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-brand)] to-violet-600 text-sm font-bold text-white shadow-sm"
             aria-hidden
           >
-            T
+            HT
           </span>
           <span className="hidden sm:inline">HabeshaTech</span>
         </Link>
@@ -49,7 +48,7 @@ export function LandingHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 sm:flex">
-          <button 
+          <button
             onClick={toggleTheme}
             className="flex size-9 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
             aria-label="Toggle themes"
@@ -65,7 +64,7 @@ export function LandingHeader() {
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <button 
+          <button
             onClick={toggleTheme}
             className="flex size-9 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
             aria-label="Toggle themes"

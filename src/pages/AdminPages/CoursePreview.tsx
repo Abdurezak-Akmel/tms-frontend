@@ -67,7 +67,7 @@ const CoursePreview = () => {
 
   const handleDelete = async () => {
     if (!id || !course) return;
-    
+
     if (window.confirm(`Are you sure you want to delete "${course.title}"? This will delete all its videos and files permanently.`)) {
       try {
         setIsDeleting(true);
@@ -142,33 +142,36 @@ const CoursePreview = () => {
               <Badge variant={levelBadge[course.level?.toLowerCase() || 'beginner']}>
                 {course.level}
               </Badge>
+              <Badge variant="success" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                {course.price || 'Free'}
+              </Badge>
               <div className="flex gap-2">
-                <Button 
-                  variant="danger" 
-                  size="sm" 
+                <div className="w-px h-8 bg-slate-200 mx-1"></div>
+                <ButtonLink
+                  to={`/admin/add-video?course_id=${course.course_id}`}
+                  variant="primary"
+                  size="sm"
+                  leftIcon={<Plus className="size-4" />}
+                >
+                  Add Video
+                </ButtonLink>
+                <ButtonLink
+                  to={`/admin/add-file?course_id=${course.course_id}`}
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<Plus className="size-4" />}
+                >
+                  Add File
+                </ButtonLink>
+                <Button
+                  variant="danger"
+                  size="sm"
                   onClick={handleDelete}
                   isLoading={isDeleting}
                   leftIcon={<Trash2 className="size-4" />}
                 >
                   Delete Course
                 </Button>
-                <div className="w-px h-8 bg-slate-200 mx-1"></div>
-                <ButtonLink 
-                  to={`/admin/add-video?course_id=${course.course_id}`} 
-                  variant="primary" 
-                  size="sm"
-                  leftIcon={<Plus className="size-4" />}
-                >
-                  Add Video
-                </ButtonLink>
-                <ButtonLink 
-                  to={`/admin/add-file?course_id=${course.course_id}`} 
-                  variant="outline" 
-                  size="sm"
-                  leftIcon={<Plus className="size-4" />}
-                >
-                  Add File
-                </ButtonLink>
               </div>
             </div>
           }

@@ -22,7 +22,7 @@ const AdminFooter = () => {
 
         <nav className="flex flex-wrap items-center gap-x-6 gap-y-3">
           <a
-            href="mailto:support@tms.com"
+            href="abduakmel16@gmail.com"
             className="flex items-center gap-2 text-xs font-semibold text-slate-600 transition-colors hover:text-slate-900"
           >
             <Mail className="size-3.5" />
@@ -45,9 +45,9 @@ const AdminFooter = () => {
         </nav>
 
         <div className="flex items-center gap-4 text-[11px] font-medium text-slate-400">
-          <p>© {currentYear} TMS. All rights reserved.</p>
+          <p>© {currentYear} HabaeshaTech TMS. All rights reserved.</p>
           <div className="size-1 rounded-full bg-slate-200"></div>
-          <p>Version 2.4.0 (Stable)</p>
+          <p>Version 1.0.0 (Stable)</p>
         </div>
       </div>
     </footer>

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search,
-  UserPlus,
   Trash2,
   Filter,
   UserCog,
@@ -128,9 +127,6 @@ const Users = () => {
               leftIcon={<RefreshCw size={14} className={loading ? "animate-spin" : ""} />}
             >
               Refresh
-            </Button>
-            <Button variant="primary" leftIcon={<UserPlus size={16} />}>
-              Add User
             </Button>
           </div>
         }

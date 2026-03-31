@@ -59,7 +59,7 @@ export const userService = {
     }
   },
 
-  // Admin: get user by id
+  // User: get user by id
   async getUserById(id: number): Promise<UserResponse> {
     try {
       const token = localStorage.getItem('accessToken');
@@ -126,7 +126,7 @@ export const userService = {
     // Validate allowed fields
     const allowedFields = ['name', 'email', 'role_id', 'status', 'email_verified', 'registration_device'];
     const invalidFields = Object.keys(updateData).filter(field => !allowedFields.includes(field));
-    
+
     if (invalidFields.length > 0) {
       errors.push(`Invalid fields: ${invalidFields.join(', ')}. Allowed fields: ${allowedFields.join(', ')}`);
     }
@@ -246,7 +246,7 @@ export const userService = {
     }
 
     const term = searchTerm.toLowerCase().trim();
-    return users.filter(user => 
+    return users.filter(user =>
       user.name.toLowerCase().includes(term) ||
       user.email.toLowerCase().includes(term)
     );
@@ -301,7 +301,7 @@ export const userService = {
       //   headers: { Authorization: `Bearer ${token}` }
       // });
       // return response.data;
-      
+
       // Placeholder implementation
       return {
         success: true,

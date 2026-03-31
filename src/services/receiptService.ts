@@ -15,6 +15,7 @@ export interface Receipt {
   receipt_id: number;
   user_id: number;
   file_path: string;
+  file_size?: number; // Added file_size
   upload_date: string;
   status: 'pending' | 'approved' | 'rejected';
 }
@@ -34,7 +35,16 @@ export interface UploadReceiptResponse {
     file_path: string;
     upload_date: string;
     status: string;
+    file_size?: number; // Added file_size
   };
+  error?: string;
+}
+
+export interface AllReceiptsResponse {
+  success: boolean;
+  receipts: Receipt[];
+  count: number;
+  message?: string;
   error?: string;
 }
 
@@ -44,7 +54,7 @@ export const receiptService = {
   async uploadReceipt(file: File): Promise<UploadReceiptResponse> {
     try {
       const token = localStorage.getItem('accessToken');
-      
+
       // Create FormData for file upload
       const formData = new FormData();
       formData.append('receipt', file);
@@ -76,6 +86,36 @@ export const receiptService = {
     }
   },
 
+  // User/Admin: get receipt by ID
+  async getReceiptById(id: number): Promise<ReceiptResponse> {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await api.get(`/receipts/get-receipt/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { message: 'Failed to get receipt details' };
+    }
+  },
+
+  // Admin: get all receipts
+  async getAllReceipts(): Promise<AllReceiptsResponse> {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await api.get('/receipts/get-all-receipts', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { message: 'Failed to get all receipts' };
+    }
+  },
+
   // Helper function to get receipt download URL
   getReceiptUrl(receipt: Receipt): string {
     return `${API_BASE_URL.replace('/api', '')}/uploads/receipts/${receipt.file_path}`;
@@ -85,12 +125,12 @@ export const receiptService = {
   validateReceiptFileType(file: File): boolean {
     const allowedTypes = ['application/pdf'];
     const allowedExtensions = ['.pdf'];
-    
+
     const hasValidType = allowedTypes.includes(file.type);
-    const hasValidExtension = allowedExtensions.some(ext => 
+    const hasValidExtension = allowedExtensions.some(ext =>
       file.name.toLowerCase().endsWith(ext)
     );
-    
+
     return hasValidType && hasValidExtension;
   },
 

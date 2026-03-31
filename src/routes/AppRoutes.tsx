@@ -31,7 +31,6 @@ import BuyCourse from '../pages/UserPages/BuyCourse';
 import AdminDashboard from '../pages/AdminPages/AdminDashboard';
 import Analytics from '../pages/AdminPages/Analytics';
 import Reports from '../pages/AdminPages/Reports';
-import Settings from '../pages/AdminPages/Settings';
 import Users from '../pages/AdminPages/Users';
 import Roles from '../pages/AdminPages/Roles';
 import AccessRequests from '../pages/AdminPages/AccessRequests';
@@ -47,10 +46,13 @@ import AdminFilePreview from '../pages/AdminPages/FilePreview';
 import UserUpdate from '../pages/AdminPages/UserUpdate';
 import CreateRole from '../pages/AdminPages/CreateRole';
 import UpdateRole from '../pages/AdminPages/UpdateRole';
+import LandingVideo from '../pages/AdminPages/LandingVideo';
+import LandingProject from '../pages/AdminPages/LandingProject';
+import FAQPage from '../pages/AdminPages/FAQPage';
 
 
 // Common Pages
-import Profile from '../pages/CommonPages/Profile';
+import Profile from '../pages/UserPages/Profile';
 import ReceiptPreview from '../pages/CommonPages/ReceiptPreview';
 import NewPassword from '../pages/CommonPages/NewPassword';
 
@@ -94,7 +96,6 @@ const AppRoutes: React.FC = () => {
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/admin/analytics" element={<Analytics />} />
             <Route path="/admin/reports" element={<Reports />} />
-            <Route path="/admin/settings" element={<Settings />} />
             <Route path="/admin/users" element={<Users />} />
             <Route path="/admin/roles" element={<Roles />} />
             <Route path="/admin/access-requests" element={<AccessRequests />} />
@@ -111,6 +112,9 @@ const AppRoutes: React.FC = () => {
             <Route path="/admin/user-update/:id" element={<UserUpdate />} />
             <Route path="/admin/create-role" element={<CreateRole />} />
             <Route path="/admin/update-role/:id" element={<UpdateRole />} />
+            <Route path="/admin/landing-video" element={<LandingVideo />} />
+            <Route path="/admin/landing-project" element={<LandingProject />} />
+            <Route path="/admin/faq" element={<FAQPage />} />
           </Route>
         </Route>
 

@@ -7,7 +7,9 @@ import {
 import type { CourseSummary, CourseLevel } from '../../components/courses/types';
 import { Callout } from '../../components/feedback';
 import { PageHeader, Stack } from '../../components/layout';
+import { courseService } from '../../services/courseService';
 import { roleCourseService } from '../../services/roleCourseService';
+import { accessRequestService } from '../../services/accessRequestService';
 import { useAuth } from '../../hooks/useAuth';
 
 const MyCourses = () => {
@@ -24,24 +26,44 @@ const MyCourses = () => {
       return;
     }
 
-    // Manual code
-    if (user?.role_id === 1) {
-      console.log(user);
-    }
-
     setIsLoading(true);
     setError(null);
     try {
-      // Fetch only courses assigned to the user's role
-      const response = await roleCourseService.getCoursesByRoleId(user.role_id);
+      // 1. Fetch all courses
+      // 2. Fetch courses assigned to the user's role
+      // 3. Fetch user's approved access requests
+      const [allCoursesRes, roleCoursesRes, accessRequestsRes] = await Promise.all([
+        courseService.getAllCourses(),
+        roleCourseService.getCoursesByRoleId(user.role_id),
+        accessRequestService.getUserAccessRequests()
+      ]);
 
-      if (!response.success || !response.courses) {
-        setError(response.message || 'Failed to fetch your courses.');
+      if (!allCoursesRes.success || !allCoursesRes.courses) {
+        setError(allCoursesRes.message || 'Failed to fetch courses.');
         return;
       }
 
-      // Map matching courses to the UI summary format
-      const mappedCourses: CourseSummary[] = response.courses.map((c: any) => ({
+      // Identify which IDs are assigned or approved
+      const assignedIds = new Set<number>();
+      
+      // Add role-assigned courses
+      if (roleCoursesRes.success && roleCoursesRes.courses) {
+        roleCoursesRes.courses.forEach((c: any) => assignedIds.add(c.course_id));
+      }
+      
+      // Add approved access requests
+      if (accessRequestsRes.success && accessRequestsRes.data) {
+        const requests = Array.isArray(accessRequestsRes.data) ? accessRequestsRes.data : [accessRequestsRes.data];
+        requests.forEach((req: any) => {
+          if (req.status === 'approved') {
+            assignedIds.add(req.course_id);
+          }
+        });
+      }
+
+      // Filter and map matching courses
+      const myCourses = allCoursesRes.courses.filter(c => assignedIds.has(c.course_id));
+      const mappedCourses: CourseSummary[] = myCourses.map((c) => ({
         id: c.course_id.toString(),
         title: c.title,
         shortDescription: c.description || 'No description provided.',
@@ -51,7 +73,8 @@ const MyCourses = () => {
           : 'Beginner') as CourseLevel,
         duration: '8 weeks', // Placeholder
         moduleCount: 10,     // Placeholder
-        locked: false,       // Since they are assigned, they are not locked
+        price: (c.price && Number(c.price) > 0) ? `${c.price} ETB` : 'Free',
+        locked: false,
       }));
 
       setCourses(mappedCourses);

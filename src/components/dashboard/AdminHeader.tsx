@@ -1,11 +1,33 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Bell, ShieldCheck } from 'lucide-react';
 import { Button } from '../ui/Button';
 import authService from '../../services/authService';
+import { accessRequestService } from '../../services/accessRequestService';
 import Breadcrumbs from './Breadcrumbs';
 
 const AdminHeader = () => {
   const navigate = useNavigate();
+  const [hasNotifications, setHasNotifications] = useState(false);
+
+  useEffect(() => {
+    const checkPendingRequests = async () => {
+      try {
+        const response = await accessRequestService.getPendingRequests();
+        if (response.success && Array.isArray(response.data)) {
+          setHasNotifications(response.data.length > 0);
+        }
+      } catch (error) {
+        console.error('Failed to check pending requests:', error);
+      }
+    };
+
+    checkPendingRequests();
+    
+    // Optional: Set up an interval to check periodically
+    const interval = setInterval(checkPendingRequests, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -33,9 +55,14 @@ const AdminHeader = () => {
       </div>
 
       <div className="flex items-center gap-3">
-        <button className="relative flex size-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900">
+        <button 
+          className="relative flex size-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
+          onClick={() => navigate('/admin/access-requests')}
+        >
           <Bell className="size-5" />
-          <span className="absolute right-2 top-2 size-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+          {hasNotifications && (
+            <span className="absolute right-2 top-2 size-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+          )}
         </button>
         
         <div className="h-6 w-px bg-slate-200 mx-1"></div>

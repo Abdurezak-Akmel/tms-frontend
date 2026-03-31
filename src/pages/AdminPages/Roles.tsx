@@ -6,7 +6,6 @@ import {
   RefreshCw,
   Search,
   BookOpen,
-  Trash2,
   ShieldAlert,
   Edit3,
   Calendar
@@ -196,7 +195,7 @@ const Roles = () => {
                 <div className="flex-1 p-6 flex flex-col bg-slate-50/20">
                   <div className="space-y-3 flex-1 mb-4">
                     <h5 className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-400 flex items-center gap-2">
-                       Permissions ({role.assignedCourses.length})
+                      Permissions ({role.assignedCourses.length})
                     </h5>
 
                     <div className="bg-white/40 rounded-2xl p-3.5 border border-slate-200/40 min-h-[90px] flex flex-col group/list shadow-sm">
@@ -234,14 +233,6 @@ const Roles = () => {
                       onClick={() => navigate(`/admin/update-role/${role.role_id}`)}
                     >
                       Manage Role
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="size-10 p-0 text-rose-500 border-rose-100 bg-white hover:bg-rose-50 transition-all rounded-xl shrink-0 shadow-sm"
-                      title="Delete"
-                    >
-                      <Trash2 size={16} />
                     </Button>
                   </div>
                 </div>

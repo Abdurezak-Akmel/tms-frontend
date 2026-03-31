@@ -101,8 +101,8 @@ const UserCoursePreview = () => {
           level: levelRaw as CourseLevel,
           duration: '—',
           moduleCount: videos.length,
-          price: 99,
-          currency: 'USD',
+          price: (c.price && Number(c.price) > 0) ? `${c.price} ETB` : 'Free', // Use real price and format it
+          currency: 'ETB',
           outcomes: [],
           videos,
           files,

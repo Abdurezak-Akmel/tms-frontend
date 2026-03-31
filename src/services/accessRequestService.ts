@@ -34,6 +34,7 @@ export interface AccessRequest {
   email?: string;
   course_title?: string;
   role_id?: number;
+  receipt_file_path?: string;
 }
 
 export interface AccessRequestResponse {

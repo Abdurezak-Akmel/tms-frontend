@@ -1,6 +1,5 @@
 import { Surface } from '../../components/layout/Surface';
 import {
-  CredibilitySection,
   FaqSection,
   FeaturedCoursesSection,
   FinalCtaSection,
@@ -8,10 +7,8 @@ import {
   LandingFooter,
   LandingHeader,
   LandingHero,
-  PricingSection,
   ProjectShowcaseSection,
   TechStackSection,
-  TestimonialsSection,
   WhyChooseUsSection,
 } from '../../components/landing';
 
@@ -26,9 +23,6 @@ const LandingPage = () => {
         <WhyChooseUsSection />
         <HowItWorksSection />
         <ProjectShowcaseSection />
-        <TestimonialsSection />
-        <CredibilitySection />
-        <PricingSection />
         <FaqSection />
         <FinalCtaSection />
       </main>

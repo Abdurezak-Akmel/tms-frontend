@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Bell, ShieldCheck, Moon, Sun, GraduationCap } from 'lucide-react';
+import { LogOut, ShieldCheck, Moon, Sun, GraduationCap } from 'lucide-react';
 import { Button } from '../ui/Button';
 import authService from '../../services/authService';
 import Breadcrumbs from '../dashboard/Breadcrumbs';
@@ -39,17 +39,12 @@ const AppHeader = ({ isAdmin = false }: AppHeaderProps) => {
       </div>
 
       <div className="flex items-center gap-3 ml-auto">
-        <button 
+        <button
           onClick={toggleTheme}
           className="relative flex size-10 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
           aria-label="Toggle themes"
         >
           {theme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
-        </button>
-
-        <button className="relative flex size-10 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100">
-          <Bell className="size-5" />
-          <span className="absolute right-2 top-2 size-2 rounded-full bg-brand-500 dark:bg-brand-400 ring-2 ring-white dark:ring-slate-900"></span>
         </button>
 
         <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>

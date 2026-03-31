@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Clock, Layers, Lock } from 'lucide-react';
+import { ArrowRight, BookOpen, Lock } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/Card';
 import { cn } from '../../utils/cn';
@@ -78,15 +78,9 @@ export function CourseCard({ course, className, href }: CourseCardProps) {
 
         <CardContent className="px-5 py-4 dark:bg-slate-900/50">
           <dl className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
-            <div className="flex items-center gap-1.5">
-              <Clock className="size-4 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden />
-              <dt className="sr-only">Duration</dt>
-              <dd className="dark:text-slate-300">{course.duration}</dd>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Layers className="size-4 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden />
-              <dt className="sr-only">Modules</dt>
-              <dd className="dark:text-slate-300">{course.moduleCount} modules</dd>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-bold">
+              <dt className="sr-only">Price</dt>
+              <dd>{course.price || 'Free'}</dd>
             </div>
             <div className="flex w-full items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3 sm:w-auto sm:border-0 sm:pt-0">
               {isLocked ? (

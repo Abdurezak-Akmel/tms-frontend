@@ -42,6 +42,7 @@ export type SectionIntroProps = {
   title: string;
   description?: string;
   align?: 'center' | 'left';
+  className?: string;
   /** Use on dark section backgrounds (e.g. tone="dark") */
   inverse?: boolean;
 };
@@ -52,12 +53,14 @@ export function SectionIntro({
   description,
   align = 'center',
   inverse = false,
+  className,
 }: SectionIntroProps) {
   return (
     <div
       className={cn(
         'mb-12 max-w-2xl space-y-3 md:mb-16',
         align === 'center' && 'mx-auto text-center',
+        className
       )}
     >
       <p

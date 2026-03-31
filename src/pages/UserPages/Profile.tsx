@@ -1,9 +1,12 @@
-import { type FormEvent, useMemo, useState } from 'react';
+import { type FormEvent, useMemo, useState, useEffect } from 'react';
 import { CalendarDays, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
 import { Avatar, Badge, Button, Card, CardContent, CardHeader, CardTitle } from '../../components/ui';
 import { FormFieldInput, FormFieldTextarea } from '../../components/forms';
 import { Callout } from '../../components/feedback';
 import { PageHeader, Stack } from '../../components/layout';
+import { useAuth } from '../../hooks/useAuth';
+import { userService } from '../../services/userService';
+
 
 type ProfileValues = {
   fullName: string;
@@ -16,18 +19,12 @@ type ProfileValues = {
 type ProfileErrors = Partial<Record<keyof ProfileValues, string>>;
 
 const initialValues: ProfileValues = {
-  fullName: 'Ava Morgan',
-  email: 'ava.morgan@example.com',
-  phone: '+1 (555) 209-8841',
-  location: 'New York, USA',
-  bio: 'Frontend-focused learner building production-ready web apps with strong accessibility and clean UI architecture.',
+  fullName: '',
+  email: '',
+  phone: '',
+  location: '',
+  bio: '',
 };
-
-const quickStats = [
-  { label: 'Courses enrolled', value: '4' },
-  { label: 'Videos completed', value: '19' },
-  { label: 'Files reviewed', value: '11' },
-] as const;
 
 function validate(values: ProfileValues): ProfileErrors {
   const errors: ProfileErrors = {};
@@ -54,13 +51,45 @@ function validate(values: ProfileValues): ProfileErrors {
 }
 
 const Profile = () => {
+  const { user } = useAuth();
   const [values, setValues] = useState<ProfileValues>(initialValues);
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState('');
   const [weeklyDigest, setWeeklyDigest] = useState(true);
   const [courseUpdates, setCourseUpdates] = useState(true);
   const [securityAlerts, setSecurityAlerts] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user?.user_id) {
+        setIsLoading(false);
+        return;
+      }
+      try {
+        const response = await userService.getUserById(user.user_id);
+        if (response.success && response.user) {
+          const fetchedUser = response.user;
+          // Note: API doesn't seem to return phone, location, bio
+          // We map what we have and leave placeholders or empty strings for the rest
+          setValues({
+            fullName: fetchedUser.name || '',
+            email: fetchedUser.email || '',
+            phone: '', // Placeholder as it's not in the DB schema provided in this conversation
+            location: '', // Placeholder
+            bio: '', // Placeholder
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [user?.user_id]);
 
   const initials = useMemo(
     () =>
@@ -72,12 +101,6 @@ const Profile = () => {
         .join(''),
     [values.fullName],
   );
-
-  function setField<K extends keyof ProfileValues>(key: K, value: ProfileValues[K]) {
-    setValues((prev) => ({ ...prev, [key]: value }));
-    setErrors((prev) => ({ ...prev, [key]: undefined }));
-    setSuccessMessage('');
-  }
 
   function handleReset() {
     setValues(initialValues);
@@ -99,10 +122,20 @@ const Profile = () => {
     setIsSubmitting(true);
 
     // Simulate API latency for this frontend-only implementation.
+    // Replace with a real update user call when the endpoint is ready
     await new Promise((resolve) => setTimeout(resolve, 450));
 
     setSuccessMessage('Profile changes saved successfully.');
     setIsSubmitting(false);
+  }
+
+  if (isLoading) {
+    return (
+      <Stack gap="lg" className="pb-10 pt-10 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--color-brand)] border-t-transparent"></div>
+        <p className="text-sm text-slate-500">Loading profile data...</p>
+      </Stack>
+    );
   }
 
   return (
@@ -149,24 +182,15 @@ const Profile = () => {
               </li>
               <li className="flex items-center gap-2">
                 <CalendarDays className="size-4 text-slate-400" aria-hidden />
-                <span>Joined Jan 2025</span>
+                <span>Joined {new Date().getFullYear()}</span>
               </li>
             </ul>
-
-            <div className="grid grid-cols-3 gap-2">
-              {quickStats.map((item) => (
-                <div key={item.label} className="rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2 text-center">
-                  <p className="text-base font-semibold text-slate-900">{item.value}</p>
-                  <p className="text-[11px] leading-tight text-slate-500">{item.label}</p>
-                </div>
-              ))}
-            </div>
           </CardContent>
         </Card>
 
         <Card className="border-slate-200/90 shadow-sm lg:col-span-2" padding="lg">
           <CardHeader>
-            <CardTitle className="text-base">Edit profile details</CardTitle>
+            <CardTitle className="text-base">Profile details</CardTitle>
           </CardHeader>
           <CardContent>
             <form className="space-y-5" noValidate onSubmit={handleSubmit}>
@@ -175,7 +199,9 @@ const Profile = () => {
                   id="profile-full-name"
                   label="Full name"
                   value={values.fullName}
-                  onChange={(event) => setField('fullName', event.target.value)}
+                  onChange={() => { }}
+                  disabled
+                  readOnly
                   error={errors.fullName}
                   required
                 />
@@ -184,7 +210,9 @@ const Profile = () => {
                   label="Email"
                   type="email"
                   value={values.email}
-                  onChange={(event) => setField('email', event.target.value)}
+                  disabled
+                  readOnly
+                  onChange={() => { }} // Email cannot be altered
                   error={errors.email}
                   required
                 />
@@ -196,7 +224,9 @@ const Profile = () => {
                   label="Phone"
                   type="tel"
                   value={values.phone}
-                  onChange={(event) => setField('phone', event.target.value)}
+                  onChange={() => { }}
+                  disabled
+                  readOnly
                   error={errors.phone}
                   placeholder="+1 (555) 000-0000"
                 />
@@ -204,7 +234,9 @@ const Profile = () => {
                   id="profile-location"
                   label="Location"
                   value={values.location}
-                  onChange={(event) => setField('location', event.target.value)}
+                  onChange={() => { }}
+                  disabled
+                  readOnly
                   error={errors.location}
                   placeholder="City, Country"
                 />
@@ -214,7 +246,9 @@ const Profile = () => {
                 id="profile-bio"
                 label="Bio"
                 value={values.bio}
-                onChange={(event) => setField('bio', event.target.value)}
+                onChange={() => { }}
+                disabled
+                readOnly
                 error={errors.bio}
                 placeholder="Tell others what you are focused on learning."
                 rows={4}
@@ -228,7 +262,8 @@ const Profile = () => {
                     type="checkbox"
                     className="size-4 rounded border-slate-300 text-[var(--color-brand)] focus:ring-[var(--color-brand)]"
                     checked={weeklyDigest}
-                    onChange={(event) => setWeeklyDigest(event.target.checked)}
+                    disabled
+                    onChange={() => { }}
                   />
                   Weekly learning digest
                 </label>
@@ -237,7 +272,8 @@ const Profile = () => {
                     type="checkbox"
                     className="size-4 rounded border-slate-300 text-[var(--color-brand)] focus:ring-[var(--color-brand)]"
                     checked={courseUpdates}
-                    onChange={(event) => setCourseUpdates(event.target.checked)}
+                    disabled
+                    onChange={() => { }}
                   />
                   Course and material updates
                 </label>
@@ -246,17 +282,18 @@ const Profile = () => {
                     type="checkbox"
                     className="size-4 rounded border-slate-300 text-[var(--color-brand)] focus:ring-[var(--color-brand)]"
                     checked={securityAlerts}
-                    onChange={(event) => setSecurityAlerts(event.target.checked)}
+                    disabled
+                    onChange={() => { }}
                   />
                   Security alerts
                 </label>
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Button type="submit" isLoading={isSubmitting}>
+                <Button type="submit" isLoading={isSubmitting} disabled>
                   Save changes
                 </Button>
-                <Button type="button" variant="outline" onClick={handleReset}>
+                <Button type="button" variant="outline" onClick={handleReset} disabled>
                   Reset
                 </Button>
               </div>

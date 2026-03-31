@@ -16,6 +16,7 @@ export interface CreateCourseData {
   description?: string;
   category?: string;
   level?: string;
+  price: string;
 }
 
 export interface UpdateCourseData {
@@ -23,6 +24,7 @@ export interface UpdateCourseData {
   description?: string;
   category?: string;
   level?: string;
+  price?: string;
 }
 
 export interface Course {
@@ -31,6 +33,7 @@ export interface Course {
   description: string | null;
   category: string | null;
   level: string | null;
+  price: string;
   created_at: string;
   updated_at: string | null;
 }
@@ -158,6 +161,14 @@ export const courseService = {
         errors.push('Level must be a string');
       } else if (!validLevels.includes(courseData.level.toLowerCase())) {
         errors.push('Level must be one of: beginner, intermediate, advanced, expert');
+      }
+    }
+
+    if ('price' in courseData) {
+      if (!courseData.price || courseData.price.trim() === '') {
+        errors.push('Price is required');
+      } else if (typeof courseData.price !== 'string') {
+        errors.push('Price must be a string');
       }
     }
 

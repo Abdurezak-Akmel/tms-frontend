@@ -8,5 +8,6 @@ export type CourseSummary = {
   level: CourseLevel;
   duration: string;
   moduleCount: number;
+  price?: string;
   locked?: boolean;
 };

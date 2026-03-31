@@ -36,12 +36,12 @@ export function LandingFooter() {
                 className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-sm font-bold text-white"
                 aria-hidden
               >
-                T
+                HT
               </span>
-              Tutorial LMS
+              HabeshaTech
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-slate-400">
-              Structured courses, hands-on projects, and instructor-led support—built
+              Structured courses, hands-on projects, built
               for serious learners.
             </p>
           </div>

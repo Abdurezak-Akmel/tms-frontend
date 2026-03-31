@@ -8,7 +8,6 @@ import {
   FolderOpen,
   LayoutDashboard,
   MonitorPlay,
-  Settings as SettingsIcon,
   ShieldCheck,
   UserRound,
   Users as UsersIcon,
@@ -81,11 +80,6 @@ const adminNav: NavItem[] = [
     label: 'Profile',
     icon: <UserRound className="size-5 shrink-0 opacity-80" aria-hidden />,
   },
-  {
-    to: '/admin/settings',
-    label: 'Settings',
-    icon: <SettingsIcon className="size-5 shrink-0 opacity-80" aria-hidden />,
-  },
 ];
 
 
@@ -103,7 +97,7 @@ export function AdminShell() {
             <ShieldCheck className="size-6" aria-hidden />
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">TMS Admin</h1>
+            <h1 className="truncate text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">HabeshaTech Admin</h1>
             <p className="truncate text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">System Management</p>
           </div>
         </div>

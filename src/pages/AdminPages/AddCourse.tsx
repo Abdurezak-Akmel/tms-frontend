@@ -34,6 +34,7 @@ const AddCourse = () => {
     description: '',
     category: CATEGORIES[0],
     level: LEVELS[0].toLowerCase(),
+    price: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -147,6 +148,18 @@ const AddCourse = () => {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="price">Course Price</Label>
+                <Input
+                  id="price"
+                  name="price"
+                  placeholder="e.g. 49.99 or Free"
+                  value={formData.price}
+                  onChange={handleChange}
+                  required
+                />
               </div>
             </div>
 

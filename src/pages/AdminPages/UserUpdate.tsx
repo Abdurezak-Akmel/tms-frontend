@@ -330,8 +330,8 @@ const UserUpdate = () => {
                                                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                                                 className="w-full h-11 px-4 pr-10 rounded-xl border border-slate-200 bg-white text-slate-900 font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all appearance-none cursor-pointer capitalize"
                                             >
-                                                <option value="active">Active - Full Access</option>
-                                                <option value="suspended">Suspended - Under Review</option>
+                                                <option value="active">Active</option>
+                                                <option value="suspended">Suspended </option>
                                             </select>
                                             <Activity className="absolute right-4 top-1/2 -translate-y-1/2 size-4 text-slate-400 group-hover:text-primary transition-colors pointer-events-none" />
                                         </div>

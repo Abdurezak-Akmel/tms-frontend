@@ -74,8 +74,8 @@ export function UserShell() {
             <GraduationCap className="size-5" strokeWidth={1.75} aria-hidden />
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">Learning hub</p>
-            <p className="truncate text-xs text-slate-500 dark:text-slate-400">Tutorial portal</p>
+            <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">HabeshaTech</p>
+            <p className="truncate text-xs text-slate-500 dark:text-slate-400">Learning Hub</p>
           </div>
         </div>
 

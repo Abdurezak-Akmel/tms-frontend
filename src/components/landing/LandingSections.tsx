@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   ChevronDown,
   Code2,
-  GraduationCap,
   Layers,
   LineChart,
   MessageSquare,
@@ -12,10 +11,14 @@ import {
   Users,
   Video,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { courseService, type Course } from '../../services/courseService';
+import { landingVideoService, type LandingVideo } from '../../services/landingVideoService';
+import { projectService, type Project } from '../../services/projectService';
+import { faqService, type FAQ } from '../../services/faqService';
 import { Callout } from '../feedback/Callout';
 import { Stack } from '../layout/Stack';
 import { Container } from '../layout/Container';
-import { Avatar } from '../ui/Avatar';
 import { Badge } from '../ui/Badge';
 import { ButtonLink } from '../ui/ButtonLink';
 import {
@@ -26,8 +29,6 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/Card';
-import { Separator } from '../ui/Separator';
-import { cn } from '../../utils/cn';
 import { SectionIntro, SectionShell } from './SectionShell';
 
 const TECH = [
@@ -35,36 +36,12 @@ const TECH = [
   { name: 'TypeScript', detail: 'Typed, safer code' },
   { name: 'Node.js', detail: 'APIs & backends' },
   { name: 'REST & APIs', detail: 'Integration patterns' },
-  { name: 'Git & CI', detail: 'Ship with confidence' },
+  { name: 'Postman', detail: 'API Testing' },
+  { name: 'Git & Git Hub', detail: 'Ship with confidence' },
   { name: 'SQL & data', detail: 'Modeling & queries' },
+  { name: 'Vercel and Render', detail: 'Deployment and Production' },
 ] as const;
 
-const COURSES = [
-  {
-    title: 'Full-Stack Web Foundations',
-    level: 'Beginner → Intermediate',
-    duration: '8 weeks',
-    modules: '12 modules',
-    blurb: 'HTML to React, routing, forms, and auth—then connect to a real API.',
-    path: 'Web Development',
-  },
-  {
-    title: 'APIs & Backend Services',
-    level: 'Intermediate',
-    duration: '6 weeks',
-    modules: '9 modules',
-    blurb: 'Design REST endpoints, validation, errors, and deployment patterns.',
-    path: 'Backend',
-  },
-  {
-    title: 'Frontend Architecture',
-    level: 'Intermediate',
-    duration: '5 weeks',
-    modules: '8 modules',
-    blurb: 'State, performance, testing, and maintainable UI patterns.',
-    path: 'Frontend',
-  },
-] as const;
 
 const BENEFITS = [
   {
@@ -80,15 +57,15 @@ const BENEFITS = [
     icon: Code2,
   },
   {
-    title: 'Instructor feedback',
+    title: 'Architectural Thninking - not only tools and tech stacks',
     description:
-      'Ask questions and get guidance when you are stuck on real problems.',
+      'You learn how to assemble components not how to write javascript code',
     icon: MessageSquare,
   },
   {
     title: 'Progress you can see',
     description:
-      'Track lessons, submissions, and milestones in one dashboard.',
+      'Everything is clear why you do it. You will not be told to do it only.',
     icon: LineChart,
   },
   {
@@ -108,140 +85,23 @@ const BENEFITS = [
 const STEPS = [
   {
     step: '01',
-    title: 'Enroll & orient',
-    text: 'Create your account, pick a path, and review the syllabus.',
+    title: 'Enroll & Tech The Free Pre-Request Course',
+    text: 'Create your account, pick the course, and enjoy it  for free.',
   },
   {
     step: '02',
-    title: 'Learn & practice',
-    text: 'Short lessons, exercises, and checkpoints to lock in concepts.',
+    title: 'Upgrade to the paid courses',
+    text: 'Short lessons, project-based, and checkpoints to lock in concepts.',
   },
   {
     step: '03',
-    title: 'Ship projects',
+    title: 'Never Forget Practicing',
     text: 'Apply skills in scoped projects with clear criteria.',
   },
   {
     step: '04',
-    title: 'Review & iterate',
-    text: 'Get feedback, refine your work, and document outcomes.',
-  },
-] as const;
-
-const PROJECTS = [
-  {
-    title: 'Course catalog & enrollment',
-    tags: ['React', 'Routing', 'Forms'],
-    summary:
-      'Build a public catalog with filters and a guided enrollment flow.',
-  },
-  {
-    title: 'Auth & receipts API',
-    tags: ['Node', 'Validation', 'Security'],
-    summary:
-      'Implement sign-in, protected routes, and receipt uploads with validation.',
-  },
-  {
-    title: 'Admin dashboard',
-    tags: ['Analytics', 'Roles', 'UI'],
-    summary:
-      'Surface metrics, manage users, and approve access requests with role-aware UI.',
-  },
-] as const;
-
-const TESTIMONIALS = [
-  {
-    quote:
-      'The project-based pacing made the difference—I finally shipped features I could show in interviews.',
-    name: 'Aisha M.',
-    role: 'Career switcher',
-  },
-  {
-    quote:
-      'Clear modules and materials in one place. I spent time learning, not hunting for files.',
-    name: 'Jordan R.',
-    role: 'Self-taught developer',
-  },
-  {
-    quote:
-      'Feedback was actionable. I knew what to fix and why, not just “looks good.”',
-    name: 'Sam K.',
-    role: 'Bootcamp graduate',
-  },
-] as const;
-
-const STATS = [
-  { label: 'Learners supported', value: '12k+' },
-  { label: 'Project submissions', value: '48k+' },
-  { label: 'Avg. lesson completion', value: '87%' },
-] as const;
-
-const PLANS = [
-  {
-    name: 'Starter',
-    price: '$0',
-    period: 'forever',
-    description: 'Explore the platform and preview select lessons.',
-    features: ['Course previews', 'Community access', 'Email support'],
-    cta: 'Create free account',
-    href: '/register',
-    variant: 'outline' as const,
-    highlighted: false,
-  },
-  {
-    name: 'Pro',
-    price: '$29',
-    period: 'per month',
-    description: 'Full courses, projects, and progress tracking.',
-    features: [
-      'All courses & modules',
-      'Project reviews & feedback',
-      'Certificates of completion',
-      'Priority support',
-    ],
-    cta: 'Start learning',
-    href: '/register',
-    variant: 'primary' as const,
-    highlighted: true,
-  },
-  {
-    name: 'Team',
-    price: 'Custom',
-    period: '',
-    description: 'For schools and cohorts with admin workflows.',
-    features: [
-      'Role-based access',
-      'Bulk enrollment',
-      'Reports & analytics',
-      'Dedicated success manager',
-    ],
-    cta: 'Contact sales',
-    href: '/register',
-    variant: 'outline' as const,
-    highlighted: false,
-  },
-] as const;
-
-const FAQS = [
-  {
-    q: 'Do I need prior experience?',
-    a: 'Some paths assume no prior programming; others work best if you know basics. Each course lists prerequisites up front.',
-  },
-  {
-    q: 'Do I get lifetime access?',
-    a: 'Paid plans include access for the subscription period. Free previews remain available on the Starter tier.',
-  },
-  {
-    q: 'Are projects graded?',
-    a: 'Projects include rubrics and feedback checkpoints. You submit work and iterate based on instructor notes.',
-  },
-  {
-    q: 'Can teams or schools use this?',
-    a: 'Yes—Team plans include admin tools, role management, and reporting tailored for cohorts.',
-  },
-  {
-    q: 'What if I get stuck?',
-    a: 'Use the discussion areas and structured help channels. Pro learners get priority responses.',
+    title: 'Begin Your Work',
+    text: 'Prepare your website, github and portfolio to win a job.',
   },
 ] as const;
 
@@ -269,7 +129,7 @@ export function LandingHero() {
             <span className="gradient-text dark:from-indigo-400 dark:to-violet-400">clarity and momentum</span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300 sm:text-xl">
-            Short lessons, guided projects, and instructor feedback—so you move from
+            Short and exciting lessons with guided projects—so you move from
             theory to shipped work without losing the thread.
           </p>
           <Stack
@@ -293,8 +153,7 @@ export function LandingHero() {
             </ButtonLink>
           </Stack>
           <Callout variant="info" className="mx-auto max-w-xl text-left shadow-sm dark:bg-sky-900/40 dark:border-sky-800/60 dark:text-sky-100">
-            <strong className="font-semibold text-sky-950 dark:text-sky-300">Starter is free.</strong>{' '}
-            No credit card required—upgrade when you want full courses and feedback.
+            <strong className="font-semibold text-sky-950 dark:text-sky-300">By creating your account, get free course on HTML, CSS and Fundamental os Javascript.</strong>{' '} They are pre-requests for the paid full stack development course —upgrade when you want full courses.
           </Callout>
         </Stack>
       </Container>
@@ -336,36 +195,94 @@ export function TechStackSection() {
 }
 
 export function FeaturedCoursesSection() {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await courseService.getAllCourses();
+        if (response.success && response.courses) {
+          setCourses(response.courses);
+        }
+      } catch (error) {
+        console.error('Failed to fetch courses:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <SectionShell id="courses">
+        <SectionIntro
+          eyebrow="Featured courses"
+          title="Learning paths that build on each other"
+          description="Pick a track—each course includes modules, checkpoints, and a capstone project."
+        />
+        <div className="grid gap-6 lg:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="h-80 animate-pulse bg-slate-100 dark:bg-slate-800" />
+          ))}
+        </div>
+      </SectionShell>
+    );
+  }
+
+  if (courses.length === 0) {
+    return (
+      <SectionShell id="courses">
+        <SectionIntro
+          eyebrow="Featured courses"
+          title="Learning paths that build on each other"
+          description="Pick a track—each course includes modules, checkpoints, and a capstone project."
+        />
+        <div className="text-center py-12">
+          <p className="text-slate-500 dark:text-slate-400">No courses available at the moment. Please check back later!</p>
+        </div>
+      </SectionShell>
+    );
+  }
+
   return (
     <SectionShell id="courses">
       <SectionIntro
         eyebrow="Featured courses"
         title="Learning paths that build on each other"
-        description="Pick a track—each course includes modules, checkpoints, and a capstone project."
+        description="Pick a course—each course includes modules, exciting video tutorials, and a project or more."
       />
       <div className="grid gap-6 lg:grid-cols-3">
-        {COURSES.map((c) => (
+        {courses.map((c) => (
           <Card
-            key={c.title}
+            key={c.course_id}
             padding="none"
             className="flex flex-col overflow-hidden border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-shadow hover:shadow-md"
           >
             <div className="border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-indigo-50/90 to-violet-50/60 dark:from-indigo-900/20 dark:to-violet-900/10 px-6 py-5">
               <Badge variant="outline" className="mb-3 bg-white/80 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-300">
-                {c.path}
+                {c.category || 'Course'}
               </Badge>
               <CardTitle className="text-xl dark:text-slate-100">{c.title}</CardTitle>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{c.blurb}</p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 line-clamp-2">
+                {c.description || 'Access modern learning materials, videos, and projects to master this subject.'}
+              </p>
             </div>
             <CardContent className="flex flex-1 flex-col px-6 pt-5">
               <ul className="flex list-none flex-col gap-2 text-sm text-slate-600 dark:text-slate-300">
                 <li className="flex gap-2">
                   <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
-                  {c.level}
+                  {courseService.formatLevel(c.level)}
                 </li>
                 <li className="flex gap-2">
                   <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
-                  {c.duration} · {c.modules}
+                  Self-paced learning · Structured topics
+                </li>
+                <li className="flex gap-2 font-bold text-emerald-700 dark:text-emerald-400">
+                  <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
+                  Price: {c.price || 'Free'}
                 </li>
               </ul>
             </CardContent>
@@ -419,6 +336,33 @@ export function WhyChooseUsSection() {
 }
 
 export function HowItWorksSection() {
+  const [videos, setVideos] = useState<LandingVideo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await landingVideoService.getAllLandingVideos();
+        if (response.success && response.videos) {
+          setVideos(response.videos);
+        }
+      } catch (error) {
+        console.error('Failed to fetch landing videos:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
+
+  // Helper to extract YouTube ID
+  const getVideoId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
   return (
     <SectionShell id="how">
       <SectionIntro
@@ -437,198 +381,163 @@ export function HowItWorksSection() {
           </Card>
         ))}
       </div>
+
+      {/* Landing Videos Section */}
+      <div className="mt-20 border-t border-slate-100 dark:border-slate-800 pt-16">
+        <SectionIntro
+          eyebrow="Platform in action"
+          title="See how we teach"
+          description="A selection of video lessons and platform walkthroughs to get you started."
+          className="mb-12"
+        />
+
+        {isLoading ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="aspect-video animate-pulse bg-slate-100 dark:bg-slate-800 rounded-xl" />
+            ))}
+          </div>
+        ) : videos.length > 0 ? (
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {videos.map((video) => (
+              <Card
+                key={video.land_video_id}
+                padding="none"
+                className="group overflow-hidden border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1"
+              >
+                <div className="aspect-video relative bg-slate-100 dark:bg-slate-800">
+                  <iframe
+                    className="absolute inset-0 h-full w-full"
+                    src={`https://www.youtube.com/embed/${getVideoId(video.youtube_url)}`}
+                    title={video.title || "Landing Video"}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="outline" className="bg-indigo-50/50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 border-none px-2 py-0 text-[10px] font-bold uppercase">
+                      Video Lesson
+                    </Badge>
+                    {video.duration && (
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                        {video.duration} min
+                      </span>
+                    )}
+                  </div>
+                  <CardTitle className="text-base font-semibold dark:text-slate-100 line-clamp-1 group-hover:text-[var(--color-brand)] transition-colors">
+                    {video.title || "Untitled Video"}
+                  </CardTitle>
+                  {video.description && (
+                    <CardDescription className="mt-1.5 text-sm dark:text-slate-400 line-clamp-2 leading-relaxed">
+                      {video.description}
+                    </CardDescription>
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-dashed border-slate-200 dark:border-slate-700">
+            <Video className="mx-auto size-8 text-slate-400 mb-3 opacity-50" />
+            <p className="text-sm text-slate-500 dark:text-slate-400">Preview videos are arriving soon. Stay tuned!</p>
+          </div>
+        )}
+      </div>
     </SectionShell>
   );
 }
 
 export function ProjectShowcaseSection() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await projectService.getAllProjects();
+        if (response.success && response.projects) {
+          setProjects(response.projects);
+        }
+      } catch (error) {
+        console.error('Failed to fetch projects:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <SectionShell id="projects" tone="muted">
+        <SectionIntro
+          eyebrow="Project-based learning"
+          title="Ship real work—not toy demos"
+          description="While simple, projects mirror real constraints: APIs, auth, roles, and user-facing polish."
+        />
+        <div className="grid gap-6 lg:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="h-48 animate-pulse bg-slate-100 dark:bg-slate-800" />
+          ))}
+        </div>
+      </SectionShell>
+    );
+  }
+
+  if (projects.length === 0) {
+    return (
+      <SectionShell id="projects" tone="muted">
+        <SectionIntro
+          eyebrow="Project-based learning"
+          title="Ship real work—not toy demos"
+          description="While simple, projects mirror real constraints: APIs, auth, roles, and user-facing polish."
+        />
+        <div className="text-center py-12 rounded-2xl bg-white/50 dark:bg-slate-800/30 border border-dashed border-slate-200 dark:border-slate-700">
+          <Code2 className="mx-auto size-8 text-slate-400 mb-3 opacity-50" />
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Exciting portfolio projects are on the way. Check back soon!
+          </p>
+        </div>
+      </SectionShell>
+    );
+  }
+
   return (
     <SectionShell id="projects" tone="muted">
       <SectionIntro
         eyebrow="Project-based learning"
         title="Ship real work—not toy demos"
-        description="Projects mirror real constraints: APIs, auth, roles, and user-facing polish."
+        description="While simple, projects mirror real constraints: APIs, auth, roles, and user-facing polish."
       />
       <div className="grid gap-6 lg:grid-cols-3">
-        {PROJECTS.map((p) => (
+        {projects.map((p) => (
           <Card
-            key={p.title}
+            key={p.project_id}
             padding="md"
             className="border-slate-200/80 transition-shadow hover:shadow-md"
           >
             <CardHeader className="border-0 pb-2">
               <Stack direction="row" gap="sm" wrap className="flex-wrap">
-                {p.tags.map((t) => (
-                  <Badge key={t} variant="outline" className="dark:border-slate-700 dark:text-slate-300">
-                    {t}
+                {p.category && (
+                  <Badge variant="outline" className="dark:border-slate-700 dark:text-slate-300">
+                    {p.category}
                   </Badge>
-                ))}
+                )}
+                {p.level && (
+                  <Badge variant="outline" className="dark:border-slate-700 dark:text-slate-300">
+                    {projectService.formatLevel(p.level)}
+                  </Badge>
+                )}
               </Stack>
               <CardTitle className="pt-2 text-lg dark:text-slate-100">{p.title}</CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-              <p className="text-sm text-slate-600 dark:text-slate-300">{p.summary}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </SectionShell>
-  );
-}
-
-export function TestimonialsSection() {
-  return (
-    <SectionShell id="testimonials">
-      <SectionIntro
-        eyebrow="Student success"
-        title="What learners say"
-        description="Anonymous feedback from recent cohorts—focused on outcomes and clarity."
-      />
-      <div className="grid gap-6 lg:grid-cols-3">
-        {TESTIMONIALS.map((t) => (
-          <Card
-            key={t.name}
-            padding="md"
-            className="border-slate-200/80 dark:border-slate-800 bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-800/50"
-          >
-            <CardContent className="pt-2">
-              <p className="text-slate-700 dark:text-slate-300">&ldquo;{t.quote}&rdquo;</p>
-              <Separator className="my-6 dark:bg-slate-700" />
-              <Stack direction="row" gap="md" align="center">
-                <Avatar fallback={t.name} size="md" />
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.name}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">{t.role}</p>
-                </div>
-              </Stack>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </SectionShell>
-  );
-}
-
-export function CredibilitySection() {
-  return (
-    <SectionShell id="credibility" tone="dark" className="relative overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-30"
-        style={{
-          background:
-            'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99,102,241,0.35), transparent)',
-        }}
-        aria-hidden
-      />
-      <div className="relative">
-        <SectionIntro
-          eyebrow="Instructor & platform"
-          title="Credibility you can verify"
-          description="Curriculum is maintained by practitioners who ship software—not just teach slides. The platform is built for real classrooms, audits, and cohorts at scale."
-          inverse
-        />
-
-        <div className="mt-4 grid gap-6 sm:grid-cols-3">
-          {STATS.map((s) => (
-            <Card
-              key={s.label}
-              padding="md"
-              className="border-slate-700/80 bg-slate-800/40 text-center text-white backdrop-blur"
-            >
-              <p className="text-3xl font-semibold sm:text-4xl">{s.value}</p>
-              <p className="mt-2 text-sm text-slate-400">{s.label}</p>
-            </Card>
-          ))}
-        </div>
-
-        <Card
-          padding="lg"
-          className="mt-10 border-slate-700/80 bg-slate-800/30 backdrop-blur"
-        >
-          <Stack
-            direction="row"
-            gap="lg"
-            align="start"
-            className="flex-col sm:flex-row sm:items-start"
-          >
-            <div className="flex size-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-2xl font-bold text-white shadow-lg">
-              <GraduationCap className="size-10" strokeWidth={1.5} />
-            </div>
-            <Stack gap="sm" className="min-w-0 text-center sm:text-left">
-              <p className="text-sm font-semibold uppercase tracking-wider text-indigo-300">
-                Lead instructor
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {p.description || 'A hands-on project to master real-world engineering constraints.'}
               </p>
-              <CardTitle className="text-xl text-white">
-                Experienced engineers & educators
-              </CardTitle>
-              <CardDescription className="text-slate-300">
-                Materials are reviewed for accuracy, pacing, and accessibility. Admin
-                tooling helps instructors focus on teaching—while you focus on building.
-              </CardDescription>
-            </Stack>
-          </Stack>
-        </Card>
-      </div>
-    </SectionShell>
-  );
-}
-
-export function PricingSection() {
-  return (
-    <SectionShell id="pricing">
-      <SectionIntro
-        eyebrow="Pricing"
-        title="Access plans that match your pace"
-        description="Start free, upgrade when you want full courses and feedback."
-      />
-      <div className="grid gap-6 lg:grid-cols-3">
-        {PLANS.map((plan) => (
-          <Card
-            key={plan.name}
-            padding="md"
-            className={cn(
-              'flex flex-col border-slate-200/80 dark:border-slate-800 dark:bg-slate-900',
-              plan.highlighted &&
-                'relative border-indigo-300 dark:border-indigo-700 shadow-lg ring-2 ring-[var(--color-brand)]/25 dark:ring-[var(--color-brand)]/50',
-            )}
-          >
-            {plan.highlighted ? (
-              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--color-brand)] text-white hover:bg-[var(--color-brand)]">
-                Most popular
-              </Badge>
-            ) : null}
-            <CardHeader className="border-0 pb-2">
-              <CardTitle className="text-xl dark:text-slate-100">{plan.name}</CardTitle>
-              <CardDescription className="dark:text-slate-400">{plan.description}</CardDescription>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-                  {plan.price}
-                </span>
-                {plan.period ? (
-                  <span className="text-sm text-slate-500 dark:text-slate-400">/{plan.period}</span>
-                ) : null}
-              </div>
-            </CardHeader>
-            <CardContent className="flex flex-1 flex-col gap-3">
-              <ul className="space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex gap-2">
-                    <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
             </CardContent>
-            <CardFooter className="mt-auto border-0 pt-0">
-              <ButtonLink
-                to={plan.href}
-                variant={plan.variant}
-                size="md"
-                className="w-full justify-center"
-              >
-                {plan.cta}
-              </ButtonLink>
-            </CardFooter>
           </Card>
         ))}
       </div>
@@ -637,6 +546,61 @@ export function PricingSection() {
 }
 
 export function FaqSection() {
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const response = await faqService.getAllFAQs();
+        if (response.success && response.faqs) {
+          setFaqs(response.faqs);
+        }
+      } catch (error) {
+        console.error('Failed to fetch FAQs:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <SectionShell id="faq" tone="muted">
+        <SectionIntro
+          eyebrow="FAQ"
+          title="Answers before you enroll"
+          description="Still unsure? These cover the most common questions."
+        />
+        <Card padding="none" className="mx-auto max-w-3xl divide-y divide-slate-200 dark:divide-slate-800 border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm animate-pulse">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-16 px-4 py-4" />
+          ))}
+        </Card>
+      </SectionShell>
+    );
+  }
+
+  if (faqs.length === 0) {
+    return (
+      <SectionShell id="faq" tone="muted">
+        <SectionIntro
+          eyebrow="FAQ"
+          title="Answers before you enroll"
+          description="Still unsure? These cover the most common questions."
+        />
+        <div className="mx-auto max-w-3xl text-center py-12 rounded-2xl bg-white/50 dark:bg-slate-800/30 border border-dashed border-slate-200 dark:border-slate-700">
+          <MessageSquare className="mx-auto size-8 text-slate-400 mb-3 opacity-50" />
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Frequently asked questions will appear here soon. Stay tuned!
+          </p>
+        </div>
+      </SectionShell>
+    );
+  }
+
   return (
     <SectionShell id="faq" tone="muted">
       <SectionIntro
@@ -645,19 +609,21 @@ export function FaqSection() {
         description="Still unsure? These cover the most common questions."
       />
       <Card padding="none" className="mx-auto max-w-3xl divide-y divide-slate-200 dark:divide-slate-800 border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
-        {FAQS.map((item) => (
+        {faqs.map((item) => (
           <details
-            key={item.q}
+            key={item.faqs_id}
             className="group px-4 py-1 [&_summary::-webkit-details-marker]:hidden"
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">
-              {item.q}
+              {item.question}
               <ChevronDown
                 className="size-4 shrink-0 text-slate-400 transition group-open:rotate-180"
                 aria-hidden
               />
             </summary>
-            <p className="pb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{item.a}</p>
+            <p className="pb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              {item.answer}
+            </p>
           </details>
         ))}
       </Card>

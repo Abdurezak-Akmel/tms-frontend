@@ -15,7 +15,7 @@ export type CourseFileItem = {
 
 export type CourseDetail = CourseSummary & {
   fullDescription: string;
-  price: number;
+  price: string;
   currency: string;
   outcomes: string[];
   videos: CourseVideoItem[];

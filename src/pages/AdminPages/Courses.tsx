@@ -38,6 +38,7 @@ const Courses = () => {
           level: (c.level ? (c.level.charAt(0).toUpperCase() + c.level.slice(1).toLowerCase()) : 'Beginner') as CourseLevel,
           duration: 'NA', // Mocked as requested
           moduleCount: 0,     // Mocked as requested
+          price: c.price
         }));
         setCourses(mappedCourses);
       } else {
