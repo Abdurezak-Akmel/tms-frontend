@@ -6,9 +6,18 @@ export type CourseFileSectionProps = {
   courseName: string;
   files: FileCatalogItem[];
   basePath?: string;
+  onDelete?: (id: string) => void;
+  isDeletingId?: string | null;
 };
 
-export function CourseFileSection({ courseId, courseName, files, basePath }: CourseFileSectionProps) {
+export function CourseFileSection({ 
+  courseId, 
+  courseName, 
+  files, 
+  basePath,
+  onDelete,
+  isDeletingId
+}: CourseFileSectionProps) {
   const headingId = `files-course-${courseId}`;
 
   return (
@@ -27,7 +36,12 @@ export function CourseFileSection({ courseId, courseName, files, basePath }: Cou
       <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {files.map((file) => (
           <li key={file.id}>
-            <FileCard file={file} basePath={basePath} />
+            <FileCard 
+              file={file} 
+              basePath={basePath} 
+              onDelete={onDelete}
+              isDeleting={isDeletingId === file.id}
+            />
           </li>
         ))}
       </ul>

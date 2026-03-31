@@ -51,7 +51,7 @@ const Courses = () => {
         if (roleCoursesRes.success && roleCoursesRes.courses) {
           roleCoursesRes.courses.forEach((c: any) => assignedIds.add(c.course_id));
         }
-        
+
         // Add approved access requests
         if (accessRequestsRes.success && accessRequestsRes.data) {
           const requests = Array.isArray(accessRequestsRes.data) ? accessRequestsRes.data : [accessRequestsRes.data];
@@ -72,9 +72,8 @@ const Courses = () => {
         level: (c.level
           ? c.level.charAt(0).toUpperCase() + c.level.slice(1).toLowerCase()
           : 'Beginner') as CourseLevel,
-        duration: '8 weeks', // Placeholder as not in DB
         moduleCount: 10,     // Placeholder as not in DB
-        price: (c.price && Number(c.price) > 0) ? `${c.price} ETB` : 'Free', // Add price and format it
+        price: c.price || 'Free',
         locked: !assignedIds.has(c.course_id),
       }));
 

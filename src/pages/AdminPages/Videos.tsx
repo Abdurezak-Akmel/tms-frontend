@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Film } from 'lucide-react';
+import { toast } from 'react-toastify';
 import {
   CourseVideoSection,
 } from '../../components/videos';
+import type { VideoCatalogItem } from '../../components/videos/types';
 import { Callout, EmptyState } from '../../components/feedback';
 import { PageHeader, Stack } from '../../components/layout';
 import { videoService } from '../../services/videoService';
@@ -14,36 +16,57 @@ const Videos = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [videoRes, courseRes] = await Promise.all([
-          videoService.getAllVideos(),
-          courseService.getAllCourses()
-        ]);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [videoRes, courseRes] = await Promise.all([
+        videoService.getAllVideos(),
+        courseService.getAllCourses()
+      ]);
 
-        if (videoRes.success && videoRes.videos) {
-          setVideos(videoRes.videos);
-        }
-        if (courseRes.success && courseRes.courses) {
-          setCourses(courseRes.courses);
-        }
-      } catch (err: any) {
-        setError(err.message || 'Failed to fetch videos');
-      } finally {
-        setLoading(false);
+      if (videoRes.success && videoRes.videos) {
+        setVideos(videoRes.videos);
       }
-    };
+      if (courseRes.success && courseRes.courses) {
+        setCourses(courseRes.courses);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to fetch videos');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
+  const handleDeleteVideo = async (videoId: string) => {
+    if (!window.confirm('Are you sure you want to delete this video?')) return;
+
+    try {
+      setIsDeletingId(videoId);
+      const res = await videoService.deleteVideo(parseInt(videoId));
+      
+      if (res.success) {
+        toast.success('Video deleted successfully');
+        setVideos((prev) => prev.filter((v) => v.video_id.toString() !== videoId));
+      } else {
+        toast.error(res.message || 'Failed to delete video');
+      }
+    } catch (err: any) {
+      toast.error(err.message || 'An error occurred while deleting the video');
+    } finally {
+      setIsDeletingId(null);
+    }
+  };
+
   const courseMap = new Map(courses.map(c => [c.course_id, c.title]));
 
-  const mappedVideos = videos.map(v => ({
+  const mappedVideos: VideoCatalogItem[] = videos.map(v => ({
     id: v.video_id.toString(),
     courseId: v.course_id.toString(),
     courseName: courseMap.get(v.course_id) || 'Unknown Course',
@@ -53,9 +76,9 @@ const Videos = () => {
     youtubeId: videoService.extractYouTubeId(v.youtube_url) || '',
   }));
 
-  // Grouping logic (since we want to avoid depending on components/videos/mockVideos.ts which uses mock types)
-  const groupVideos = (items: any[]) => {
-    const map = new Map<string, { courseName: string; courseId: string; videos: any[] }>();
+  type VideoGroup = { courseName: string; courseId: string; videos: VideoCatalogItem[] };
+  const groupVideos = (items: VideoCatalogItem[]): VideoGroup[] => {
+    const map = new Map<string, VideoGroup>();
     for (const v of items) {
       if (!map.has(v.courseId)) {
         map.set(v.courseId, { courseName: v.courseName, courseId: v.courseId, videos: [] });
@@ -102,6 +125,8 @@ const Videos = () => {
               courseName={section.courseName}
               videos={section.videos}
               basePath="/admin/videos"
+              onDelete={handleDeleteVideo}
+              isDeletingId={isDeletingId}
             />
           ))}
         </div>

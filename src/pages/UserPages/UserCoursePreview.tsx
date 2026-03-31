@@ -16,7 +16,7 @@ import type { CourseDetail, CourseVideoItem, CourseFileItem } from '../../compon
 import { Callout, EmptyState } from '../../components/feedback';
 import { PageHeader, Stack } from '../../components/layout';
 import { Badge, ButtonLink } from '../../components/ui';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui';
 import { courseService } from '../../services/courseService';
 import { videoService } from '../../services/videoService';
 import { courseMaterialService } from '../../services/courseMaterialService';
@@ -173,9 +173,7 @@ const UserCoursePreview = () => {
       <Card className="border-slate-200/90 shadow-sm" padding="lg">
         <CardHeader>
           <CardTitle>About this course</CardTitle>
-          <CardDescription>
-            {course.moduleCount} {course.moduleCount === 1 ? 'lesson' : 'lessons'} · instructor-led materials
-          </CardDescription>
+
         </CardHeader>
         <CardContent className="space-y-6">
           <p className="text-sm leading-relaxed text-slate-700">{course.fullDescription}</p>

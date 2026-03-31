@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Film,
@@ -78,6 +78,17 @@ const Videos = () => {
     fetchVideosForUnlockedCourses();
   }, [fetchVideosForUnlockedCourses]);
 
+  const groupedVideos = useMemo(() => {
+    const groups: Record<string, VideoWithCourse[]> = {};
+    videos.forEach(video => {
+      if (!groups[video.courseName]) {
+        groups[video.courseName] = [];
+      }
+      groups[video.courseName].push(video);
+    });
+    return groups;
+  }, [videos]);
+
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -119,71 +130,74 @@ const Videos = () => {
           }
         />
       ) : (
-        /* YouTube-style Grid Layout */
-        <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {videos.map((video) => {
-            const thumbnail = videoService.getThumbnailUrl(video.youtube_url, 'high');
-            // const durationArr = video.duration ? videoService.formatDuration(video.duration).split(':') : [];
-            const durationLabel = video.duration ? videoService.formatDuration(video.duration) : '';
+        /* Categorized Layout */
+        <div className="flex flex-col gap-10">
+          {Object.entries(groupedVideos).map(([courseName, courseVideos]) => (
+            <section key={courseName} className="flex flex-col gap-5">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                <BookOpen className="size-5 text-[var(--color-brand)] dark:text-brand-400" />
+                {courseName}
+              </h2>
+              <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {courseVideos.map((video) => {
+                  const thumbnail = videoService.getThumbnailUrl(video.youtube_url, 'high');
+                  const durationLabel = video.duration ? videoService.formatDuration(video.duration) : '';
 
-            return (
-              <Link
-                key={video.video_id}
-                to={`/videos/${video.video_id}`}
-                className="group flex flex-col space-y-3 transition-transform duration-200 hover:scale-[1.02]"
-              >
-                {/* Thumbnail Wrapper */}
-                <div className="relative aspect-video overflow-hidden rounded-xl bg-slate-100 shadow-sm">
-                  {thumbnail ? (
-                    <img
-                      src={thumbnail}
-                      alt={video.title || 'Video thumbnail'}
-                      className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-slate-300">
-                      <Film className="size-12" />
-                    </div>
-                  )}
+                  return (
+                    <Link
+                      key={video.video_id}
+                      to={`/videos/${video.video_id}`}
+                      className="group flex flex-col space-y-3 transition-transform duration-200 hover:scale-[1.02]"
+                    >
+                      {/* Thumbnail Wrapper */}
+                      <div className="relative aspect-video overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800 shadow-sm hover:shadow-md transition-shadow">
+                        {thumbnail ? (
+                          <img
+                            src={thumbnail}
+                            alt={video.title || 'Video thumbnail'}
+                            className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-slate-300 dark:text-slate-600">
+                            <Film className="size-12" />
+                          </div>
+                        )}
 
-                  {/* Play Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                    <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-brand)] text-white shadow-lg shadow-[var(--color-brand)]/20">
-                      <Play className="ml-1 size-6 fill-current" />
-                    </div>
-                  </div>
+                        {/* Play Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                          <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-brand)] text-white shadow-lg shadow-[var(--color-brand)]/20">
+                            <Play className="ml-1 size-6 fill-current" />
+                          </div>
+                        </div>
 
-                  {/* Duration Badge */}
-                  {durationLabel && (
-                    <div className="absolute bottom-2 right-2 rounded bg-black/80 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
-                      {durationLabel}
-                    </div>
-                  )}
-                </div>
-
-                {/* Meta Information */}
-                <div className="flex gap-3">
-                  {/* Category/Icon (Equivalent to Channel Avatar) */}
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500">
-                    <BookOpen className="size-4" />
-                  </div>
-
-                  <div className="flex flex-col space-y-1">
-                    <h3 className="line-clamp-2 text-sm font-bold leading-tight text-slate-900 group-hover:text-[var(--color-brand)]">
-                      {video.title || 'Untitled Lesson'}
-                    </h3>
-                    <div className="flex flex-col text-xs text-slate-500">
-                      <span className="font-medium hover:text-slate-700">{video.courseName}</span>
-                      <div className="mt-0.5 flex items-center gap-1">
-                        <Clock className="size-3" />
-                        <span>Uploaded on {videoService.formatDate(video.created_at).split(',')[0]}</span>
+                        {/* Duration Badge */}
+                        {durationLabel && (
+                          <div className="absolute bottom-2 right-2 rounded bg-black/80 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
+                            {durationLabel}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+
+                      {/* Meta Information */}
+                      <div className="flex gap-3">
+                        <div className="flex flex-col space-y-1 w-full relative">
+                          <h3 className="line-clamp-2 text-sm font-bold leading-tight text-slate-900 dark:text-slate-100 group-hover:text-[var(--color-brand)] dark:group-hover:text-brand-400">
+                            {video.title || 'Untitled Lesson'}
+                          </h3>
+                          <div className="flex flex-col text-xs text-slate-500 dark:text-slate-400">
+                            <div className="mt-0.5 flex items-center gap-1">
+                              <Clock className="size-3" />
+                              <span>Uploaded on {videoService.formatDate(video.created_at).split(',')[0]}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
       )}
     </Stack>

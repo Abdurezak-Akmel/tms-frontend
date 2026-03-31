@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { Check, X, Clock, Search, BookOpen, User, CreditCard, FileText, ExternalLink } from 'lucide-react';
-import { Badge, Button, Card, CardContent, Input, Separator } from '../../components/ui';
+import { Check, X, Clock, Search, User, CreditCard, FileText, ExternalLink, Trash2 } from 'lucide-react';
+import { Badge, Button, Card, Input } from '../../components/ui';
 import { PageHeader, Stack } from '../../components/layout';
 import { EmptyState } from '../../components/feedback';
 import accessRequestService, { type AccessRequest } from '../../services/accessRequestService';
@@ -22,6 +22,7 @@ const AccessRequests = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [updatingRoleFor, setUpdatingRoleFor] = useState<number | null>(null); // request_id currently being updated
+  const [isDeleting, setIsDeleting] = useState<number | null>(null);
 
   const fetchRequests = useCallback(async () => {
     try {
@@ -89,6 +90,20 @@ const AccessRequests = () => {
     }
   };
 
+  const handleDeleteRequest = async (request_id: number) => {
+    if (!window.confirm('Are you sure you want to delete this access request?')) return;
+    try {
+      setIsDeleting(request_id);
+      await accessRequestService.deleteAccessRequest(request_id);
+      setRequests((prev) => prev.filter((req) => req.request_id !== request_id));
+    } catch (error) {
+      console.error('Error deleting request:', error);
+      alert('Failed to delete request');
+    } finally {
+      setIsDeleting(null);
+    }
+  };
+
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8">
       <Stack gap="lg" className="pb-10 w-full max-w-none">
@@ -137,13 +152,27 @@ const AccessRequests = () => {
                       <div className="p-5 xl:w-[28%] flex flex-col justify-between border-b xl:border-b-0 xl:border-r border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30">
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
-                            <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-black">REQ #{req.request_id}</span>
-                            <Badge
-                              variant={statusVariant[req.status] || 'warning'}
-                              className="capitalize px-2.5 py-1 font-black tracking-wider rounded-full text-[10px]"
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-black">REQ #{req.request_id}</span>
+                              <Badge
+                                variant={statusVariant[req.status] || 'warning'}
+                                className="capitalize px-2.5 py-1 font-black tracking-wider rounded-full text-[10px]"
+                              >
+                                {req.status}
+                              </Badge>
+                            </div>
+                            <button
+                              onClick={() => handleDeleteRequest(req.request_id)}
+                              disabled={isDeleting === req.request_id}
+                              className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
+                              title="Delete Request"
                             >
-                              {req.status}
-                            </Badge>
+                              {isDeleting === req.request_id ? (
+                                <div className="size-4 border-2 border-rose-500/20 border-t-rose-500 rounded-full animate-spin" />
+                              ) : (
+                                <Trash2 className="size-4" />
+                              )}
+                            </button>
                           </div>
                           <div className="flex items-start gap-3">
                             <div className="size-10 shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
@@ -188,7 +217,7 @@ const AccessRequests = () => {
                             {req.receipt_file_path ? (
                               <button
                                 onClick={() => {
-                                  const url = receiptService.getReceiptUrl({ file_path: req.receipt_file_path } as any);
+                                  const url = receiptService.getReceiptUrl({ file_path: req.receipt_file_path! });
                                   window.open(url, '_blank');
                                 }}
                                 className="flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-100/50 dark:hover:bg-blue-900/50 transition-all px-3 py-1.5 rounded-lg border border-blue-100 dark:border-blue-800/50"

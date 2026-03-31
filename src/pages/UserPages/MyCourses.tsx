@@ -45,12 +45,12 @@ const MyCourses = () => {
 
       // Identify which IDs are assigned or approved
       const assignedIds = new Set<number>();
-      
+
       // Add role-assigned courses
       if (roleCoursesRes.success && roleCoursesRes.courses) {
         roleCoursesRes.courses.forEach((c: any) => assignedIds.add(c.course_id));
       }
-      
+
       // Add approved access requests
       if (accessRequestsRes.success && accessRequestsRes.data) {
         const requests = Array.isArray(accessRequestsRes.data) ? accessRequestsRes.data : [accessRequestsRes.data];
@@ -73,7 +73,7 @@ const MyCourses = () => {
           : 'Beginner') as CourseLevel,
         duration: '8 weeks', // Placeholder
         moduleCount: 10,     // Placeholder
-        price: (c.price && Number(c.price) > 0) ? `${c.price} ETB` : 'Free',
+        price: c.price || 'Free',
         locked: false,
       }));
 

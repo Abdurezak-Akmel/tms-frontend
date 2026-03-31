@@ -54,7 +54,7 @@ export function CoursePurchaseAndReceipt({ course }: CoursePurchaseAndReceiptPro
   const priceLabel = new Intl.NumberFormat(undefined, {
     style: 'currency',
     currency: course.currency,
-  }).format(course.price);
+  }).format(Number(course.price || 0));
 
   return (
     <div id="course-payment" className="scroll-mt-8 space-y-6">

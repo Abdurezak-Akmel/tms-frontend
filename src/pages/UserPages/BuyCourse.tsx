@@ -154,7 +154,7 @@ const BuyCourse = () => {
         <Stack gap="lg" className="pb-12 pt-4">
             <div>
                 <Link
-                    to={courseId ? `/course/${courseId}?locked=true` : "/courses"}
+                    to={"/courses"}
                     className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[var(--color-brand)] hover:underline"
                 >
                     <ArrowLeft className="size-4" aria-hidden />

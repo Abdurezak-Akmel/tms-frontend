@@ -108,6 +108,17 @@ const Files = () => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  const groupedMaterials = useMemo(() => {
+    const groups: Record<string, MaterialWithCourse[]> = {};
+    filteredMaterials.forEach(m => {
+      if (!groups[m.courseName]) {
+        groups[m.courseName] = [];
+      }
+      groups[m.courseName].push(m);
+    });
+    return groups;
+  }, [filteredMaterials]);
+
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -155,49 +166,59 @@ const Files = () => {
           )}
         />
       ) : (
-        /* Grid Layout */
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredMaterials.map((material) => (
-            <div
-              key={material.material_id}
-              onClick={() => openFile(material)}
-              className="group cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 transition-all duration-200 hover:border-[var(--color-brand)] hover:shadow-md hover:shadow-[var(--color-brand)]/5"
-            >
-              <div className="mb-6 flex items-center justify-between">
-                <div className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200 transition-colors group-hover:bg-[var(--color-brand)]/5 group-hover:ring-[var(--color-brand)]/20">
-                  {getFileIcon(material.file_type)}
-                </div>
-                <div className="rounded-full bg-slate-50 p-2 text-slate-400 opacity-0 transition-all group-hover:opacity-100 hover:text-[var(--color-brand)]">
-                  <ExternalLink className="size-4" />
-                </div>
-              </div>
+        /* Categorized Layout */
+        <div className="flex flex-col gap-10">
+          {Object.entries(groupedMaterials).map(([courseName, courseMaterials]) => (
+            <section key={courseName} className="flex flex-col gap-5">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                <BookOpen className="size-5 text-[var(--color-brand)] dark:text-brand-400" />
+                {courseName}
+              </h2>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {courseMaterials.map((material) => (
+                  <div
+                    key={material.material_id}
+                    onClick={() => openFile(material)}
+                    className="group cursor-pointer rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 transition-all duration-200 hover:border-[var(--color-brand)] dark:hover:border-brand-400 hover:shadow-md hover:shadow-[var(--color-brand)]/5"
+                  >
+                    <div className="mb-6 flex items-center justify-between">
+                      <div className="rounded-xl bg-slate-50 dark:bg-slate-800 p-3 ring-1 ring-slate-200 dark:ring-slate-700 transition-colors group-hover:bg-[var(--color-brand)]/5 group-hover:ring-[var(--color-brand)]/20">
+                        {getFileIcon(material.file_type)}
+                      </div>
+                      <div className="rounded-full bg-slate-50 dark:bg-slate-800 p-2 text-slate-400 opacity-0 transition-all group-hover:opacity-100 hover:text-[var(--color-brand)] dark:hover:text-brand-400">
+                        <ExternalLink className="size-4" />
+                      </div>
+                    </div>
 
-              <div className="space-y-4">
-                <div className="min-w-0 space-y-1">
-                  <h3 className="line-clamp-2 text-sm font-bold text-slate-900 group-hover:text-[var(--color-brand)]">
-                    {material.title}
-                  </h3>
-                  <p className="truncate text-xs text-slate-400">{material.file_name}</p>
-                </div>
+                    <div className="space-y-4">
+                      <div className="min-w-0 space-y-1">
+                        <h3 className="line-clamp-2 text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-[var(--color-brand)] dark:group-hover:text-brand-400">
+                          {material.title}
+                        </h3>
+                        <p className="truncate text-xs text-slate-400 dark:text-slate-500">{material.file_name}</p>
+                      </div>
 
-                <div className="space-y-2 border-t border-slate-100 pt-3">
-                  <div className="flex items-center gap-2 text-xs text-slate-600">
-                    <BookOpen className="size-3.5 shrink-0 text-[var(--color-brand)]" />
-                    <span className="truncate font-medium">{material.courseName}</span>
+                      <div className="space-y-2 border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+                          <BookOpen className="size-3.5 shrink-0 text-[var(--color-brand)] dark:text-brand-400" />
+                          <span className="truncate font-medium">{material.courseName}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="size-3" />
+                            {new Date(material.uploaded_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Layers className="size-3" />
+                            {courseMaterialService.formatFileSize(material.file_size)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="size-3" />
-                      {new Date(material.uploaded_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Layers className="size-3" />
-                      {courseMaterialService.formatFileSize(material.file_size)}
-                    </span>
-                  </div>
-                </div>
+                ))}
               </div>
-            </div>
+            </section>
           ))}
         </div>
       )}

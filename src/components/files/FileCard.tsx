@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Calendar } from 'lucide-react';
+import { ArrowUpRight, Calendar, Trash2 } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 import { cn } from '../../utils/cn';
 import type { FileCatalogItem } from './types';
 import { fileKindAccent, fileKindIcon } from './fileKindMeta';
@@ -10,9 +11,17 @@ export type FileCardProps = {
   file: FileCatalogItem;
   className?: string;
   basePath?: string;
+  onDelete?: (id: string) => void;
+  isDeleting?: boolean;
 };
 
-export function FileCard({ file, className, basePath = '/files' }: FileCardProps) {
+export function FileCard({ 
+  file, 
+  className, 
+  basePath = '/files', 
+  onDelete,
+  isDeleting = false
+}: FileCardProps) {
   const Icon = fileKindIcon(file.kind);
   const accent = fileKindAccent(file.kind);
 
@@ -54,16 +63,33 @@ export function FileCard({ file, className, basePath = '/files' }: FileCardProps
             aria-hidden
           />
         </div>
-        <div className="space-y-3 p-5">
+        <div className="space-y-3 p-5 pt-4">
           <p className="line-clamp-2 text-sm text-slate-600">{file.description}</p>
-          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3 sm:pt-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
             <div className="flex min-w-0 items-center gap-1.5 text-xs text-slate-500">
               <span className="truncate font-medium text-slate-700">{file.courseName}</span>
+              <span className="mx-1">•</span>
+              <span className="inline-flex items-center gap-1">
+                <Calendar className="size-3.5" aria-hidden />
+                {file.updatedLabel}
+              </span>
             </div>
-            <span className="inline-flex items-center gap-1 text-xs text-slate-400">
-              <Calendar className="size-3.5" aria-hidden />
-              {file.updatedLabel}
-            </span>
+            {onDelete && (
+              <Button
+                variant="danger"
+                size="sm"
+                className="h-7 w-7 rounded-md p-0 shadow-none hover:bg-rose-50 hover:text-rose-600 focus-visible:ring-rose-200"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(file.id);
+                }}
+                isLoading={isDeleting}
+                title="Delete material"
+              >
+                {!isDeleting && <Trash2 className="size-3.5" aria-hidden />}
+              </Button>
+            )}
           </div>
         </div>
       </Card>

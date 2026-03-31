@@ -66,6 +66,11 @@ const adminNav: NavItem[] = [
     icon: <ClipboardList className="size-5 shrink-0 opacity-80" aria-hidden />,
   },
   {
+    to: '/admin/receipts',
+    label: 'Receipts',
+    icon: <ClipboardList className="size-5 shrink-0 opacity-80" aria-hidden />,
+  },
+  {
     to: '/admin/analytics',
     label: 'Analytics',
     icon: <BarChart3 className="size-5 shrink-0 opacity-80" aria-hidden />,

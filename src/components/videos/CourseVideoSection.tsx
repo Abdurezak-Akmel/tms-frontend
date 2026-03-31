@@ -6,9 +6,18 @@ export type CourseVideoSectionProps = {
   courseName: string;
   videos: VideoCatalogItem[];
   basePath?: string;
+  onDelete?: (id: string) => void;
+  isDeletingId?: string | null;
 };
 
-export function CourseVideoSection({ courseId, courseName, videos, basePath }: CourseVideoSectionProps) {
+export function CourseVideoSection({ 
+  courseId, 
+  courseName, 
+  videos, 
+  basePath,
+  onDelete,
+  isDeletingId
+}: CourseVideoSectionProps) {
   const headingId = `videos-course-${courseId}`;
 
   return (
@@ -24,7 +33,12 @@ export function CourseVideoSection({ courseId, courseName, videos, basePath }: C
       <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {videos.map((video) => (
           <li key={video.id}>
-            <VideoCard video={video} basePath={basePath} />
+            <VideoCard 
+              video={video} 
+              basePath={basePath} 
+              onDelete={onDelete}
+              isDeleting={isDeletingId === video.id}
+            />
           </li>
         ))}
       </ul>

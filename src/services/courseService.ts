@@ -17,6 +17,7 @@ export interface CreateCourseData {
   category?: string;
   level?: string;
   price: string;
+  duration: string;
 }
 
 export interface UpdateCourseData {
@@ -25,6 +26,7 @@ export interface UpdateCourseData {
   category?: string;
   level?: string;
   price?: string;
+  duration?: string;
 }
 
 export interface Course {
@@ -34,6 +36,7 @@ export interface Course {
   category: string | null;
   level: string | null;
   price: string;
+  duration: string | null;
   created_at: string;
   updated_at: string | null;
 }
@@ -169,6 +172,14 @@ export const courseService = {
         errors.push('Price is required');
       } else if (typeof courseData.price !== 'string') {
         errors.push('Price must be a string');
+      }
+    }
+
+    if ('duration' in courseData) {
+      if (!courseData.duration || courseData.duration.trim() === '') {
+        errors.push('Duration is required');
+      } else if (typeof courseData.duration !== 'string') {
+        errors.push('Duration must be a string');
       }
     }
 

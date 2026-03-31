@@ -6,7 +6,7 @@ export type CourseSummary = {
   shortDescription: string;
   category: string;
   level: CourseLevel;
-  duration: string;
+  duration?: string;
   moduleCount: number;
   price?: string;
   locked?: boolean;

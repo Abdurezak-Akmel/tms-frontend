@@ -116,8 +116,23 @@ export const receiptService = {
     }
   },
 
+  // Admin: delete receipt by ID
+  async deleteReceipt(id: number): Promise<ReceiptResponse> {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await api.delete(`/receipts/delete-receipt/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || { message: 'Failed to delete receipt' };
+    }
+  },
+
   // Helper function to get receipt download URL
-  getReceiptUrl(receipt: Receipt): string {
+  getReceiptUrl(receipt: { file_path: string }): string {
     return `${API_BASE_URL.replace('/api', '')}/uploads/receipts/${receipt.file_path}`;
   },
 

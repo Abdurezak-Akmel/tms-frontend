@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Clock, Play } from 'lucide-react';
+import { Clock, Play, Trash2 } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 import { cn } from '../../utils/cn';
 import type { VideoCatalogItem } from './types';
 
@@ -13,9 +14,17 @@ export type VideoCardProps = {
   video: VideoCatalogItem;
   className?: string;
   basePath?: string;
+  onDelete?: (id: string) => void;
+  isDeleting?: boolean;
 };
 
-export function VideoCard({ video, className, basePath = '/videos' }: VideoCardProps) {
+export function VideoCard({ 
+  video, 
+  className, 
+  basePath = '/videos', 
+  onDelete,
+  isDeleting = false
+}: VideoCardProps) {
   return (
     <Link
       to={`${basePath}/${video.id}`}
@@ -54,10 +63,28 @@ export function VideoCard({ video, className, basePath = '/videos' }: VideoCardP
             {video.title}
           </h3>
           <p className="line-clamp-2 text-sm text-slate-600">{video.description}</p>
-          <p className="flex items-center gap-1.5 text-xs text-slate-500">
-            <Clock className="size-3.5" aria-hidden />
-            Lesson · {video.duration}
-          </p>
+          <div className="flex items-center justify-between gap-1.5 pt-1">
+            <p className="flex items-center gap-1.5 text-xs text-slate-500">
+              <Clock className="size-3.5" aria-hidden />
+              Lesson · {video.duration}
+            </p>
+            {onDelete && (
+              <Button
+                variant="danger"
+                size="sm"
+                className="h-7 w-7 rounded-md p-0 shadow-none hover:bg-rose-50 hover:text-rose-600 focus-visible:ring-rose-200"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(video.id);
+                }}
+                isLoading={isDeleting}
+                title="Delete video"
+              >
+                {!isDeleting && <Trash2 className="size-3.5" aria-hidden />}
+              </Button>
+            )}
+          </div>
         </div>
       </Card>
     </Link>

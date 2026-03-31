@@ -10,10 +10,10 @@ import ForgetPassword from '../pages/PublicPages/ForgetPassword';
 import AdminLogin from '../pages/PublicPages/AdminLogin';
 import UserLogin from '../pages/PublicPages/UserLogin';
 import VerifyEmail from '../pages/PublicPages/VerifyEmail';
+import NewPassword from '../pages/PublicPages/NewPassword';
 
 // Layout
 import { UserShell, AdminShell } from '../components/dashboard';
-
 
 // User Pages
 import UserDashboard from '../pages/UserPages/UserDachboard';
@@ -49,12 +49,12 @@ import UpdateRole from '../pages/AdminPages/UpdateRole';
 import LandingVideo from '../pages/AdminPages/LandingVideo';
 import LandingProject from '../pages/AdminPages/LandingProject';
 import FAQPage from '../pages/AdminPages/FAQPage';
-
+import Receipts from '../pages/AdminPages/Receipts';
 
 // Common Pages
 import Profile from '../pages/UserPages/Profile';
-import ReceiptPreview from '../pages/CommonPages/ReceiptPreview';
-import NewPassword from '../pages/CommonPages/NewPassword';
+
+
 
 const AppRoutes: React.FC = () => {
   return (
@@ -64,6 +64,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/new-password" element={<NewPassword />} />
 
         {/* User Authentication Routes */}
         <Route path="/user-login" element={<UserLogin />} />
@@ -77,14 +78,13 @@ const AppRoutes: React.FC = () => {
             <Route path="/my-courses" element={<MyCourses />} />
             <Route path="/add-receipt" element={<AddReceipt />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/new-password" element={<NewPassword />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:id" element={<UserCoursePreview />} />
             <Route path="/videos" element={<Videos />} />
             <Route path="/videos/:id" element={<VideoDisplay />} />
             <Route path="/files" element={<Files />} />
             <Route path="/files/:id" element={<FilePreview />} />
-            <Route path="/receipts/:id" element={<ReceiptPreview />} />
+            {/* <Route path="/receipts/:id" element={<ReceiptPreview />} /> */}
             <Route path="/buy-course/:id" element={<BuyCourse />} />
           </Route>
         </Route>
@@ -115,6 +115,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/admin/landing-video" element={<LandingVideo />} />
             <Route path="/admin/landing-project" element={<LandingProject />} />
             <Route path="/admin/faq" element={<FAQPage />} />
+            <Route path="/admin/receipts" element={<Receipts />} />
           </Route>
         </Route>
 
