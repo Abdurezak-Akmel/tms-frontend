@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import {
   BarChart3,
@@ -12,6 +12,7 @@ import {
   UserRound,
   Users as UsersIcon,
   ChevronRight,
+  X,
 } from 'lucide-react';
 
 import { AppNavLink } from '../navigation';
@@ -89,22 +90,41 @@ const adminNav: NavItem[] = [
 
 
 export function AdminShell() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <div className="flex min-h-dvh bg-slate-50/50">
-      {/* Sidebar Sidebar sidebar */}
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm lg:hidden transition-opacity duration-300"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 lg:flex lg:w-72',
+          'fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 lg:static lg:flex',
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
       >
-        <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 px-6 py-5 transition-colors">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-slate-900 dark:bg-slate-800 text-white shadow-lg shadow-slate-200 dark:shadow-none ring-4 ring-slate-50 dark:ring-slate-900">
-            <ShieldCheck className="size-6" aria-hidden />
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-6 py-5 transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-slate-900 dark:bg-slate-800 text-white shadow-lg shadow-slate-200 dark:shadow-none ring-4 ring-slate-50 dark:ring-slate-900">
+              <ShieldCheck className="size-6" aria-hidden />
+            </div>
+            <div className="min-w-0">
+              <h1 className="truncate text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">HabeshaTech Admin</h1>
+              <p className="truncate text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">System Management</p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <h1 className="truncate text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">HabeshaTech Admin</h1>
-            <p className="truncate text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">System Management</p>
-          </div>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="lg:hidden flex size-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <X className="size-5" />
+          </button>
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6" aria-label="Admin Navigation">
@@ -121,6 +141,7 @@ export function AdminShell() {
                 to={item.to}
                 end={item.end}
                 className={navClass}
+                onClick={() => setIsSidebarOpen(false)}
               >
                 {item.icon}
                 <span className="flex-1">{item.label}</span>
@@ -144,8 +165,8 @@ export function AdminShell() {
       </aside>
 
       {/* Main Content Areas */}
-      <div className="flex flex-1 flex-col lg:pl-72 transition-all">
-        <AppHeader isAdmin />
+      <div className="flex flex-1 flex-col transition-all">
+        <AppHeader isAdmin onMenuOpen={() => setIsSidebarOpen(true)} />
 
         <main className="flex-1 bg-slate-50/50 dark:bg-slate-900/50 transition-colors">
           <div className="mx-auto max-w-7xl">

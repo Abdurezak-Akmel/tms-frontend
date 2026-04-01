@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import {
   BookMarked,
@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   MonitorPlay,
   UserRound,
+  X,
 } from 'lucide-react';
 import { AppNavLink } from '../navigation';
 import { Separator } from '../ui';
@@ -61,22 +62,40 @@ const mainNav: NavItem[] = [
 ];
 
 export function UserShell() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <div className="flex min-h-dvh flex-col bg-slate-50 dark:bg-slate-900 lg:flex-row transition-colors">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm lg:hidden transition-opacity duration-300"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       <aside
         className={cn(
-          'flex flex-col border-b border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-colors',
-          'lg:sticky lg:top-0 lg:h-dvh lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r lg:border-slate-200/90 dark:lg:border-slate-800',
+          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 lg:static lg:flex',
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
       >
-        <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 px-4 py-4 lg:px-5">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-[var(--color-brand)]/10 dark:bg-[var(--color-brand)]/20 text-[var(--color-brand)] dark:text-brand-400">
-            <GraduationCap className="size-5" strokeWidth={1.75} aria-hidden />
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-4 py-4 lg:px-5">
+          <div className="flex items-center gap-2">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-[var(--color-brand)]/10 dark:bg-[var(--color-brand)]/20 text-[var(--color-brand)] dark:text-brand-400">
+              <GraduationCap className="size-5" strokeWidth={1.75} aria-hidden />
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">HabeshaTech</p>
+              <p className="truncate text-xs text-slate-500 dark:text-slate-400">Learning Hub</p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">HabeshaTech</p>
-            <p className="truncate text-xs text-slate-500 dark:text-slate-400">Learning Hub</p>
-          </div>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="lg:hidden flex size-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <X className="size-5" />
+          </button>
         </div>
 
         <nav className="flex flex-1 flex-col gap-0.5 p-3 lg:overflow-y-auto" aria-label="Main">
@@ -89,6 +108,7 @@ export function UserShell() {
               to={item.to}
               end={item.end}
               className={navClass}
+              onClick={() => setIsSidebarOpen(false)}
             >
               {item.icon}
               {item.label}
@@ -108,7 +128,7 @@ export function UserShell() {
       </aside>
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col transition-colors">
-        <AppHeader isAdmin={false} />
+        <AppHeader isAdmin={false} onMenuOpen={() => setIsSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto w-full">
           <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 text-slate-900 dark:text-slate-100">
             <Outlet />
