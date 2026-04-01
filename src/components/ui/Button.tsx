@@ -13,21 +13,21 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-[var(--color-brand)] text-white shadow-sm hover:bg-[var(--color-brand-dark)] focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2',
+    'bg-[var(--color-brand)] text-white shadow-sm hover:bg-[var(--color-brand-dark)] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2',
   secondary:
-    'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-sm hover:bg-slate-800 dark:hover:bg-slate-200 focus-visible:ring-2 focus-visible:ring-slate-900 dark:focus-visible:ring-slate-100 focus-visible:ring-offset-2',
+    'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-sm hover:bg-slate-800 dark:hover:bg-slate-200 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-slate-900 dark:focus-visible:ring-slate-100 focus-visible:ring-offset-2',
   outline:
-    'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2',
+    'border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#21262d] text-slate-800 dark:text-slate-200 shadow-sm hover:bg-slate-50 dark:hover:bg-[#30363d] hover:border-slate-300 dark:hover:border-slate-600 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2',
   ghost:
-    'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2',
+    'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#21262d] hover:text-slate-900 dark:hover:text-slate-100 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2',
   danger:
-    'bg-rose-600 text-white shadow-sm hover:bg-rose-700 focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2',
+    'bg-rose-600 text-white shadow-sm hover:bg-rose-700 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: 'h-8 gap-1.5 px-3 text-sm rounded-lg',
-  md: 'h-10 gap-2 px-4 text-sm rounded-xl',
-  lg: 'h-12 gap-2 px-6 text-base rounded-xl',
+  sm: 'h-8 gap-1.5 px-3 text-xs font-semibold rounded-lg',
+  md: 'h-10 gap-2 px-4 text-sm font-semibold rounded-xl',
+  lg: 'h-12 gap-2 px-6 text-sm font-semibold rounded-xl',
 };
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -62,7 +62,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={isDisabled}
         className={cn(
-          'inline-flex items-center justify-center font-medium transition-colors',
+          'inline-flex items-center justify-center font-semibold transition-all duration-150',
           'disabled:pointer-events-none disabled:opacity-50',
           variantClasses[variant],
           sizeClasses[size],

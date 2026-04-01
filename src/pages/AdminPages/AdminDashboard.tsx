@@ -173,7 +173,7 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <Stack gap="lg" className="pb-10">
+    <Stack gap="lg" className="pb-10 animate-fade-in-up">
 
       <PageHeader
         title="Admin Dashboard"
@@ -181,16 +181,16 @@ const AdminDashboard = () => {
       />
 
       {/* Quick Stats */}
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label} className="border-slate-200/60 shadow-sm transition-shadow hover:shadow-md">
+          <Card key={stat.label} className="border-slate-200/70 dark:border-[#30363d] shadow-sm transition-all duration-200 hover:shadow-md dark:hover:shadow-slate-900/50 hover:-translate-y-0.5">
             <div className="flex items-center gap-4">
-              <div className={`flex size-8 items-center justify-center rounded-sm ${stat.bg} ${stat.color}`}>
-                <stat.icon className="size-6" strokeWidth={2} />
+              <div className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${stat.bg} dark:bg-opacity-20 ${stat.color}`}>
+                <stat.icon className="size-5" strokeWidth={1.75} />
               </div>
-              <div>
-                <p className="text-sm font-medium text-slate-500">{stat.label}</p>
-                <p className="text-md font-bold text-slate-900">{stat.value}</p>
+              <div className="min-w-0">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-[#8b949e]">{stat.label}</p>
+                <p className="mt-0.5 text-xl font-bold text-slate-900 dark:text-[#f0f6fc] tabular-nums">{stat.value}</p>
               </div>
             </div>
           </Card>
@@ -199,54 +199,54 @@ const AdminDashboard = () => {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* System Overview */}
-        <Card className="flex flex-col h-full overflow-hidden">
+        <Card className="flex flex-col h-full overflow-hidden border-slate-200/70 dark:border-[#30363d]">
           <CardHeader>
             <CardTitle>System Overview</CardTitle>
             <CardDescription>Key metrics and platform usage over the last 30 days.</CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-1 items-center justify-center min-h-48 border-2 border-dashed border-slate-100 rounded-xl m-4 mt-6">
+          <CardContent className="flex flex-1 items-center justify-center min-h-48 border-2 border-dashed border-slate-100 dark:border-[#30363d] rounded-xl m-4 mt-6">
             <div className="text-center">
-              <BarChart3 className="size-10 text-slate-300 mx-auto mb-2" />
-              <p className="text-sm text-slate-400 font-medium">Analytics chart placeholder</p>
+              <BarChart3 className="size-10 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
+              <p className="text-sm text-slate-400 dark:text-[#484f58] font-medium">Analytics chart placeholder</p>
             </div>
           </CardContent>
         </Card>
 
         {/* Management Tasks */}
-        <Card className="flex flex-col h-full">
+        <Card className="flex flex-col h-full border-slate-200/70 dark:border-[#30363d]">
           <CardHeader>
             <CardTitle>Management Tasks</CardTitle>
             <CardDescription>Frequent actions for administrators.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4 pt-6">
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 bg-slate-50/50">
+          <CardContent className="space-y-3 pt-6">
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 dark:border-[#30363d] bg-slate-50/60 dark:bg-[#0d1117]/40 transition-colors hover:border-slate-200 dark:hover:border-[#484f58]">
               <div className="flex items-center gap-3">
-                <Users className="size-4 text-slate-500" />
-                <span className="text-sm font-medium text-slate-700">Review new users</span>
+                <Users className="size-4 text-slate-500 dark:text-[#8b949e]" />
+                <span className="text-sm font-medium text-slate-700 dark:text-[#e6edf3]">Review new users</span>
               </div>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">Nice to do</span>
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-[#21262d] text-slate-600 dark:text-[#8b949e]">Nice to do</span>
             </div>
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 bg-slate-50/50">
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-amber-100 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 transition-colors hover:border-amber-200 dark:hover:border-amber-800/60">
               <div className="flex items-center gap-3">
-                <ClipboardList className="size-4 text-slate-500" />
-                <span className="text-sm font-medium text-slate-700">Audit access requests</span>
+                <ClipboardList className="size-4 text-amber-500 dark:text-amber-400" />
+                <span className="text-sm font-medium text-slate-700 dark:text-[#e6edf3]">Audit access requests</span>
               </div>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">Pending</span>
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400">Pending</span>
             </div>
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 bg-slate-50/50">
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-950/20 transition-colors hover:border-emerald-200 dark:hover:border-emerald-800/60">
               <div className="flex items-center gap-3">
-                <ShieldCheck className="size-4 text-slate-500" />
-                <span className="text-sm font-medium text-slate-700">Manage Roles</span>
+                <ShieldCheck className="size-4 text-emerald-500 dark:text-emerald-400" />
+                <span className="text-sm font-medium text-slate-700 dark:text-[#e6edf3]">Manage Roles</span>
               </div>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">On-going</span>
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">On-going</span>
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Landing Videos Management */}
-      <Card className="border-slate-200/60 shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-6">
+      <Card className="border-slate-200/70 dark:border-[#30363d] shadow-sm">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 dark:border-[#30363d] pb-6">
           <div>
             <CardTitle>Landing Page Videos</CardTitle>
             <CardDescription>Manage the video content displayed on the public landing page.</CardDescription>
@@ -256,7 +256,6 @@ const AdminDashboard = () => {
             size="sm"
             leftIcon={<Plus className="size-4" />}
             onClick={() => navigate('/admin/landing-video')}
-            className="rounded-xl shadow-md shadow-primary/20"
           >
             Create Video
           </Button>
@@ -264,38 +263,38 @@ const AdminDashboard = () => {
         <CardContent className="p-0">
           {isLoading ? (
             <div className="py-20 flex flex-col items-center justify-center gap-3">
-              <div className="size-8 border-4 border-slate-200 border-t-primary rounded-full animate-spin" />
-              <p className="text-sm text-slate-500 font-medium">Loading videos...</p>
+              <div className="size-8 border-2 border-[var(--color-brand)] border-t-transparent rounded-full animate-spin" />
+              <p className="text-sm text-slate-500 dark:text-[#8b949e] font-medium">Loading videos...</p>
             </div>
           ) : landingVideos.length === 0 ? (
             <div className="py-20 text-center">
-              <div className="size-16 rounded-2xl bg-slate-50 flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-slate-200">
-                <Video className="size-8 text-slate-300" />
+              <div className="size-16 rounded-2xl bg-slate-50 dark:bg-[#21262d] flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-slate-200 dark:border-[#30363d]">
+                <Video className="size-8 text-slate-300 dark:text-slate-600" />
               </div>
-              <p className="text-slate-500 font-bold">No landing videos found</p>
-              <p className="text-xs text-slate-400 mt-1">Start by creating your first landing video content.</p>
+              <p className="text-slate-500 dark:text-[#8b949e] font-semibold">No landing videos found</p>
+              <p className="text-xs text-slate-400 dark:text-[#484f58] mt-1">Start by creating your first landing video content.</p>
             </div>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-slate-100 dark:divide-[#30363d]">
               {landingVideos.map((video) => (
-                <div key={video.land_video_id} className="group flex items-center justify-between p-6 hover:bg-slate-50/80 transition-colors">
+                <div key={video.land_video_id} className="group flex items-center justify-between p-5 hover:bg-slate-50/80 dark:hover:bg-[#21262d]/60 transition-colors">
                   <div className="flex items-center gap-4 min-w-0">
-                    <div className="size-14 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0">
-                      <Video className="size-7" />
+                    <div className="size-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+                      <Video className="size-6" />
                     </div>
                     <div className="min-w-0">
-                      <h4 className="text-sm font-bold text-slate-900 truncate">
+                      <h4 className="text-sm font-semibold text-slate-900 dark:text-[#e6edf3] truncate">
                         {video.title || "Untitled Video"}
                       </h4>
                       <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-4 border-slate-200 bg-white text-slate-500 uppercase tracking-tighter">
+                        <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-4 uppercase tracking-tighter">
                           Order: {video.order_index}
                         </Badge>
                         <a
                           href={video.youtube_url}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center gap-1 text-[11px] text-indigo-600 hover:text-indigo-800 font-bold transition-colors"
+                          className="flex items-center gap-1 text-[11px] text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold transition-colors"
                         >
                           <ExternalLink size={10} />
                           YouTube Link
@@ -305,21 +304,21 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="text-slate-500 hover:text-indigo-600 bg-white shadow-sm border border-slate-200 rounded-xl px-3"
+                      className="text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 hover:border-indigo-200 dark:hover:border-indigo-800/60"
                       onClick={() => navigate(`/admin/landing-video?id=${video.land_video_id}`)}
                     >
-                      <Edit className="size-4 mr-2" />
+                      <Edit className="size-4 mr-1.5" />
                       Update
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="text-slate-400 hover:text-rose-600 bg-white shadow-sm border border-slate-200 rounded-xl px-3"
+                      className="text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:border-rose-200 dark:hover:border-rose-800/60"
                       onClick={() => handleDelete(video.land_video_id)}
                     >
-                      <Trash2 className="size-4 mr-2" />
+                      <Trash2 className="size-4 mr-1.5" />
                       Delete
                     </Button>
                   </div>

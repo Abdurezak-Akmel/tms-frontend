@@ -23,28 +23,28 @@ export function PageHeader({
   return (
     <header
       className={cn(
-        'flex flex-col gap-4 border-b border-slate-200/80 dark:border-slate-800 pb-6 sm:flex-row sm:items-start sm:justify-between transition-colors',
+        'flex flex-col gap-4 border-b border-slate-200/80 dark:border-[#30363d] pb-6 sm:flex-row sm:items-start sm:justify-between transition-colors',
         className,
       )}
       {...props}
     >
-      <div className="min-w-0 space-y-1">
+      <div className="min-w-0 space-y-1.5">
         <div className="flex items-center gap-3">
           {backPath && (
             <Link
               to={backPath}
-              className="group flex h-10 w-10 items-center justify-center rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 shadow-sm transition-all hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 active:scale-95 sm:hidden xl:flex"
+              className="group flex h-9 w-9 items-center justify-center rounded-xl bg-white dark:bg-[#21262d] border border-slate-200 dark:border-[#30363d] text-slate-500 dark:text-slate-400 shadow-sm transition-all duration-150 hover:bg-slate-50 dark:hover:bg-[#30363d] hover:border-slate-300 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-100 active:scale-95 sm:hidden xl:flex"
               aria-label="go back"
             >
-              <ChevronLeft size={20} className="transition-transform group-hover:-translate-x-0.5" />
+              <ChevronLeft size={18} className="transition-transform group-hover:-translate-x-0.5" />
             </Link>
           )}
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-[#f0f6fc] sm:text-3xl">
             {title}
           </h1>
         </div>
         {description ? (
-          <p className="max-w-2xl text-sm text-slate-600 dark:text-slate-400 sm:text-base">
+          <p className="max-w-2xl text-sm text-slate-500 dark:text-[#8b949e] sm:text-base leading-relaxed">
             {description}
           </p>
         ) : null}

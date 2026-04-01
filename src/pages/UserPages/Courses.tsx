@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { BookOpen, Loader2 } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import {
   CourseList,
   CoursesToolbar,
@@ -110,14 +110,14 @@ const Courses = () => {
   const accessibleCount = courses.filter((c) => !c.locked).length;
 
   return (
-    <Stack gap="lg" className="pb-10">
+    <Stack gap="lg" className="pb-10 animate-fade-in-up">
       <PageHeader
         title="Courses"
         description="Browse the full catalog. Courses assigned to your role are fully accessible; others require admin access."
         actions={
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-600 dark:text-slate-400 shadow-sm transition-colors">
-              <BookOpen className="size-4 text-[var(--color-brand)] dark:text-brand-400" aria-hidden />
+            <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-[#30363d] bg-white dark:bg-[#21262d] px-3 py-2 text-sm font-medium text-slate-700 dark:text-[#e6edf3] shadow-sm transition-colors">
+              <BookOpen className="size-4 text-[var(--color-brand)] dark:text-indigo-400" aria-hidden />
               {accessibleCount} / {courses.length} accessible
             </span>
           </div>
@@ -147,7 +147,7 @@ const Courses = () => {
 
           {isLoading ? (
             <div className="flex h-64 items-center justify-center">
-              <Loader2 className="size-8 animate-spin text-slate-300" />
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-brand)] border-t-transparent" />
             </div>
           ) : (
             <CourseList courses={filtered} linkPrefix="/courses" />

@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { GraduationCap, Loader2 } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import {
   CourseList,
   CoursesToolbar,
@@ -108,14 +108,14 @@ const MyCourses = () => {
   }, [searchQuery, activeCategory, courses]);
 
   return (
-    <Stack gap="lg" className="pb-10">
+    <Stack gap="lg" className="pb-10 animate-fade-in-up">
       <PageHeader
         title="My Courses"
         description="Continue learning from the courses assigned to your professional role."
         actions={
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 shadow-sm">
-              <GraduationCap className="size-4 text-[var(--color-brand)]" aria-hidden />
+            <span className="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-[#30363d] bg-white dark:bg-[#21262d] px-3 py-2 text-sm font-medium text-slate-700 dark:text-[#e6edf3] shadow-sm transition-colors">
+              <GraduationCap className="size-4 text-[var(--color-brand)] dark:text-indigo-400" aria-hidden />
               {courses.length} {courses.length === 1 ? 'course' : 'courses'}
             </span>
           </div>
@@ -146,17 +146,19 @@ const MyCourses = () => {
 
           {isLoading ? (
             <div className="flex h-64 items-center justify-center">
-              <Loader2 className="size-8 animate-spin text-slate-300" />
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-brand)] border-t-transparent" />
             </div>
           ) : (
             <CourseList courses={filtered} linkPrefix="/courses" />
           )}
 
           {!isLoading && courses.length === 0 && (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 py-20 text-center">
-              <GraduationCap className="mb-4 size-12 text-slate-300" />
-              <h3 className="text-lg font-semibold text-slate-900">No courses assigned yet</h3>
-              <p className="max-w-xs text-sm text-slate-500">
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 dark:border-[#30363d] bg-slate-50/50 dark:bg-[#0d1117]/40 py-20 text-center transition-colors">
+              <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-white dark:bg-[#21262d] shadow-sm ring-1 ring-slate-200/80 dark:ring-[#30363d]">
+                <GraduationCap className="size-8 text-slate-300 dark:text-slate-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-[#f0f6fc]">No courses assigned yet</h3>
+              <p className="mt-1 max-w-xs text-sm text-slate-500 dark:text-[#8b949e]">
                 You haven't been assigned any courses for your current role. Please check the main
                 catalog to request access or contact your admin.
               </p>

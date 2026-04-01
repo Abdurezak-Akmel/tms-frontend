@@ -9,24 +9,24 @@ const styles: Record<
   { wrap: string; icon: typeof Info; iconClass: string }
 > = {
   info: {
-    wrap: 'border-sky-200 bg-sky-50/90 text-sky-950',
+    wrap: 'border-sky-200/80 bg-sky-50 text-sky-900 dark:border-sky-800/60 dark:bg-sky-950/30 dark:text-sky-200',
     icon: Info,
-    iconClass: 'text-sky-600',
+    iconClass: 'text-sky-500 dark:text-sky-400',
   },
   success: {
-    wrap: 'border-emerald-200 bg-emerald-50/90 text-emerald-950',
+    wrap: 'border-emerald-200/80 bg-emerald-50 text-emerald-900 dark:border-emerald-800/60 dark:bg-emerald-950/30 dark:text-emerald-200',
     icon: CheckCircle2,
-    iconClass: 'text-emerald-600',
+    iconClass: 'text-emerald-500 dark:text-emerald-400',
   },
   warning: {
-    wrap: 'border-amber-200 bg-amber-50/90 text-amber-950',
+    wrap: 'border-amber-200/80 bg-amber-50 text-amber-900 dark:border-amber-800/60 dark:bg-amber-950/30 dark:text-amber-200',
     icon: TriangleAlert,
-    iconClass: 'text-amber-600',
+    iconClass: 'text-amber-500 dark:text-amber-400',
   },
   danger: {
-    wrap: 'border-rose-200 bg-rose-50/90 text-rose-950',
+    wrap: 'border-rose-200/80 bg-rose-50 text-rose-900 dark:border-rose-800/60 dark:bg-rose-950/30 dark:text-rose-200',
     icon: AlertCircle,
-    iconClass: 'text-rose-600',
+    iconClass: 'text-rose-500 dark:text-rose-400',
   },
 };
 
@@ -51,7 +51,7 @@ export function Callout({
     <div
       role="note"
       className={cn(
-        'flex gap-3 rounded-xl border px-4 py-3 text-sm',
+        'flex gap-3 rounded-xl border px-4 py-3.5 text-sm transition-colors',
         cfg.wrap,
         className,
       )}

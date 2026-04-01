@@ -20,7 +20,7 @@ export function Card({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-colors',
+        'rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#161b22] shadow-sm transition-all duration-200',
         paddingMap[padding],
         className,
       )}
@@ -34,7 +34,7 @@ export type CardHeaderProps = HTMLAttributes<HTMLDivElement>;
 export function CardHeader({ className, ...props }: CardHeaderProps) {
   return (
     <div
-      className={cn('flex flex-col gap-1.5 border-b border-slate-100 dark:border-slate-800 pb-4', className)}
+      className={cn('flex flex-col gap-1.5 border-b border-slate-100 dark:border-slate-800/80 pb-4', className)}
       {...props}
     />
   );
@@ -45,7 +45,7 @@ export type CardTitleProps = HTMLAttributes<HTMLHeadingElement>;
 export function CardTitle({ className, ...props }: CardTitleProps) {
   return (
     <h3
-      className={cn('text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100', className)}
+      className={cn('text-lg font-semibold tracking-tight text-slate-900 dark:text-[#f0f6fc]', className)}
       {...props}
     />
   );
@@ -55,7 +55,7 @@ export type CardDescriptionProps = HTMLAttributes<HTMLParagraphElement>;
 
 export function CardDescription({ className, ...props }: CardDescriptionProps) {
   return (
-    <p className={cn('text-sm text-slate-600 dark:text-slate-400', className)} {...props} />
+    <p className={cn('text-sm text-slate-500 dark:text-[#8b949e]', className)} {...props} />
   );
 }
 
@@ -71,7 +71,7 @@ export function CardFooter({ className, ...props }: CardFooterProps) {
   return (
     <div
       className={cn(
-        'flex flex-wrap items-center gap-3 border-t border-slate-100 dark:border-slate-800 pt-4',
+        'flex flex-wrap items-center gap-3 border-t border-slate-100 dark:border-slate-800/80 pt-4',
         className,
       )}
       {...props}

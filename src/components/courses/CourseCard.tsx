@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Lock } from 'lucide-react';
+import { ArrowRight, BookOpen, Lock, Tag } from 'lucide-react';
 import { Badge } from '../ui/Badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/Card';
 import { cn } from '../../utils/cn';
 import type { CourseSummary } from './types';
 
@@ -27,84 +26,96 @@ export function CourseCard({ course, className, href }: CourseCardProps) {
     <Link
       to={destination}
       className={cn(
-        'group block rounded-2xl outline-none transition-[transform,box-shadow] focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2',
-        isLocked && 'opacity-75',
+        'group block rounded-2xl outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2',
+        isLocked ? 'opacity-80 hover:opacity-100' : '',
         className,
       )}
     >
-      <Card
-        padding="none"
+      <div
         className={cn(
-          'relative h-full overflow-hidden border-slate-200/90 dark:border-slate-800 shadow-sm transition-shadow dark:bg-slate-900',
+          'relative h-full overflow-hidden rounded-2xl border bg-white dark:bg-[#161b22] shadow-sm transition-all duration-200',
           isLocked
-            ? 'group-hover:border-red-200 dark:group-hover:border-red-900 group-hover:shadow-md'
-            : 'group-hover:border-slate-300/90 dark:group-hover:border-slate-700 group-hover:shadow-md',
+            ? 'border-slate-200 dark:border-slate-800 group-hover:border-rose-200 dark:group-hover:border-rose-900/60 group-hover:shadow-md group-hover:shadow-rose-100/50 dark:group-hover:shadow-rose-950/30'
+            : 'border-slate-200/80 dark:border-slate-800 group-hover:border-indigo-200 dark:group-hover:border-indigo-900/60 group-hover:-translate-y-0.5 group-hover:shadow-md group-hover:shadow-indigo-100/50 dark:group-hover:shadow-indigo-950/30',
         )}
       >
         {/* Lock overlay badge */}
         {isLocked && (
-          <div className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-lg bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600 shadow-sm ring-1 ring-red-200">
+          <div className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/60 px-2.5 py-1 text-xs font-semibold text-rose-600 dark:text-rose-400 shadow-sm ring-1 ring-rose-200 dark:ring-rose-900/60">
             <Lock className="size-3.5" aria-hidden />
             Access Required
           </div>
         )}
 
-        <CardHeader
+        {/* Card header / accent band */}
+        <div
           className={cn(
-            'border-b border-slate-100 dark:border-slate-800 px-5 pb-4 pt-5 transition-colors',
+            'border-b border-slate-100 dark:border-slate-800/80 px-5 pb-4 pt-5 transition-colors',
             isLocked
-              ? 'bg-gradient-to-br from-red-50/60 to-white dark:from-red-950/40 dark:to-slate-900'
-              : 'bg-gradient-to-br from-slate-50/90 to-white dark:from-slate-800/50 dark:to-slate-900',
+              ? 'bg-gradient-to-br from-rose-50/70 via-white to-white dark:from-rose-950/20 dark:via-[#161b22] dark:to-[#161b22]'
+              : 'bg-gradient-to-br from-slate-50/90 via-white to-indigo-50/30 dark:from-slate-800/40 dark:via-[#161b22] dark:to-indigo-950/20',
           )}
         >
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <Badge variant="outline" className="font-normal">
+            <Badge variant="outline" className="font-medium text-xs">
               {course.category}
             </Badge>
             <Badge variant={levelVariant[course.level]}>{course.level}</Badge>
           </div>
-          <CardTitle
+          <h3
             className={cn(
-              'mt-3 text-lg leading-snug dark:text-slate-100',
+              'mt-3 text-base font-semibold leading-snug transition-colors',
               isLocked
-                ? 'text-slate-500 dark:text-slate-400 group-hover:text-red-600 dark:group-hover:text-red-500'
-                : 'group-hover:text-[var(--color-brand)] dark:group-hover:text-brand-400',
+                ? 'text-slate-600 dark:text-slate-400 group-hover:text-rose-600 dark:group-hover:text-rose-400'
+                : 'text-slate-800 dark:text-[#e6edf3] group-hover:text-[var(--color-brand)] dark:group-hover:text-indigo-400',
             )}
           >
             {course.title}
-          </CardTitle>
-          <CardDescription className="line-clamp-2 text-sm dark:text-slate-400">{course.shortDescription}</CardDescription>
-        </CardHeader>
+          </h3>
+          <p className="mt-1.5 line-clamp-2 text-sm text-slate-500 dark:text-[#8b949e]">
+            {course.shortDescription}
+          </p>
+        </div>
 
-        <CardContent className="px-5 py-4 dark:bg-slate-900/50">
-          <dl className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-bold">
+        {/* Card footer */}
+        <div className="px-5 py-4 dark:bg-[#161b22]">
+          <dl className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600 dark:text-[#8b949e]">
+            {/* Price chip */}
+            <div className="flex items-center gap-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 text-emerald-700 dark:text-emerald-400 font-semibold text-xs ring-1 ring-emerald-200/60 dark:ring-emerald-800/40">
+              <Tag className="size-3" aria-hidden />
               <dt className="sr-only">Price</dt>
               <dd>{course.price || 'Free'}</dd>
             </div>
-            <div className="flex w-full items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3 sm:w-auto sm:border-0 sm:pt-0">
+
+            {/* Spacer */}
+            <div className="flex-1" />
+
+            {/* Action label */}
+            <div className="flex w-full items-center justify-between border-t border-slate-100 dark:border-slate-800/60 pt-3">
               {isLocked ? (
-                <span className="inline-flex items-center gap-1 text-sm font-medium text-red-500">
-                  <Lock className="size-4" aria-hidden />
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-500 dark:text-rose-400">
+                  <Lock className="size-3.5" aria-hidden />
                   Locked
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-sm font-medium text-[var(--color-brand)]">
-                  <BookOpen className="size-4" aria-hidden />
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--color-brand)] dark:text-indigo-400">
+                  <BookOpen className="size-3.5" aria-hidden />
                   View course
                 </span>
               )}
               <ArrowRight
                 className={cn(
-                  'size-4 transition-transform group-hover:translate-x-0.5',
-                  isLocked ? 'text-red-300 group-hover:text-red-500' : 'text-slate-400 group-hover:text-[var(--color-brand)]',
+                  'size-4 transition-transform duration-150 group-hover:translate-x-0.5',
+                  isLocked
+                    ? 'text-rose-300 dark:text-rose-700 group-hover:text-rose-500 dark:group-hover:text-rose-400'
+                    : 'text-slate-300 dark:text-slate-600 group-hover:text-[var(--color-brand)] dark:group-hover:text-indigo-400',
                 )}
                 aria-hidden
               />
             </div>
           </dl>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </Link>
   );
 }

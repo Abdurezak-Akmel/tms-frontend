@@ -26,35 +26,40 @@ const AppHeader = ({ isAdmin = false }: AppHeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 px-4 backdrop-blur-md sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="flex items-center gap-4 lg:hidden">
-        <div className="flex size-9 items-center justify-center rounded-xl bg-slate-900 dark:bg-slate-800 text-white">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/80 dark:border-[#30363d] bg-white/80 dark:bg-[#161b22]/90 px-4 backdrop-blur-md sm:px-6 lg:px-8 transition-all duration-300 shadow-sm dark:shadow-[0_1px_0_0_#30363d]">
+      <div className="flex items-center gap-3 lg:hidden">
+        <div className={`flex size-9 items-center justify-center rounded-xl text-white shadow-inner ${isAdmin ? 'bg-gradient-to-br from-violet-600 to-indigo-700' : 'bg-gradient-to-br from-indigo-600 to-violet-600'}`}>
           {isAdmin ? <ShieldCheck className="size-5" aria-hidden /> : <GraduationCap className="size-5" aria-hidden />}
         </div>
-        <span className="font-semibold text-slate-900 dark:text-slate-100">{isAdmin ? 'Admin Control' : 'Learning Hub'}</span>
+        <span className="font-semibold text-slate-900 dark:text-[#f0f6fc] tracking-tight">
+          {isAdmin ? 'Admin Control' : 'Learning Hub'}
+        </span>
       </div>
 
-      <div className="hidden items-center lg:flex">
+      <div className="hidden items-center lg:flex flex-1">
         {isAdmin && <Breadcrumbs />}
       </div>
 
-      <div className="flex items-center gap-3 ml-auto">
+      <div className="flex items-center gap-2 ml-auto">
         <button
           onClick={toggleTheme}
-          className="relative flex size-10 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
+          className="relative flex size-9 items-center justify-center rounded-lg border border-transparent text-slate-500 dark:text-slate-400 transition-all duration-150 hover:bg-slate-100 dark:hover:bg-[#21262d] hover:border-slate-200 dark:hover:border-[#30363d] hover:text-slate-900 dark:hover:text-slate-100 active:scale-95"
           aria-label="Toggle themes"
         >
-          {theme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
+          {theme === 'dark'
+            ? <Sun className="size-4.5" />
+            : <Moon className="size-4.5" />
+          }
         </button>
 
-        <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
+        <div className="h-5 w-px bg-slate-200 dark:bg-[#30363d] mx-1" />
 
         <Button
           variant="outline"
           size="sm"
-          leftIcon={<LogOut className="size-4" />}
+          leftIcon={<LogOut className="size-3.5" />}
           onClick={handleLogout}
-          className="text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-100 border-slate-200 dark:border-slate-700 dark:text-red-400 dark:hover:bg-red-400/10 dark:hover:text-red-300 bg-transparent"
+          className="text-rose-600 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 dark:text-rose-400 dark:hover:bg-rose-950/30 dark:hover:text-rose-300 dark:hover:border-rose-800/60 dark:border-[#30363d] dark:bg-transparent"
         >
           Logout
         </Button>
