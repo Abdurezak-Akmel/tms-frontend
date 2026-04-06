@@ -84,7 +84,6 @@ const AppRoutes: React.FC = () => {
             <Route path="/videos/:id" element={<VideoDisplay />} />
             <Route path="/files" element={<Files />} />
             <Route path="/files/:id" element={<FilePreview />} />
-            {/* <Route path="/receipts/:id" element={<ReceiptPreview />} /> */}
             <Route path="/buy-course/:id" element={<BuyCourse />} />
           </Route>
         </Route>
