@@ -36,7 +36,7 @@ const Courses = () => {
           shortDescription: c.description || 'No description provided.',
           category: c.category || 'Uncategorized',
           level: (c.level ? (c.level.charAt(0).toUpperCase() + c.level.slice(1).toLowerCase()) : 'Beginner') as CourseLevel,
-          duration: 'NA', // Mocked as requested
+          duration: c.duration || 'N/A',
           moduleCount: 0,     // Mocked as requested
           price: c.price
         }));

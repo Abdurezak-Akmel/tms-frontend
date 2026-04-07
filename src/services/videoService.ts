@@ -17,7 +17,7 @@ export interface CreateVideoData {
   description?: string;
   youtube_url: string;
   order_index?: number;
-  duration?: number;
+  duration?: string;
 }
 
 export interface UpdateVideoData {
@@ -26,7 +26,7 @@ export interface UpdateVideoData {
   description?: string;
   youtube_url?: string;
   order_index?: number;
-  duration?: number;
+  duration?: string;
 }
 
 export interface Video {
@@ -36,7 +36,7 @@ export interface Video {
   description: string | null;
   youtube_url: string;
   order_index: number | null;
-  duration: number | null;
+  duration: string | null;
   created_at: string;
   updated_at: string | null;
 }
@@ -194,8 +194,8 @@ export const videoService = {
 
     // Validate duration if provided
     if ('duration' in videoData && videoData.duration !== undefined) {
-      if (!Number.isInteger(videoData.duration) || videoData.duration <= 0) {
-        errors.push('duration must be a positive integer (in seconds)');
+      if (typeof videoData.duration !== 'string') {
+        errors.push('duration must be a string (e.g. "10:30")');
       }
     }
 
@@ -233,9 +233,11 @@ export const videoService = {
   },
 
   // Helper function to format duration for display
-  formatDuration(seconds: number | null): string {
-    if (!seconds) return 'Unknown';
+  formatDuration(duration: string | number | null): string {
+    if (!duration) return 'Unknown';
+    if (typeof duration === 'string') return duration; // Return already formatted string
 
+    const seconds = duration;
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
@@ -296,6 +298,28 @@ export const videoService = {
     return { title, duration };
   },
 
+  // Helper function to parse duration string (e.g., "10:30" or "1:05:00") to seconds
+  parseDuration(duration: string | number | null): number {
+    if (!duration) return 0;
+    if (typeof duration === 'number') return duration;
+
+    const durationStr = duration.toString();
+    // If it's just numbers, return it as seconds
+    if (/^\d+$/.test(durationStr)) return parseInt(durationStr);
+
+    const parts = durationStr.split(':').map(Number);
+    if (parts.some(isNaN)) return 0;
+
+    if (parts.length === 3) {
+      // HH:MM:SS
+      return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    } else if (parts.length === 2) {
+      // MM:SS
+      return parts[0] * 60 + parts[1];
+    }
+    return parts[0] || 0;
+  },
+
   // Helper to parse ISO 8601 duration to seconds
   parseISODuration(isoDuration: string): number {
     const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
@@ -335,7 +359,7 @@ export const videoService = {
 
   // Helper function to get total duration of videos
   getTotalDuration(videos: Video[]): number {
-    return videos.reduce((total, video) => total + (video.duration || 0), 0);
+    return videos.reduce((total, video) => total + (this.parseDuration(video.duration) || 0), 0);
   },
 
   // Helper function to get video statistics (would need backend implementation)

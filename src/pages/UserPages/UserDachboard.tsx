@@ -324,7 +324,7 @@ const UserDashboard = () => {
               {[
                 { to: '/videos', label: 'Watch videos' },
                 { to: '/files', label: 'Open files' },
-                { to: '/profile', label: 'Edit profile' },
+                { to: '/profile', label: 'My Profile' },
                 { to: '/my-courses', label: 'My courses' },
               ].map((link) => (
                 <Link

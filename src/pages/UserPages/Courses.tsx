@@ -72,6 +72,7 @@ const Courses = () => {
         level: (c.level
           ? c.level.charAt(0).toUpperCase() + c.level.slice(1).toLowerCase()
           : 'Beginner') as CourseLevel,
+        duration: c.duration || 'N/A',
         moduleCount: 10,     // Placeholder as not in DB
         price: c.price || 'Free',
         locked: !assignedIds.has(c.course_id),

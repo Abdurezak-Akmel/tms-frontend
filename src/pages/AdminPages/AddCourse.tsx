@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 import { PageHeader, Stack } from '../../components/layout';
 import { Button } from '../../components/ui/Button';
@@ -27,6 +27,10 @@ const LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
 
 const AddCourse = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get('edit_id');
+  const isEditing = !!editId;
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -35,7 +39,37 @@ const AddCourse = () => {
     category: CATEGORIES[0],
     level: LEVELS[0].toLowerCase(),
     price: '',
+    duration: '',
   });
+
+  useEffect(() => {
+    if (isEditing && editId) {
+      const fetchCourse = async () => {
+        try {
+          setIsLoading(true);
+          const response = await courseService.getCourseById(parseInt(editId));
+          if (response.success && response.course) {
+            const c = response.course;
+            setFormData({
+              title: c.title,
+              description: c.description || '',
+              category: c.category || CATEGORIES[0],
+              level: c.level.toLowerCase(),
+              price: c.price || '',
+              duration: c.duration || '',
+            });
+          } else {
+            setError(response.message || 'Failed to fetch course data');
+          }
+        } catch (err: any) {
+          setError(err.message || 'An unexpected error occurred');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchCourse();
+    }
+  }, [editId, isEditing]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -48,11 +82,17 @@ const AddCourse = () => {
     setError(null);
 
     try {
-      const response = await courseService.createCourse(formData);
-      if (response.success) {
-        navigate('/admin/courses');
+      let response;
+      if (isEditing && editId) {
+        response = await courseService.updateCourse(parseInt(editId), formData);
       } else {
-        setError(response.message || 'Failed to create course');
+        response = await courseService.createCourse(formData);
+      }
+
+      if (response.success) {
+        navigate(isEditing ? `/admin/courses/${editId}` : '/admin/courses');
+      } else {
+        setError(response.message || `Failed to ${isEditing ? 'update' : 'create'} course`);
       }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
@@ -64,19 +104,21 @@ const AddCourse = () => {
   return (
     <Stack gap="lg" className="pb-10 max-w-3xl mx-auto">
       <div className="flex items-center gap-2">
-         <Button 
-           variant="ghost" 
-           size="sm" 
-           onClick={() => navigate(-1)} 
-           leftIcon={<ArrowLeft className="size-4" />}
-         >
-           Back
-         </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate(-1)}
+          leftIcon={<ArrowLeft className="size-4" />}
+        >
+          Back
+        </Button>
       </div>
 
       <PageHeader
-        title="Create New Course"
-        description="Add a new course to the catalog. Fill in the details below to get started."
+        title={isEditing ? 'Update Course' : 'Create New Course'}
+        description={isEditing 
+          ? 'Modify the details of your existing course. All changes will be saved immediately.' 
+          : 'Add a new course to the catalog. Fill in the details below to get started.'}
       />
 
       {error && (
@@ -161,6 +203,18 @@ const AddCourse = () => {
                   required
                 />
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="duration">Course Duration</Label>
+                <Input
+                  id="duration"
+                  name="duration"
+                  placeholder="e.g. 10 hours or 4 weeks"
+                  value={formData.duration}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
 
             <div className="pt-4 flex justify-end">
@@ -171,7 +225,7 @@ const AddCourse = () => {
                 leftIcon={<Save className="size-4" />}
                 className="w-full sm:w-auto"
               >
-                Create Course
+                {isEditing ? 'Update Course' : 'Create Course'}
               </Button>
             </div>
           </form>

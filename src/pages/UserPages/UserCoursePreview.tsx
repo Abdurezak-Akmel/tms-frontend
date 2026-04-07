@@ -74,7 +74,7 @@ const UserCoursePreview = () => {
             videos = videosRes.videos.map((v) => ({
               id: v.video_id.toString(),
               title: v.title || 'Untitled video',
-              duration: v.duration ? videoService.formatDuration(v.duration) : 'Unknown',
+              duration: v.duration ? videoService.formatDuration(v.duration) : 'Unknown'
             }));
           }
 
@@ -99,7 +99,7 @@ const UserCoursePreview = () => {
           fullDescription: c.description || 'No description provided.',
           category: c.category || 'Uncategorized',
           level: levelRaw as CourseLevel,
-          duration: '—',
+          duration: c.duration || 'N/A',
           moduleCount: videos.length,
           price: (c.price && Number(c.price) > 0) ? `${c.price} ETB` : 'Free', // Use real price and format it
           currency: 'ETB',
@@ -163,6 +163,9 @@ const UserCoursePreview = () => {
           actions={
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="outline">{course.category}</Badge>
+              <Badge variant="outline" className="bg-slate-50 dark:bg-[#21262d] text-slate-700 dark:text-[#8b949e] border-slate-200 dark:border-[#30363d]">
+                {course.duration}
+              </Badge>
               <Badge variant={levelBadge[levelKey]}>{course.level}</Badge>
             </div>
           }

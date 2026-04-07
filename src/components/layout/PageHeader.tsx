@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
-export type PageHeaderProps = HTMLAttributes<HTMLElement> & {
-  title: string;
-  description?: string;
+export type PageHeaderProps = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
+  title: ReactNode;
+  description?: ReactNode;
   /** Link to a previous page */
   backPath?: string;
   /** Actions aligned to the right on larger screens */
@@ -44,9 +44,9 @@ export function PageHeader({
           </h1>
         </div>
         {description ? (
-          <p className="max-w-2xl text-sm text-slate-500 dark:text-[#8b949e] sm:text-base leading-relaxed">
+          <div className="max-w-2xl text-sm text-slate-500 dark:text-[#8b949e] sm:text-base leading-relaxed">
             {description}
-          </p>
+          </div>
         ) : null}
       </div>
       {actions ? (

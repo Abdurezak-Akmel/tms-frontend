@@ -32,11 +32,11 @@ export interface UpdateCourseData {
 export interface Course {
   course_id: number;
   title: string;
-  description: string | null;
-  category: string | null;
-  level: string | null;
+  description: string;
+  category: string;
+  level: string;
   price: string;
-  duration: string | null;
+  duration: string;
   created_at: string;
   updated_at: string | null;
 }

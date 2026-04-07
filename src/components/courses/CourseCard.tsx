@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Lock, Tag } from 'lucide-react';
+import { ArrowRight, BookOpen, Clock, Lock, Tag } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { cn } from '../../utils/cn';
 import type { CourseSummary } from './types';
@@ -80,6 +80,13 @@ export function CourseCard({ course, className, href }: CourseCardProps) {
         {/* Card footer */}
         <div className="px-5 py-4 dark:bg-[#161b22]">
           <dl className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600 dark:text-[#8b949e]">
+            {/* Duration chip */}
+            <div className="flex items-center gap-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 px-2.5 py-1 text-slate-600 dark:text-slate-400 font-medium text-xs ring-1 ring-slate-200/60 dark:ring-slate-800/40">
+              <Clock className="size-3" aria-hidden />
+              <dt className="sr-only">Duration</dt>
+              <dd>{course.duration}</dd>
+            </div>
+
             {/* Price chip */}
             <div className="flex items-center gap-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 text-emerald-700 dark:text-emerald-400 font-semibold text-xs ring-1 ring-emerald-200/60 dark:ring-emerald-800/40">
               <Tag className="size-3" aria-hidden />

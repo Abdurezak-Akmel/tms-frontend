@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Film, FileText, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Film, FileText, Trash2, Edit } from 'lucide-react';
 import { EmptyState } from '../../components/feedback';
 import { PageHeader, Stack } from '../../components/layout';
 import { Badge, Button } from '../../components/ui';
@@ -125,57 +125,108 @@ const CoursePreview = () => {
   return (
     <Stack gap="lg" className="pb-10">
       <div>
+      <div className="animate-fade-in-up">
         <Link
           to="/admin/courses"
-          className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[var(--color-brand)] hover:underline"
+          className="group mb-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-[var(--color-brand)] transition-colors"
         >
-          <ArrowLeft className="size-4" aria-hidden />
-          All courses
+          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" aria-hidden />
+          <span>Back to courses</span>
         </Link>
 
         <PageHeader
-          title={course.title}
-          description={course.description || ''}
+          title={<span className="gradient-text pb-1">{course.title}</span>}
+          className="relative overflow-hidden transition-all duration-300 border-none pb-0"
+          description={
+            <div className="mt-2 space-y-5">
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge variant="outline" className="px-3 py-1 border-slate-200/80 bg-white/40 text-slate-800 dark:bg-[#21262d]/50 dark:border-[#30363d] backdrop-blur-sm">
+                  {course.category}
+                </Badge>
+                <Badge 
+                  variant={levelBadge[course.level?.toLowerCase() || 'beginner']} 
+                  className="px-3 py-1 shadow-sm font-semibold"
+                >
+                  {course.level}
+                </Badge>
+                <div className="hidden h-5 w-px bg-slate-200 dark:bg-[#30363d] sm:block mx-1"></div>
+                <div className="flex items-center gap-2 text-[13px] font-semibold text-slate-500 dark:text-[#8b949e]">
+                  <Film className="size-4 text-indigo-500" />
+                  <span>{videos.length || 0} Videos</span>
+                </div>
+                <div className="flex items-center gap-2 text-[13px] font-semibold text-slate-500 dark:text-[#8b949e]">
+                  <FileText className="size-4 text-sky-500" />
+                  <span>{materials.length || 0} Files</span>
+                </div>
+              </div>
+              {course.description && (
+                <p className="max-w-3xl text-[15px] leading-relaxed text-slate-500 dark:text-[#8b949e] font-medium opacity-90">
+                  {course.description.substring(0, 180)}
+                  {course.description.length > 180 ? '...' : ''}
+                </p>
+              )}
+            </div>
+          }
           actions={
-            <div className="flex flex-wrap items-center gap-3">
-              <Badge variant="outline">{course.category}</Badge>
-              <Badge variant={levelBadge[course.level?.toLowerCase() || 'beginner']}>
-                {course.level}
-              </Badge>
-              <Badge variant="success" className="bg-emerald-50 text-emerald-700 border-emerald-200">
-                {course.price || 'Free'}
-              </Badge>
-              <div className="flex gap-2">
-                <div className="w-px h-8 bg-slate-200 mx-1"></div>
-                <ButtonLink
-                  to={`/admin/add-video?course_id=${course.course_id}`}
-                  variant="primary"
-                  size="sm"
-                  leftIcon={<Plus className="size-4" />}
-                >
-                  Add Video
-                </ButtonLink>
-                <ButtonLink
-                  to={`/admin/add-file?course_id=${course.course_id}`}
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<Plus className="size-4" />}
-                >
-                  Add File
-                </ButtonLink>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={handleDelete}
-                  isLoading={isDeleting}
-                  leftIcon={<Trash2 className="size-4" />}
-                >
-                  Delete Course
-                </Button>
+            <div className="flex flex-col gap-5 sm:items-end">
+              <div className="flex flex-wrap gap-3">
+                <Badge variant="outline" className="bg-white/60 dark:bg-[#21262d] text-slate-600 dark:text-slate-400 border-slate-200/80 dark:border-[#30363d] px-4 py-1.5 text-xs font-semibold backdrop-blur-sm">
+                  {course.duration || 'Flexible Duration'}
+                </Badge>
+                <Badge variant="info" className="bg-indigo-50/80 text-indigo-700 border-indigo-100/50 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border-indigo-500/20 px-5 py-1.5 text-xs font-bold shadow-sm">
+                  {course.price || 'Free Access'}
+                </Badge>
+              </div>
+              
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200/50 dark:border-[#30363d] bg-white/50 dark:bg-[#161b22] p-2 shadow-sm backdrop-blur-md">
+                  <ButtonLink
+                    to={`/admin/add-video?course_id=${course.course_id}`}
+                    variant="primary"
+                    size="sm"
+                    className="h-9 py-0 px-4 text-xs font-bold shadow-lg shadow-indigo-500/20 hover:scale-[1.02] transition-all"
+                    leftIcon={<Plus className="size-4" />}
+                  >
+                    Add Video
+                  </ButtonLink>
+                  <ButtonLink
+                    to={`/admin/add-file?course_id=${course.course_id}`}
+                    variant="outline"
+                    size="sm"
+                    className="h-9 py-0 px-4 text-xs font-bold hover:bg-slate-50 transition-all"
+                    leftIcon={<Plus className="size-4" />}
+                  >
+                    Add File
+                  </ButtonLink>
+                </div>
+
+                <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200/50 dark:border-[#30363d] bg-slate-50/50 dark:bg-[#21262d] p-2 shadow-sm backdrop-blur-md">
+                  <ButtonLink
+                    to={`/admin/add-course?edit_id=${course.course_id}`}
+                    variant="ghost"
+                    size="sm"
+                    className="h-9 py-0 px-4 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/30"
+                    leftIcon={<Edit className="size-4" />}
+                  >
+                    Edit
+                  </ButtonLink>
+                  <div className="h-5 w-px bg-slate-300/50 dark:bg-[#30363d]"></div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleDelete}
+                    isLoading={isDeleting}
+                    className="h-9 py-0 px-4 text-xs font-bold text-red-500 hover:text-red-600 hover:bg-red-50/50 dark:hover:bg-red-950/20"
+                    leftIcon={<Trash2 className="size-4" />}
+                  >
+                    Drop
+                  </Button>
+                </div>
               </div>
             </div>
           }
         />
+      </div>
       </div>
 
       <Card className="border-slate-200/90 shadow-sm" padding="lg">

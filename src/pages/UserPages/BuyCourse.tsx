@@ -106,7 +106,7 @@ const BuyCourse = () => {
             return;
         }
         if (!paymentAmount || isNaN(Number(paymentAmount)) || Number(paymentAmount) <= 0) {
-            setError('Please enter a valid payment amount.');
+            setError('Please enter a valid payment amount (Only the number, no currency symbol).');
             return;
         }
         if (!courseId) {
@@ -309,9 +309,14 @@ const BuyCourse = () => {
                             <Button
                                 variant="outline"
                                 className="w-full bg-white"
-                                onClick={() => window.location.href = "mailto:support@tms.com?subject=Enrollment%20Support%20Request"}
                             >
-                                Contact Instructor
+                                Contact: +251 955 370 783
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="w-full bg-white"
+                            >
+                                Contact: +251 708 830 783
                             </Button>
                         </CardContent>
                     </Card>

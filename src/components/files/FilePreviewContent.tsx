@@ -31,9 +31,10 @@ export function FilePreviewContent({ file }: FilePreviewContentProps) {
             </div>
           </div>
           <div className="flex shrink-0 flex-wrap gap-2">
-            <a 
-              href={file.url} 
+            <a
+              href={file.url}
               download={file.name}
+              target='_blank'
               className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200 transition-all hover:bg-slate-50 active:scale-95"
             >
               <Download className="size-4" />
@@ -47,8 +48,8 @@ export function FilePreviewContent({ file }: FilePreviewContentProps) {
         <CardHeader className="border-b border-slate-100 bg-slate-50/80 px-6 py-5">
           <CardTitle className="text-lg">Preview</CardTitle>
           <CardDescription>
-            {file.kind === 'PDF' || file.kind === 'Image' 
-              ? "Browser-native preview for this file type." 
+            {file.kind === 'PDF' || file.kind === 'Image'
+              ? "Browser-native preview for this file type."
               : "Inline preview is not available for this file type."}
           </CardDescription>
         </CardHeader>
@@ -110,9 +111,9 @@ function PreviewFrame({ kind, name, url }: { kind: FileCatalogItem['kind']; name
     return (
       <div className="flex min-h-[400px] w-full items-center justify-center bg-slate-50 p-8">
         <div className="relative max-w-full overflow-hidden rounded-lg shadow-lg ring-1 ring-slate-200">
-          <img 
-            src={url} 
-            alt={name} 
+          <img
+            src={url}
+            alt={name}
             className="max-h-[60vh] object-contain"
           />
           <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 text-center text-[10px] text-white backdrop-blur-sm">

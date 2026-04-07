@@ -69,24 +69,7 @@ const AddVideo: React.FC = () => {
     return () => clearTimeout(timer);
   }, [formData.youtube_url]);
 
-  // Helper to parse duration string (e.g., "10:30" or "1:05:00") to seconds
-  const parseDuration = (durationStr: string): number => {
-    if (!durationStr) return 0;
-    // If it's just numbers, return it as seconds
-    if (/^\d+$/.test(durationStr.toString())) return parseInt(durationStr.toString());
 
-    const parts = durationStr.toString().split(':').map(Number);
-    if (parts.some(isNaN)) return 0;
-
-    if (parts.length === 3) {
-      // HH:MM:SS
-      return parts[0] * 3600 + parts[1] * 60 + parts[2];
-    } else if (parts.length === 2) {
-      // MM:SS
-      return parts[0] * 60 + parts[1];
-    }
-    return parts[0] || 0;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,13 +77,7 @@ const AddVideo: React.FC = () => {
     setError(null);
 
     try {
-      // Parse the duration string back to seconds before sending to API
-      const finalData = {
-        ...formData,
-        duration: parseDuration(formData.duration)
-      };
-
-      const response = await videoService.createVideo(finalData);
+      const response = await videoService.createVideo(formData);
       if (response.success) {
         setSuccess(true);
         setTimeout(() => {
