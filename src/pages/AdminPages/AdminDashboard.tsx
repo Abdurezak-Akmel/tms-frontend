@@ -11,6 +11,7 @@ import {
   Badge
 } from '../../components/ui';
 import { PageHeader, Stack } from '../../components/layout';
+import { ResponsiveGrid, ResponsiveContainer, ResponsiveFlex } from '../../components/ui';
 import { landingVideoService, type LandingVideo } from '../../services/landingVideoService';
 import { projectService, type Project } from '../../services/projectService';
 import { faqService, type FAQ } from '../../services/faqService';
@@ -20,7 +21,7 @@ import { courseService } from '../../services/courseService';
 import { videoService } from '../../services/videoService';
 import { courseMaterialService } from '../../services/courseMaterialService';
 import { accessRequestService } from '../../services/accessRequestService';
-import { receiptService } from '../../services/receiptService'; // Imported receiptService
+import { receiptService } from '../../services/receiptService';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -197,52 +198,69 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* System Overview */}
-        <Card className="flex flex-col h-full overflow-hidden border-slate-200/70 dark:border-[#30363d]">
-          <CardHeader>
-            <CardTitle>System Overview</CardTitle>
-            <CardDescription>Key metrics and platform usage over the last 30 days.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-1 items-center justify-center min-h-48 border-2 border-dashed border-slate-100 dark:border-[#30363d] rounded-xl m-4 mt-6">
-            <div className="text-center">
-              <BarChart3 className="size-10 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
-              <p className="text-sm text-slate-400 dark:text-[#484f58] font-medium">Analytics chart placeholder</p>
-            </div>
-          </CardContent>
-        </Card>
+      <ResponsiveContainer maxWidth={{ mobile: 'full', tablet: 'xl', desktop: 'xl' }} padding={{ mobile: 'sm', tablet: 'md', desktop: 'lg' }}>
+        <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 2 }} gap="lg">
+          {/* System Overview */}
+          <Card className="flex flex-col h-full overflow-hidden border-slate-200/70 dark:border-[#30363d]">
+            <CardHeader>
+              <CardTitle>System Overview</CardTitle>
+              <CardDescription>Key metrics and platform usage over the last 30 days.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-1 items-center justify-center min-h-48 border-2 border-dashed border-slate-100 dark:border-[#30363d] rounded-xl m-4 mt-6">
+              <div className="text-center">
+                <BarChart3 className="size-10 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
+                <p className="text-sm text-slate-400 dark:text-[#484f58] font-medium">Analytics chart placeholder</p>
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Management Tasks */}
-        <Card className="flex flex-col h-full border-slate-200/70 dark:border-[#30363d]">
-          <CardHeader>
-            <CardTitle>Management Tasks</CardTitle>
-            <CardDescription>Frequent actions for administrators.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 pt-6">
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 dark:border-[#30363d] bg-slate-50/60 dark:bg-[#0d1117]/40 transition-colors hover:border-slate-200 dark:hover:border-[#484f58]">
-              <div className="flex items-center gap-3">
-                <Users className="size-4 text-slate-500 dark:text-[#8b949e]" />
-                <span className="text-sm font-medium text-slate-700 dark:text-[#e6edf3]">Review new users</span>
-              </div>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-[#21262d] text-slate-600 dark:text-[#8b949e]">Nice to do</span>
-            </div>
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-amber-100 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 transition-colors hover:border-amber-200 dark:hover:border-amber-800/60">
-              <div className="flex items-center gap-3">
-                <ClipboardList className="size-4 text-amber-500 dark:text-amber-400" />
-                <span className="text-sm font-medium text-slate-700 dark:text-[#e6edf3]">Audit access requests</span>
-              </div>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400">Pending</span>
-            </div>
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-950/20 transition-colors hover:border-emerald-200 dark:hover:border-emerald-800/60">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="size-4 text-emerald-500 dark:text-emerald-400" />
-                <span className="text-sm font-medium text-slate-700 dark:text-[#e6edf3]">Manage Roles</span>
-              </div>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">On-going</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          {/* Management Tasks */}
+          <Card className="flex flex-col h-full border-slate-200/70 dark:border-[#30363d]">
+            <CardHeader>
+              <CardTitle>Management Tasks</CardTitle>
+              <CardDescription>Frequent actions for administrators.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 pt-6">
+              <ResponsiveFlex 
+                direction={{ mobile: 'col', tablet: 'row', desktop: 'row' }} 
+                justify={{ mobile: 'start', tablet: 'between', desktop: 'between' }}
+                gap="sm"
+                className="p-3.5 rounded-xl border border-slate-100 dark:border-[#30363d] bg-slate-50/60 dark:bg-[#0d1117]/40 transition-colors hover:border-slate-200 dark:hover:border-[#484f58]"
+              >
+                <div className="flex items-center gap-3">
+                  <Users className="size-4 text-slate-500 dark:text-[#8b949e]" />
+                  <span className="text-sm font-medium text-slate-700 dark:text-[#e6edf3]">Review new users</span>
+                </div>
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-[#21262d] text-slate-600 dark:text-[#8b949e]">Nice to do</span>
+              </ResponsiveFlex>
+              <ResponsiveFlex 
+                direction={{ mobile: 'col', tablet: 'row', desktop: 'row' }} 
+                justify={{ mobile: 'start', tablet: 'between', desktop: 'between' }}
+                gap="sm"
+                className="p-3.5 rounded-xl border border-amber-100 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 transition-colors hover:border-amber-200 dark:hover:border-amber-800/60"
+              >
+                <div className="flex items-center gap-3">
+                  <ClipboardList className="size-4 text-amber-500 dark:text-amber-400" />
+                  <span className="text-sm font-medium text-slate-700 dark:text-[#e6edf3]">Audit access requests</span>
+                </div>
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400">Pending</span>
+              </ResponsiveFlex>
+              <ResponsiveFlex 
+                direction={{ mobile: 'col', tablet: 'row', desktop: 'row' }} 
+                justify={{ mobile: 'start', tablet: 'between', desktop: 'between' }}
+                gap="sm"
+                className="p-3.5 rounded-xl border border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-950/20 transition-colors hover:border-emerald-200 dark:hover:border-emerald-800/60"
+              >
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="size-4 text-emerald-500 dark:text-emerald-400" />
+                  <span className="text-sm font-medium text-slate-700 dark:text-[#e6edf3]">Manage Roles</span>
+                </div>
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">On-going</span>
+              </ResponsiveFlex>
+            </CardContent>
+          </Card>
+        </ResponsiveGrid>
+      </ResponsiveContainer>
 
       {/* Landing Videos Management */}
       <Card className="border-slate-200/70 dark:border-[#30363d] shadow-sm">
