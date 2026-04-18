@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogIn, Shield } from 'lucide-react';
+import { Eye, EyeOff, LogIn, Shield } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { Callout } from '../feedback';
 import { FormFieldSlot } from '../forms';
@@ -50,6 +50,7 @@ export function UserLoginForm() {
   const [errors, setErrors] = useState<UserLoginErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   function handleChange<K extends keyof UserLoginValues>(
     key: K,
@@ -167,16 +168,27 @@ export function UserLoginForm() {
 
           <FormFieldSlot id="password" label="Password" error={errors.password} required>
             {(a11yProps) => (
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                value={values.password}
-                onChange={(event) => handleChange('password', event.target.value)}
-                error={Boolean(errors.password)}
-                {...a11yProps}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  value={values.password}
+                  onChange={(event) => handleChange('password', event.target.value)}
+                  error={Boolean(errors.password)}
+                  className="pr-10"
+                  {...a11yProps}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center text-slate-400 hover:text-[var(--color-brand)] transition-colors focus:outline-none"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                </button>
+              </div>
             )}
           </FormFieldSlot>
 

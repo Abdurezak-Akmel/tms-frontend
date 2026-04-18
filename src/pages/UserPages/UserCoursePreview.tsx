@@ -8,6 +8,9 @@ import {
   FileText,
   Loader2,
   Lock,
+  Mail,
+  Phone,
+  Send,
 } from 'lucide-react';
 import {
   CourseResourceLists,
@@ -203,13 +206,46 @@ const UserCoursePreview = () => {
             <div className="size-16 rounded-full bg-slate-200/50 flex items-center justify-center text-slate-400">
               <Lock className="size-8" />
             </div>
-            <div className="space-y-2 max-w-sm">
-              <h3 className="text-lg font-semibold text-slate-900">Content Locked</h3>
-              <h3>For Payment Contact: +251 955 370 783 | +251 708 830 783</h3>
-              <p className="text-sm text-slate-500">
-                The resources for this course are not assigned to your current role.
-                Please enroll to gain full access to all materials.
-              </p>
+            <div className="space-y-6 max-w-2xl px-4">
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-slate-900">Content Locked</h3>
+                <p className="text-sm text-slate-500">
+                  Thanks for choosing Habesha Tech. Pay and enroll in this course to get full access to all materials.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-200/60 shadow-sm transition-all hover:border-[var(--color-brand)]/20 hover:shadow-md">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <Phone className="size-6" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Contact Address</p>
+                    <p className="text-sm font-bold text-slate-700 font-mono">+251 955 370 783</p>
+                    <p className="text-sm font-bold text-slate-700 font-mono">+251 708 830 783</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-200/60 shadow-sm transition-all hover:border-[var(--color-brand)]/20 hover:shadow-md">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+                    <Send className="size-6" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Telegram</p>
+                    <p className="text-sm font-bold text-slate-700">@HabeshaTech_Support</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-200/60 shadow-sm transition-all hover:border-[var(--color-brand)]/20 hover:shadow-md md:col-span-2">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                    <Mail className="size-6" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Email Inquiry</p>
+                    <p className="text-sm font-bold text-slate-700">habeshatech16@gmail.com</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="mt-4 flex flex-col items-center gap-4">

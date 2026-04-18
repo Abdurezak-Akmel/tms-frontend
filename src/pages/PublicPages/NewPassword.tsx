@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Lock, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Lock, ShieldCheck, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 
 import {
   Button,
@@ -60,6 +60,8 @@ const NewPassword = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   function handleChange<K extends keyof ResetPasswordValues>(
     key: K,
@@ -145,29 +147,51 @@ const NewPassword = () => {
 
               <FormFieldSlot id="newPassword" label="New password" error={errors.newPassword} required>
                 {(a11yProps) => (
-                  <Input
-                    id="newPassword"
-                    type="password"
-                    placeholder="••••••••"
-                    value={values.newPassword}
-                    onChange={(e) => handleChange('newPassword', e.target.value)}
-                    error={Boolean(errors.newPassword)}
-                    {...a11yProps}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="newPassword"
+                      type={showNewPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={values.newPassword}
+                      onChange={(e) => handleChange('newPassword', e.target.value)}
+                      error={Boolean(errors.newPassword)}
+                      className="pr-10"
+                      {...a11yProps}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center text-slate-400 hover:text-[var(--color-brand)] transition-colors focus:outline-none"
+                      aria-label={showNewPassword ? "Hide password" : "Show password"}
+                    >
+                      {showNewPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                    </button>
+                  </div>
                 )}
               </FormFieldSlot>
 
               <FormFieldSlot id="confirmPassword" label="Confirm new password" error={errors.confirmPassword} required>
                 {(a11yProps) => (
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="••••••••"
-                    value={values.confirmPassword}
-                    onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                    error={Boolean(errors.confirmPassword)}
-                    {...a11yProps}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={values.confirmPassword}
+                      onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                      error={Boolean(errors.confirmPassword)}
+                      className="pr-10"
+                      {...a11yProps}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center text-slate-400 hover:text-[var(--color-brand)] transition-colors focus:outline-none"
+                      aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    >
+                      {showConfirmPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                    </button>
+                  </div>
                 )}
               </FormFieldSlot>
 
