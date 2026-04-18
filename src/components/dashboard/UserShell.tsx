@@ -65,7 +65,7 @@ export function UserShell() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-dvh flex-col bg-slate-50 dark:bg-slate-900 lg:flex-row transition-colors">
+    <div className="flex min-h-dvh flex-col bg-white dark:bg-slate-950 lg:flex-row transition-colors">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div

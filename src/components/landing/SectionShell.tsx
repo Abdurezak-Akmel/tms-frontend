@@ -11,7 +11,7 @@ export type SectionShellProps = HTMLAttributes<HTMLElement> & {
 
 const toneMap = {
   default: 'bg-transparent',
-  muted: 'bg-slate-50/80 dark:bg-slate-900/50',
+  muted: 'bg-[#fafafa] dark:bg-slate-900/50',
   dark: 'bg-slate-900 text-white [&_.section-eyebrow]:text-indigo-300 [&_h2]:text-white [&_.section-desc]:text-slate-300',
 };
 
@@ -73,8 +73,8 @@ export function SectionIntro({
       </p>
       <h2
         className={cn(
-          'text-3xl font-semibold tracking-tight sm:text-4xl',
-          inverse ? 'text-white' : 'text-slate-900 dark:text-slate-100',
+          'text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl',
+          inverse ? 'text-white' : 'text-black dark:text-slate-100',
         )}
       >
         {title}
@@ -82,8 +82,8 @@ export function SectionIntro({
       {description ? (
         <p
           className={cn(
-            'section-desc text-lg',
-            inverse ? 'text-slate-300' : 'text-slate-600 dark:text-slate-400',
+            'section-desc text-lg md:text-xl',
+            inverse ? 'text-slate-300' : 'text-slate-800 dark:text-slate-400',
           )}
         >
           {description}

@@ -20,7 +20,7 @@ export function Card({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#161b22] shadow-sm transition-all duration-200',
+        'rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-[#161b22] shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300',
         paddingMap[padding],
         className,
       )}
@@ -45,7 +45,7 @@ export type CardTitleProps = HTMLAttributes<HTMLHeadingElement>;
 export function CardTitle({ className, ...props }: CardTitleProps) {
   return (
     <h3
-      className={cn('text-lg font-semibold tracking-tight text-slate-900 dark:text-[#f0f6fc]', className)}
+      className={cn('text-lg font-bold tracking-tight text-black dark:text-[#f0f6fc]', className)}
       {...props}
     />
   );
@@ -55,7 +55,7 @@ export type CardDescriptionProps = HTMLAttributes<HTMLParagraphElement>;
 
 export function CardDescription({ className, ...props }: CardDescriptionProps) {
   return (
-    <p className={cn('text-sm text-slate-500 dark:text-[#8b949e]', className)} {...props} />
+    <p className={cn('text-sm text-slate-800 dark:text-[#8b949e]', className)} {...props} />
   );
 }
 

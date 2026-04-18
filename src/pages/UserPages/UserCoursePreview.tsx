@@ -205,6 +205,7 @@ const UserCoursePreview = () => {
             </div>
             <div className="space-y-2 max-w-sm">
               <h3 className="text-lg font-semibold text-slate-900">Content Locked</h3>
+              <h3>For Payment Contact: +251 955 370 783 | +251 708 830 783</h3>
               <p className="text-sm text-slate-500">
                 The resources for this course are not assigned to your current role.
                 Please enroll to gain full access to all materials.

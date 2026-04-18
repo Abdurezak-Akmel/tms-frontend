@@ -117,8 +117,8 @@ const UserDashboard = () => {
       hint: 'Total access',
       tone: 'success' as const,
       icon: BookOpen,
-      iconBg: 'bg-emerald-50 dark:bg-emerald-950/40',
-      iconColor: 'text-emerald-600 dark:text-emerald-400',
+      iconBg: 'bg-emerald-50/50 dark:bg-emerald-950/40',
+      iconColor: 'text-emerald-700 dark:text-emerald-400',
     },
     {
       label: 'Unlocked Videos',
@@ -126,8 +126,8 @@ const UserDashboard = () => {
       hint: 'Available to watch',
       tone: 'default' as const,
       icon: TrendingUp,
-      iconBg: 'bg-indigo-50 dark:bg-indigo-950/40',
-      iconColor: 'text-indigo-600 dark:text-indigo-400',
+      iconBg: 'bg-indigo-50/50 dark:bg-indigo-950/40',
+      iconColor: 'text-indigo-700 dark:text-indigo-400',
     },
     {
       label: 'Unlocked Files',
@@ -135,8 +135,8 @@ const UserDashboard = () => {
       hint: 'Downloadable resources',
       tone: 'default' as const,
       icon: Target,
-      iconBg: 'bg-violet-50 dark:bg-violet-950/40',
-      iconColor: 'text-violet-600 dark:text-violet-400',
+      iconBg: 'bg-violet-50/50 dark:bg-violet-950/40',
+      iconColor: 'text-violet-700 dark:text-violet-400',
     },
     {
       label: 'Pending Requests',
@@ -144,8 +144,8 @@ const UserDashboard = () => {
       hint: 'Enrollments under review',
       tone: 'warning' as const,
       icon: Clock,
-      iconBg: 'bg-amber-50 dark:bg-amber-950/40',
-      iconColor: 'text-amber-600 dark:text-amber-400',
+      iconBg: 'bg-amber-50/50 dark:bg-amber-950/40',
+      iconColor: 'text-amber-700 dark:text-amber-400',
     },
   ];
 
@@ -168,7 +168,7 @@ const UserDashboard = () => {
         {statCards.map((s) => {
           const Icon = s.icon;
           return (
-            <Card key={s.label} padding="md" className="border-slate-200/80 dark:border-[#30363d] shadow-sm hover:shadow-md dark:hover:shadow-slate-900/50 transition-all duration-200">
+            <Card key={s.label} padding="md" className="border-slate-100 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm hover:shadow-lg transition-all duration-300">
               <CardContent className="pt-0">
                 <div className="flex items-start justify-between gap-3">
                   <div className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${s.iconBg}`}>
@@ -179,9 +179,9 @@ const UserDashboard = () => {
                   </Badge>
                 </div>
                 <div className="mt-3">
-                  <p className="text-3xl font-bold tabular-nums text-slate-900 dark:text-[#f0f6fc]">{s.value}</p>
-                  <p className="mt-0.5 text-xs font-medium uppercase tracking-wide text-slate-400 dark:text-[#8b949e]">{s.label}</p>
-                  <p className="mt-1 text-xs text-slate-500 dark:text-[#8b949e]">{s.hint}</p>
+                  <p className="text-3xl font-black tabular-nums text-black dark:text-[#f0f6fc]">{s.value}</p>
+                  <p className="mt-0.5 text-xs font-black uppercase tracking-widest text-black/60 dark:text-[#8b949e]">{s.label}</p>
+                  <p className="mt-1 text-xs font-bold text-black/70 dark:text-[#8b949e]">{s.hint}</p>
                 </div>
               </CardContent>
             </Card>
@@ -192,13 +192,13 @@ const UserDashboard = () => {
       {/* Main content grid */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Continue learning */}
-        <Card className="border-slate-200/80 dark:border-[#30363d] shadow-sm lg:col-span-2" padding="lg">
+        <Card className="border-slate-200/80 dark:border-[#30363d] bg-white dark:bg-slate-900 shadow-sm lg:col-span-2" padding="lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <BookOpen className="size-5 text-[var(--color-brand)] dark:text-indigo-400" aria-hidden />
+            <CardTitle className="flex items-center gap-2 text-xl font-bold text-black dark:text-slate-100">
+              <BookOpen className="size-6 text-indigo-600 dark:text-indigo-400" aria-hidden />
               Continue learning
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-black font-bold">
               Your most recent modules — open the course catalog or my courses for the full list.
             </CardDescription>
           </CardHeader>
@@ -208,13 +208,13 @@ const UserDashboard = () => {
                 <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--color-brand)] border-t-transparent" />
               </div>
             ) : activeCourses.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-slate-200 dark:border-[#30363d] bg-slate-50/80 dark:bg-[#0d1117]/50 p-6 text-center">
-                <BookOpen className="mx-auto mb-2 size-8 text-slate-300 dark:text-slate-600" />
-                <p className="text-sm font-medium text-slate-500 dark:text-[#8b949e]">
+              <div className="rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-10 text-center">
+                <BookOpen className="mx-auto mb-3 size-10 text-slate-300 dark:text-slate-600" />
+                <p className="text-base font-bold text-black dark:text-slate-300">
                   You haven't enrolled in any courses yet.
                 </p>
-                <div className="mt-3">
-                  <ButtonLink to="/courses" variant="outline" size="sm">
+                <div className="mt-4">
+                  <ButtonLink to="/courses" variant="primary" size="md">
                     Browse Catalog
                   </ButtonLink>
                 </div>
@@ -227,8 +227,8 @@ const UserDashboard = () => {
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0 space-y-1">
-                      <p className="font-semibold text-slate-900 dark:text-[#e6edf3] group-hover:text-[var(--color-brand)] dark:group-hover:text-indigo-400 transition-colors">{c.title}</p>
-                      <p className="text-xs text-slate-500 dark:text-[#8b949e]">{c.category || 'Uncategorized'}</p>
+                      <p className="text-base font-black text-black dark:text-slate-100 group-hover:text-indigo-600 transition-colors">{c.title}</p>
+                      <p className="text-xs font-black uppercase tracking-wider text-black/40 dark:text-slate-400">{c.category || 'Uncategorized'}</p>
                     </div>
                     <ButtonLink to={`/courses/${c.course_id}`} variant="outline" size="sm" className="shrink-0">
                       View
@@ -241,30 +241,30 @@ const UserDashboard = () => {
         </Card>
 
         {/* This week checklist */}
-        <Card className="border-slate-200/80 dark:border-[#30363d] shadow-sm" padding="lg">
+        <Card className="border-slate-200/80 dark:border-[#30363d] bg-white dark:bg-slate-900 shadow-sm" padding="lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Target className="size-5 text-[var(--color-brand)] dark:text-indigo-400" aria-hidden />
+            <CardTitle className="flex items-center gap-2 text-xl font-black text-black dark:text-slate-100">
+              <Target className="size-6 text-indigo-600 dark:text-indigo-400" aria-hidden />
               This week
             </CardTitle>
-            <CardDescription>A focused checklist to stay on schedule.</CardDescription>
+            <CardDescription className="text-black font-bold">A focused checklist to stay on schedule.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {[
                 'Check newly assigned courses',
                 'Review new files and notes uploaded',
                 'Stay up-to-date with course videos',
               ].map((item) => (
-                <li key={item} className="flex gap-2 text-sm text-slate-700 dark:text-[#8b949e]">
-                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-500 dark:text-emerald-400" aria-hidden />
+                <li key={item} className="flex gap-3 text-sm font-black text-black dark:text-[#8b949e]">
+                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-600 dark:text-emerald-400" aria-hidden />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
-            <div className="mt-5 rounded-xl border border-dashed border-slate-200 dark:border-[#30363d] bg-slate-50/80 dark:bg-[#0d1117]/40 p-3.5">
-              <p className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-[#8b949e]">
-                <Calendar className="size-4 text-slate-400 dark:text-[#484f58]" aria-hidden />
+            <div className="mt-6 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 shadow-sm">
+              <p className="flex items-center gap-3 text-sm font-black text-black dark:text-slate-300">
+                <Calendar className="size-5 text-indigo-600" aria-hidden />
                 Tip: block 25 minutes daily for video lessons.
               </p>
             </div>
@@ -275,34 +275,34 @@ const UserDashboard = () => {
       {/* Bottom grid */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Recent activity */}
-        <Card className="border-slate-200/80 dark:border-[#30363d] shadow-sm" padding="lg">
+        <Card className="border-slate-200/80 dark:border-[#30363d] bg-white dark:bg-slate-900 shadow-sm" padding="lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Clock className="size-5 text-[var(--color-brand)] dark:text-indigo-400" aria-hidden />
+            <CardTitle className="flex items-center gap-2 text-xl font-black text-black dark:text-slate-100">
+              <Clock className="size-6 text-indigo-600 dark:text-indigo-400" aria-hidden />
               Recent activity
             </CardTitle>
-            <CardDescription>Your latest enrollment and access events.</CardDescription>
+            <CardDescription className="text-black font-bold">Your latest enrollment and access events.</CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-4">
               {stats.pendingRequests > 0 && (
-                <li className="flex flex-col gap-0.5 border-b border-slate-100 dark:border-[#30363d] pb-4 last:border-0 last:pb-0">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-[#e6edf3]">Pending Requests</p>
-                  <p className="text-sm text-slate-500 dark:text-[#8b949e]">
+                <li className="flex flex-col gap-1 border-b border-slate-100 dark:border-slate-800 pb-5 last:border-0 last:pb-0">
+                  <p className="text-base font-black text-black dark:text-slate-100">Pending Requests</p>
+                  <p className="text-sm font-bold text-black/80 dark:text-slate-400">
                     You have {stats.pendingRequests} enrollment {stats.pendingRequests === 1 ? 'request' : 'requests'} under admin review.
                   </p>
                 </li>
               )}
               {activeCourses.length > 0 && (
-                <li className="flex flex-col gap-0.5 border-b border-slate-100 dark:border-[#30363d] pb-4 last:border-0 last:pb-0">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-[#e6edf3]">Enrolled</p>
-                  <p className="text-sm text-slate-500 dark:text-[#8b949e]">
+                <li className="flex flex-col gap-1 border-b border-slate-100 dark:border-slate-800 pb-5 last:border-0 last:pb-0">
+                  <p className="text-base font-black text-black dark:text-slate-100">Enrolled</p>
+                  <p className="text-sm font-bold text-black/80 dark:text-slate-400">
                     You now have access to {stats.enrolledCourses} {stats.enrolledCourses === 1 ? 'course' : 'courses'}.
                   </p>
                 </li>
               )}
               {stats.pendingRequests === 0 && activeCourses.length === 0 && (
-                <p className="text-sm text-slate-500 dark:text-[#8b949e]">
+                <p className="text-sm font-black text-black/60 dark:text-slate-400">
                   No recent activity detected. Enroll in a course to get started!
                 </p>
               )}
@@ -313,11 +313,11 @@ const UserDashboard = () => {
         {/* Explore resources */}
         <Card className="border-slate-200/80 dark:border-[#30363d] bg-gradient-to-br from-indigo-50/60 via-white to-violet-50/30 dark:from-indigo-950/20 dark:via-[#161b22] dark:to-violet-950/10 shadow-sm" padding="lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Sparkles className="size-5 text-[var(--color-brand)] dark:text-indigo-400" aria-hidden />
+            <CardTitle className="flex items-center gap-2 text-xl font-black text-black dark:text-slate-100">
+              <Sparkles className="size-6 text-indigo-600 dark:text-indigo-400" aria-hidden />
               Explore resources
             </CardTitle>
-            <CardDescription>Shortcuts to the main areas of your workspace.</CardDescription>
+            <CardDescription className="text-black font-bold">Shortcuts to the main areas of your workspace.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-2 sm:grid-cols-2">
@@ -330,10 +330,10 @@ const UserDashboard = () => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="group flex items-center justify-between rounded-xl border border-slate-200/80 dark:border-[#30363d] bg-white/90 dark:bg-[#21262d] px-4 py-3 text-sm font-semibold text-slate-700 dark:text-[#e6edf3] shadow-sm transition-all duration-150 hover:border-[var(--color-brand)]/40 dark:hover:border-indigo-700/60 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 hover:-translate-y-0.5 hover:shadow-md"
+                  className="group flex items-center justify-between rounded-2xl border border-slate-100 dark:border-[#30363d] bg-white dark:bg-[#21262d] px-5 py-4 text-base font-bold text-black dark:text-[#e6edf3] shadow-sm transition-all duration-300 hover:border-indigo-600/40 dark:hover:border-indigo-700/60 hover:bg-slate-50 dark:hover:bg-indigo-950/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/10"
                 >
                   {link.label}
-                  <ArrowRight className="size-4 text-slate-300 dark:text-slate-600 transition-transform group-hover:translate-x-0.5 group-hover:text-[var(--color-brand)] dark:group-hover:text-indigo-400" />
+                  <ArrowRight className="size-5 text-slate-300 dark:text-slate-600 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
                 </Link>
               ))}
             </div>

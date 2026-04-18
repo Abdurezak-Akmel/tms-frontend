@@ -30,7 +30,6 @@ import {
   CardTitle,
 } from '../ui/Card';
 import { SectionIntro, SectionShell } from './SectionShell';
-
 const TECH = [
   { name: 'React', detail: 'Components & hooks' },
   { name: 'TypeScript', detail: 'Typed, safer code' },
@@ -57,7 +56,7 @@ const BENEFITS = [
     icon: Code2,
   },
   {
-    title: 'Architectural Thninking - not only tools and tech stacks',
+    title: 'Architectural Thinking - not only tools and tech stacks',
     description:
       'You learn how to assemble components not how to write javascript code',
     icon: MessageSquare,
@@ -109,27 +108,31 @@ export function LandingHero() {
   return (
     <section
       id="hero"
-      className="relative scroll-mt-20 overflow-hidden border-b border-slate-200/80 bg-gradient-to-b from-white via-indigo-50/40 to-[var(--color-surface)]"
+      className="relative scroll-mt-20 overflow-hidden border-b border-slate-100 bg-white"
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.35]"
+        className="pointer-events-none absolute inset-0 opacity-[0.2]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234f46e5' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
         aria-hidden
       />
-      <Container className="relative py-16 sm:py-20 md:py-28 lg:py-32">
-        <Stack gap="lg" align="center" className="mx-auto max-w-3xl text-center">
-          <Badge variant="outline" className="border-indigo-200/80 bg-white/80 px-3 py-1 text-xs font-medium text-indigo-800 shadow-sm backdrop-blur">
-            <Sparkles className="mr-1.5 inline size-3.5 text-[var(--color-brand)]" aria-hidden />
+      {/* Dynamic gradient blobs for "rich aesthetics" */}
+      <div className="pointer-events-none absolute -left-20 -top-20 size-96 rounded-full bg-indigo-200/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 top-40 size-80 rounded-full bg-violet-200/20 blur-3xl" />
+
+      <Container className="relative py-20 sm:py-24 md:py-32 lg:py-40">
+        <Stack gap="lg" align="center" className="mx-auto max-w-4xl text-center">
+          <Badge variant="outline" className="animate-fade-in border-indigo-200 bg-white px-3 py-1 text-xs font-semibold text-indigo-700 shadow-sm">
+            <Sparkles className="mr-1.5 inline size-3.5 text-indigo-600" aria-hidden />
             Project-based learning • Structured paths • Real outcomes
           </Badge>
-          <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
+          <h1 className="animate-fade-in-up text-5xl font-extrabold tracking-tight text-black sm:text-6xl md:text-7xl">
             Learn modern skills with{' '}
             <span className="gradient-text dark:from-indigo-400 dark:to-violet-400">clarity and momentum</span>
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300 sm:text-xl">
-            Short and exciting lessons with guided projects—so you move from
+          <p className="animate-fade-in-up mx-auto max-w-2xl text-xl font-medium text-slate-800 dark:text-slate-300 [animation-delay:100ms] sm:text-2xl">
+            Short, exciting lessons paired with guided projects. Move from
             theory to shipped work without losing the thread.
           </p>
           <Stack
@@ -138,22 +141,23 @@ export function LandingHero() {
             align="center"
             justify="center"
             wrap
-            className="w-full pt-2"
+            className="animate-fade-in-up w-full pt-4 [animation-delay:200ms]"
           >
             <ButtonLink
               to="/register"
               variant="primary"
               size="lg"
-              rightIcon={<ArrowRight className="size-4" />}
+              className="px-8 shadow-lg shadow-indigo-500/20"
+              rightIcon={<ArrowRight className="size-5" />}
             >
               Start free
             </ButtonLink>
-            <ButtonLink to="/user-login" variant="outline" size="lg">
+            <ButtonLink to="/user-login" variant="outline" size="lg" className="px-8 border-slate-200 text-black hover:bg-slate-50">
               I already have an account
             </ButtonLink>
           </Stack>
-          <Callout variant="info" className="mx-auto max-w-xl text-left shadow-sm dark:bg-sky-900/40 dark:border-sky-800/60 dark:text-sky-100">
-            <strong className="font-semibold text-sky-950 dark:text-sky-300">By creating your account, get free course on HTML, CSS and Fundamental os Javascript.</strong>{' '} They are pre-requests for the paid full stack development course —upgrade when you want full courses.
+          <Callout variant="info" className="animate-fade-in-up mx-auto mt-8 max-w-xl text-left border-sky-100 bg-sky-50/50 text-sky-900 [animation-delay:300ms] dark:bg-sky-900/40 dark:border-sky-800/60 dark:text-sky-100">
+            <strong className="font-bold text-sky-950 dark:text-sky-300">New: Get our Foundation Course for free.</strong>{' '} Just create an account to access HTML, CSS, and JS fundamentals—the prerequisites for our full-stack track.
           </Callout>
         </Stack>
       </Container>
@@ -170,20 +174,21 @@ export function TechStackSection() {
         description="We focus on tools employers actually use—taught in context, not in isolation."
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {TECH.map((t) => (
+        {TECH.map((t, idx) => (
           <Card
             key={t.name}
             padding="md"
-            className="border-slate-200/80 transition-shadow hover:shadow-md"
+            className="animate-fade-in-up border-slate-100 dark:border-slate-800"
+            style={{ animationDelay: `${idx * 50}ms`, animationFillMode: 'both' }}
           >
-            <CardHeader className="border-0 pb-0">
+            <CardHeader className="border-0 pb-0 shadow-none">
               <Stack direction="row" gap="sm" align="center">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-900/50 text-[var(--color-brand)] dark:text-brand-400">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50/50 dark:bg-indigo-900/50 text-[var(--color-brand)] dark:text-brand-400">
                   <Layers className="size-5" strokeWidth={1.75} />
                 </span>
                 <div className="min-w-0">
-                  <CardTitle className="text-base dark:text-slate-100">{t.name}</CardTitle>
-                  <CardDescription className="dark:text-slate-400">{t.detail}</CardDescription>
+                  <CardTitle className="text-base text-black dark:text-slate-100">{t.name}</CardTitle>
+                  <CardDescription className="text-slate-700 dark:text-slate-400">{t.detail}</CardDescription>
                 </div>
               </Stack>
             </CardHeader>
@@ -254,34 +259,34 @@ export function FeaturedCoursesSection() {
         title="Learning paths that build on each other"
         description="Pick a course—each course includes modules, exciting video tutorials, and a project or more."
       />
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-8 lg:grid-cols-3">
         {courses.map((c) => (
           <Card
             key={c.course_id}
             padding="none"
-            className="flex flex-col overflow-hidden border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-shadow hover:shadow-md"
+            className="group flex flex-col overflow-hidden border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl shadow-slate-200/40 dark:shadow-none transition-all hover:-translate-y-1"
           >
-            <div className="border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-indigo-50/90 to-violet-50/60 dark:from-indigo-900/20 dark:to-violet-900/10 px-6 py-5">
-              <Badge variant="outline" className="mb-3 bg-white/80 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-300">
+            <div className="border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-indigo-50/40 to-violet-50/30 dark:from-indigo-900/10 dark:to-violet-900/5 px-6 py-6 transition-colors group-hover:from-indigo-50/60 group-hover:to-violet-50/50">
+              <Badge variant="outline" className="mb-4 border-indigo-200 bg-white text-indigo-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300">
                 {c.category || 'Course'}
               </Badge>
-              <CardTitle className="text-xl dark:text-slate-100">{c.title}</CardTitle>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 line-clamp-2">
+              <CardTitle className="text-xl font-bold text-black dark:text-slate-100">{c.title}</CardTitle>
+              <p className="mt-2 text-sm font-medium text-slate-700 dark:text-slate-300 line-clamp-2">
                 {c.description || 'Access modern learning materials, videos, and projects to master this subject.'}
               </p>
             </div>
             <CardContent className="flex flex-1 flex-col px-6 pt-5">
-              <ul className="flex list-none flex-col gap-2 text-sm text-slate-600 dark:text-slate-300">
-                <li className="flex gap-2">
-                  <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
+              <ul className="flex list-none flex-col gap-3 text-sm font-medium text-slate-800 dark:text-slate-300">
+                <li className="flex gap-2.5 items-center">
+                  <div className="rounded-full bg-emerald-50 p-0.5"><CheckCircle2 className="size-4 text-emerald-600" /></div>
                   {courseService.formatLevel(c.level)}
                 </li>
-                <li className="flex gap-2">
-                  <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
+                <li className="flex gap-2.5 items-center">
+                  <div className="rounded-full bg-emerald-50 p-0.5"><CheckCircle2 className="size-4 text-emerald-600" /></div>
                   Self-paced learning · Structured topics
                 </li>
-                <li className="flex gap-2 font-bold text-emerald-700 dark:text-emerald-400">
-                  <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
+                <li className="flex gap-2.5 items-center text-emerald-800 dark:text-emerald-400">
+                  <div className="rounded-full bg-emerald-50 dark:bg-emerald-900/30 p-0.5"><CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" /></div>
                   Price: {c.price || 'Free'}
                 </li>
               </ul>
@@ -311,20 +316,21 @@ export function WhyChooseUsSection() {
         title="Built for outcomes—not endless content"
         description="Everything is designed to keep you moving: structure, practice, and feedback in one loop."
       />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {BENEFITS.map((b) => {
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {BENEFITS.map((b, idx) => {
           const Icon = b.icon;
           return (
             <Card
               key={b.title}
               padding="md"
-              className="border-slate-200/80 shadow-sm transition-shadow hover:shadow-md"
+              className="animate-fade-in-up border-slate-100 shadow-lg shadow-slate-200/30 dark:shadow-none"
+              style={{ animationDelay: `${idx * 100}ms`, animationFillMode: 'both' }}
             >
-              <div className="flex size-11 items-center justify-center rounded-xl bg-slate-900 dark:bg-slate-800 text-white dark:text-brand-400">
-                <Icon className="size-5" strokeWidth={1.75} />
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-black text-white dark:bg-slate-800 dark:text-brand-400">
+                <Icon className="size-6" strokeWidth={2} />
               </div>
-              <CardTitle className="mt-4 text-lg dark:text-slate-100">{b.title}</CardTitle>
-              <CardDescription className="mt-2 leading-relaxed dark:text-slate-400">
+              <CardTitle className="mt-5 text-xl font-bold text-black dark:text-slate-100">{b.title}</CardTitle>
+              <CardDescription className="mt-3 text-base leading-relaxed text-slate-700 dark:text-slate-400">
                 {b.description}
               </CardDescription>
             </Card>
@@ -370,14 +376,19 @@ export function HowItWorksSection() {
         title="A simple learning loop"
         description="From enrollment to portfolio pieces—each step has a clear purpose."
       />
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {STEPS.map((s) => (
-          <Card key={s.step} padding="md" className="border-slate-200/80 dark:border-slate-800 shadow-sm dark:bg-slate-900">
-            <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand)] dark:text-brand-400">
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        {STEPS.map((s, idx) => (
+          <Card 
+            key={s.step} 
+            padding="md" 
+            className="animate-fade-in-up border-slate-100 dark:border-slate-800"
+            style={{ animationDelay: `${idx * 100}ms`, animationFillMode: 'both' }}
+          >
+            <span className="inline-flex items-center justify-center size-8 rounded-full bg-indigo-50 text-xs font-bold uppercase tracking-widest text-[var(--color-brand)] dark:bg-indigo-900/40 dark:text-brand-300">
               {s.step}
             </span>
-            <CardTitle className="mt-3 text-lg dark:text-slate-100">{s.title}</CardTitle>
-            <CardDescription className="mt-2 leading-relaxed dark:text-slate-400">{s.text}</CardDescription>
+            <CardTitle className="mt-4 text-lg font-bold text-black dark:text-slate-100">{s.title}</CardTitle>
+            <CardDescription className="mt-2 text-base leading-relaxed text-slate-700 dark:text-slate-400">{s.text}</CardDescription>
           </Card>
         ))}
       </div>
@@ -403,9 +414,9 @@ export function HowItWorksSection() {
               <Card
                 key={video.land_video_id}
                 padding="none"
-                className="group overflow-hidden border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1"
+                className="group flex flex-col overflow-hidden border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl shadow-slate-200/30 transition-all hover:shadow-2xl hover:-translate-y-1.5"
               >
-                <div className="aspect-video relative bg-slate-100 dark:bg-slate-800">
+                <div className="aspect-video relative bg-slate-900">
                   <iframe
                     className="absolute inset-0 h-full w-full"
                     src={`https://www.youtube.com/embed/${getVideoId(video.youtube_url)}`}
@@ -414,22 +425,22 @@ export function HowItWorksSection() {
                     allowFullScreen
                   ></iframe>
                 </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="bg-indigo-50/50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 border-none px-2 py-0 text-[10px] font-bold uppercase">
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Badge variant="outline" className="bg-indigo-50 border-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
                       Video Lesson
                     </Badge>
                     {video.duration && (
-                      <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                        {video.duration} min
+                      <span className="text-[11px] text-slate-600 dark:text-slate-400 font-bold uppercase tracking-tight">
+                        {video.duration} MIN
                       </span>
                     )}
                   </div>
-                  <CardTitle className="text-base font-semibold dark:text-slate-100 line-clamp-1 group-hover:text-[var(--color-brand)] transition-colors">
+                  <CardTitle className="text-lg font-bold text-black dark:text-slate-100 line-clamp-1 group-hover:text-[var(--color-brand)] transition-colors">
                     {video.title || "Untitled Video"}
                   </CardTitle>
                   {video.description && (
-                    <CardDescription className="mt-1.5 text-sm dark:text-slate-400 line-clamp-2 leading-relaxed">
+                    <CardDescription className="mt-2 text-sm text-slate-700 dark:text-slate-400 line-clamp-2 leading-relaxed font-medium">
                       {video.description}
                     </CardDescription>
                   )}
@@ -511,30 +522,31 @@ export function ProjectShowcaseSection() {
         title="Ship real work—not toy demos"
         description="While simple, projects mirror real constraints: APIs, auth, roles, and user-facing polish."
       />
-      <div className="grid gap-6 lg:grid-cols-3">
-        {projects.map((p) => (
+      <div className="grid gap-8 lg:grid-cols-3">
+        {projects.map((p, idx) => (
           <Card
             key={p.project_id}
             padding="md"
-            className="border-slate-200/80 transition-shadow hover:shadow-md"
+            className="animate-fade-in-up border-slate-100 shadow-xl shadow-slate-200/20 dark:shadow-none hover:-translate-y-1 transition-all"
+            style={{ animationDelay: `${idx * 100}ms`, animationFillMode: 'both' }}
           >
-            <CardHeader className="border-0 pb-2">
+            <CardHeader className="border-0 pb-3">
               <Stack direction="row" gap="sm" wrap className="flex-wrap">
                 {p.category && (
-                  <Badge variant="outline" className="dark:border-slate-700 dark:text-slate-300">
+                  <Badge variant="outline" className="border-indigo-100 bg-indigo-50/30 text-indigo-700 dark:border-slate-700 dark:text-slate-300">
                     {p.category}
                   </Badge>
                 )}
                 {p.level && (
-                  <Badge variant="outline" className="dark:border-slate-700 dark:text-slate-300">
+                  <Badge variant="outline" className="border-slate-100 bg-slate-50 text-slate-700 dark:border-slate-700 dark:text-slate-300">
                     {projectService.formatLevel(p.level)}
                   </Badge>
                 )}
               </Stack>
-              <CardTitle className="pt-2 text-lg dark:text-slate-100">{p.title}</CardTitle>
+              <CardTitle className="pt-3 text-xl font-bold text-black dark:text-slate-100">{p.title}</CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-              <p className="text-sm text-slate-600 dark:text-slate-300">
+              <p className="text-base font-medium leading-relaxed text-slate-700 dark:text-slate-300">
                 {p.description || 'A hands-on project to master real-world engineering constraints.'}
               </p>
             </CardContent>
@@ -608,20 +620,20 @@ export function FaqSection() {
         title="Answers before you enroll"
         description="Still unsure? These cover the most common questions."
       />
-      <Card padding="none" className="mx-auto max-w-3xl divide-y divide-slate-200 dark:divide-slate-800 border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+      <Card padding="none" className="mx-auto max-w-3xl divide-y divide-slate-100 border-slate-100 dark:divide-slate-800 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl shadow-slate-200/20 dark:shadow-none">
         {faqs.map((item) => (
           <details
             key={item.faqs_id}
             className="group px-4 py-1 [&_summary::-webkit-details-marker]:hidden"
           >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left text-sm font-bold text-black dark:text-slate-100">
               {item.question}
               <ChevronDown
-                className="size-4 shrink-0 text-slate-400 transition group-open:rotate-180"
+                className="size-4 shrink-0 text-slate-400 transition-transform duration-300 group-open:rotate-180"
                 aria-hidden
               />
             </summary>
-            <p className="pb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            <p className="pb-5 text-sm font-medium leading-relaxed text-slate-700 dark:text-slate-300">
               {item.answer}
             </p>
           </details>
@@ -635,39 +647,42 @@ export function FinalCtaSection() {
   return (
     <section
       id="cta"
-      className="scroll-mt-20 border-t border-indigo-200/50 bg-gradient-to-br from-[var(--color-brand)] via-indigo-600 to-violet-700 py-16 text-white sm:py-20"
+      className="relative scroll-mt-20 overflow-hidden border-t border-indigo-200/50 bg-indigo-600 py-24 text-white sm:py-32"
     >
-      <Container>
-        <Stack gap="lg" align="center" className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Ready to start learning?
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800" />
+      <div className="absolute inset-0 opacity-[0.1] mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E")` }} />
+      
+      <Container className="relative">
+        <Stack gap="xs" align="center" className="mx-auto max-w-4xl text-center">
+          <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+            Ready to master <br className="hidden sm:block" /> new skills?
           </h2>
-          <p className="text-lg text-indigo-100">
-            Create your account in minutes. Preview courses on Starter—or unlock full
-            access when you are ready.
+          <p className="text-xl font-medium text-indigo-100 max-w-2xl opacity-90">
+            Create your account in minutes. Start with our free Foundation Course or unlock full
+            access to specialized tracks when you're ready to ship.
           </p>
           <Stack
             direction="row"
-            gap="md"
+            gap="lg"
             align="center"
             justify="center"
             wrap
-            className="w-full pt-2"
+            className="w-full pt-6"
           >
             <ButtonLink
               to="/register"
               variant="secondary"
               size="lg"
-              className="bg-white text-[var(--color-brand)] hover:bg-slate-100"
-              rightIcon={<ArrowRight className="size-4" />}
+              className="px-10 py-4 bg-white text-indigo-700 hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-black/20"
+              rightIcon={<ArrowRight className="size-5" />}
             >
-              Start learning
+              Start learning for free
             </ButtonLink>
             <ButtonLink
               to="/user-login"
               variant="outline"
               size="lg"
-              className="border-white/40 bg-white/10 text-white hover:bg-white/20"
+              className="px-10 py-4 border-white/30 bg-white/5 text-white hover:bg-white/10 backdrop-blur-sm"
             >
               Sign in
             </ButtonLink>

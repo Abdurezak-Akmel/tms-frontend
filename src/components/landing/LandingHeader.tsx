@@ -24,15 +24,15 @@ export function LandingHeader() {
       <Container className="flex h-16 items-center justify-between gap-4 lg:h-[4.25rem]">
         <Link
           to="/"
-          className="flex items-center gap-2 font-semibold tracking-tight text-slate-900 dark:text-slate-100"
+          className="flex items-center gap-2.5 font-bold tracking-tight text-black dark:text-slate-100"
         >
           <span
-            className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-brand)] to-violet-600 text-sm font-bold text-white shadow-sm"
+            className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-sm font-black text-white shadow-lg shadow-indigo-500/30"
             aria-hidden
           >
             HT
           </span>
-          <span className="hidden sm:inline">HabeshaTech</span>
+          <span className="hidden sm:inline text-xl">HabeshaTech</span>
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
@@ -40,7 +40,7 @@ export function LandingHeader() {
             <a
               key={item.href}
               href={item.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
+              className="rounded-lg px-3 py-2 text-sm font-bold text-slate-700 dark:text-slate-400 transition-all hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-black dark:hover:text-slate-100"
             >
               {item.label}
             </a>

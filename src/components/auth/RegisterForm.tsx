@@ -161,9 +161,9 @@ export function RegisterForm() {
     } catch (error: unknown) {
       const message =
         typeof error === 'object' &&
-        error !== null &&
-        'message' in error &&
-        typeof error.message === 'string'
+          error !== null &&
+          'message' in error &&
+          typeof error.message === 'string'
           ? error.message
           : 'Registration failed. Please try again.';
       setServerError(message);
@@ -173,14 +173,14 @@ export function RegisterForm() {
   }
 
   return (
-    <Card className="w-full max-w-xl border-slate-200/90 bg-white/95 shadow-lg backdrop-blur" padding="lg">
+    <Card className="w-full max-w-xl border-white/20 bg-white/10 shadow-2xl backdrop-blur-xl" padding="lg">
       <CardHeader className="space-y-2">
-        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700">
-          <ShieldCheck className="size-4 text-[var(--color-brand)]" />
+        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-md">
+          <ShieldCheck className="size-4 text-emerald-400" />
           Secure Registration
         </div>
-        <CardTitle className="text-2xl">Create your account</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-3xl font-black text-white">Create your account</CardTitle>
+        <CardDescription className="text-white/70 font-medium">
           Start managing tutorials with one professional workspace for mentors and learners.
         </CardDescription>
       </CardHeader>
@@ -189,11 +189,11 @@ export function RegisterForm() {
         {serverError ? <Callout variant="danger">{serverError}</Callout> : null}
 
         <form className="space-y-4" noValidate onSubmit={handleSubmit}>
-          <FormFieldSlot id="fullName" label="Full name" error={errors.fullName} required>
+          <FormFieldSlot id="fullName" label="Full Name" error={errors.fullName} required labelProps={{ className: 'text-white font-bold' }}>
             {(a11yProps) => (
               <Input
                 id="fullName"
-                placeholder="Jane Doe"
+                placeholder="Enter your full name"
                 autoComplete="name"
                 value={values.fullName}
                 onChange={(event) => handleChange('fullName', event.target.value)}
@@ -203,12 +203,12 @@ export function RegisterForm() {
             )}
           </FormFieldSlot>
 
-          <FormFieldSlot id="email" label="Email" error={errors.email} required>
+          <FormFieldSlot id="email" label="Email" error={errors.email} required labelProps={{ className: 'text-white font-bold' }}>
             {(a11yProps) => (
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="Enter your email"
                 autoComplete="email"
                 value={values.email}
                 onChange={(event) => handleChange('email', event.target.value)}
@@ -218,7 +218,7 @@ export function RegisterForm() {
             )}
           </FormFieldSlot>
 
-          <FormFieldSlot id="password" label="Password" error={errors.password} required>
+          <FormFieldSlot id="password" label="Password" error={errors.password} required labelProps={{ className: 'text-white font-bold' }}>
             {(a11yProps) => (
               <Input
                 id="password"
@@ -235,8 +235,8 @@ export function RegisterForm() {
 
           <div className={cn('rounded-xl border p-3', strengthClass)}>
             <div className="mb-2 flex items-center justify-between gap-2">
-              <p className="text-sm font-semibold">Password strength parameters</p>
-              <span className="rounded-md border border-current/20 px-2 py-0.5 text-xs font-semibold">
+              <p className="text-sm font-bold text-white">Password strength parameters</p>
+              <span className="rounded-md border border-white/20 px-2 py-0.5 text-xs font-bold text-white">
                 {strengthLabel}
               </span>
             </div>
@@ -261,6 +261,7 @@ export function RegisterForm() {
             label="Confirm password"
             error={errors.confirmPassword}
             required
+            labelProps={{ className: 'text-white font-bold' }}
           >
             {(a11yProps) => (
               <Input
@@ -281,9 +282,9 @@ export function RegisterForm() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-slate-600">
+        <p className="text-center text-sm font-medium text-white/80">
           Already have an account?{' '}
-          <Link to="/user-login" className="font-semibold text-[var(--color-brand)] hover:underline">
+          <Link to="/user-login" className="font-bold text-white hover:underline">
             Sign in
           </Link>
         </p>
