@@ -1,11 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   BookOpen,
   Clock,
   Loader2,
-  Calendar
+  Calendar,
+  Play,
+  Pause,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 import { EmptyState } from '../../components/feedback';
 import { Stack } from '../../components/layout';
@@ -14,21 +18,103 @@ import { Card, CardContent, CardHeader } from '../../components/ui';
 import { videoService, type Video } from '../../services/videoService';
 import { courseService } from '../../services/courseService';
 
-/* Simple VideoPlayer Component using iframe for YouTube */
+/* Simple VideoPlayer Component with Click-Shield to prevent YouTube redirects */
 const VideoPlayer = ({ youtubeUrl, title }: { youtubeUrl: string; title?: string }) => {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoId = videoService.extractYouTubeId(youtubeUrl);
+
+  const togglePlay = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const newPath = !isPlaying ? 'playVideo' : 'pauseVideo';
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func: newPath, args: [] }),
+      '*'
+    );
+    setIsPlaying(!isPlaying);
+  };
+
+  const toggleFullscreen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+
+  // Sync fullscreen state with escape key etc.
+  useEffect(() => {
+    const handleFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', handleFsChange);
+    return () => document.removeEventListener('fullscreenchange', handleFsChange);
+  }, []);
+
   if (!videoId) return <div className="aspect-video bg-slate-900 flex items-center justify-center text-white">Invalid video URL</div>;
 
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black shadow-2xl">
+    <div
+      ref={containerRef}
+      className={`relative aspect-video w-full overflow-hidden bg-black shadow-2xl group transition-all duration-300 ${isFullscreen ? 'rounded-0' : 'rounded-2xl'}`}
+    >
+      {/* 1. The Iframe with pointer-events disabled */}
       <iframe
-        className="absolute inset-0 h-full w-full"
-        src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1`}
+        ref={iframeRef}
+        className="absolute inset-0 h-full w-full pointer-events-none"
+        src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&iv_load_policy=3&controls=0&showinfo=0&disablekb=1&enablejsapi=1`}
         title={title || "Video Player"}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
       />
+
+      {/* 2. Transparent Shield */}
+      <div
+        className="absolute inset-0 z-10 cursor-pointer"
+        onClick={() => togglePlay()}
+        aria-label={isPlaying ? "Pause video" : "Play video"}
+      />
+
+      {/* 3. Custom UI Overlay for feedback */}
+      {!isPlaying && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-20 pointer-events-none transition-opacity">
+          <div className="rounded-full bg-white/20 p-6 backdrop-blur-md border border-white/30 shadow-xl">
+            <Play className="size-12 text-white fill-white" />
+          </div>
+        </div>
+      )}
+
+      {/* 4. Controls Toolbar (Bottom) */}
+      <div className="absolute bottom-4 left-6 right-6 z-20 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+        {/* Play/Pause indicator */}
+        <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm pointer-events-none">
+          {isPlaying ? <Pause className="size-4 text-white" /> : <Play className="size-4 text-white" />}
+          <span className="text-xs font-semibold text-white tracking-wider uppercase">
+            {isPlaying ? "Pause" : "Play"}
+          </span>
+        </div>
+
+        {/* Maximize Button */}
+        <button
+          onClick={toggleFullscreen}
+          className="flex items-center gap-2 bg-black/40 hover:bg-black/60 px-3 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm transition-all pointer-events-auto active:scale-95"
+          title={isFullscreen ? "Exit Fullscreen" : "Maximize Video"}
+        >
+          {isFullscreen ? (
+            <Minimize2 className="size-4 text-white" />
+          ) : (
+            <Maximize2 className="size-4 text-white" />
+          )}
+          <span className="text-xs font-semibold text-white tracking-wider uppercase">
+            {isFullscreen ? "Exit" : "Maximize"}
+          </span>
+        </button>
+      </div>
     </div>
   );
 };
