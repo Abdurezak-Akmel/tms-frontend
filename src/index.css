@@ -306,3 +306,34 @@ h6 {
 .dark .glass {
   background: rgba(22, 27, 34, 0.8);
 }
+
+/* ─── Advanced Animations for Rich Graphic Look ─── */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(-8%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 4s infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 6s infinite;
+}
