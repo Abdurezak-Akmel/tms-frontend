@@ -69,15 +69,15 @@ export function UserShell() {
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 z-30 bg-slate-900/50 backdrop-blur-sm lg:hidden transition-opacity duration-300"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 lg:static lg:flex',
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          'fixed bottom-0 left-0 top-16 z-40 flex w-64 flex-col border-r border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 lg:static lg:top-0 lg:translate-x-0',
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-4 py-4 lg:px-5">
@@ -86,7 +86,7 @@ export function UserShell() {
               <GraduationCap className="size-5" strokeWidth={1.75} aria-hidden />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">HabeshaTech</p>
+              <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">Habesha Tech</p>
               <p className="truncate text-xs text-slate-500 dark:text-slate-400">Learning Hub</p>
             </div>
           </div>
@@ -128,7 +128,11 @@ export function UserShell() {
       </aside>
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col transition-colors">
-        <AppHeader isAdmin={false} onMenuOpen={() => setIsSidebarOpen(true)} />
+        <AppHeader 
+          isAdmin={false} 
+          onMenuOpen={() => setIsSidebarOpen(!isSidebarOpen)} 
+          isSidebarOpen={isSidebarOpen} 
+        />
         <main className="flex-1 overflow-y-auto w-full">
           <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 text-slate-900 dark:text-slate-100">
             <Outlet />

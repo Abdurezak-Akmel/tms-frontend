@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { LogOut, ShieldCheck, Moon, Sun, GraduationCap, Menu } from 'lucide-react';
+import { LogOut, ShieldCheck, Moon, Sun, GraduationCap, Menu, X } from 'lucide-react';
 import { Button } from '../ui/Button';
 import authService from '../../services/authService';
 import Breadcrumbs from '../dashboard/Breadcrumbs';
@@ -8,9 +8,10 @@ import { useTheme } from '../../context/ThemeContext';
 interface AppHeaderProps {
   isAdmin?: boolean;
   onMenuOpen?: () => void;
+  isSidebarOpen?: boolean;
 }
 
-const AppHeader = ({ isAdmin = false, onMenuOpen }: AppHeaderProps) => {
+const AppHeader = ({ isAdmin = false, onMenuOpen, isSidebarOpen = false }: AppHeaderProps) => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
@@ -27,15 +28,15 @@ const AppHeader = ({ isAdmin = false, onMenuOpen }: AppHeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/80 dark:border-[#30363d] bg-white/80 dark:bg-[#161b22]/90 px-4 backdrop-blur-md sm:px-6 lg:px-8 transition-all duration-300 shadow-sm dark:shadow-[0_1px_0_0_#30363d]">
+    <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-slate-200/80 dark:border-[#30363d] bg-white/80 dark:bg-[#161b22]/90 px-4 backdrop-blur-md sm:px-6 lg:px-8 transition-all duration-300 shadow-sm dark:shadow-[0_1px_0_0_#30363d]">
       <div className="flex items-center gap-3">
         {/* Mobile menu toggle */}
         <button
           onClick={onMenuOpen}
           className="flex lg:hidden size-9 items-center justify-center rounded-lg text-slate-500 transition-all hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
-          aria-label="Open sidebar"
+          aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
         >
-          <Menu className="size-5" />
+          {isSidebarOpen ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
 
         <div className="flex items-center gap-3 lg:hidden">

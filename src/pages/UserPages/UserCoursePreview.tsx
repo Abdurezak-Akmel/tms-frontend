@@ -232,7 +232,7 @@ const UserCoursePreview = () => {
                   </div>
                   <div className="text-left">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Telegram</p>
-                    <p className="text-sm font-bold text-slate-700">@HabeshaTech_Support</p>
+                    <p className="text-sm font-bold text-slate-700">@Zuzenith</p>
                   </div>
                 </div>
 

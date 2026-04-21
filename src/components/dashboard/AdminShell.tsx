@@ -97,7 +97,7 @@ export function AdminShell() {
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 z-30 bg-slate-900/50 backdrop-blur-sm lg:hidden transition-opacity duration-300"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -105,8 +105,8 @@ export function AdminShell() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 lg:static lg:flex',
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          'fixed bottom-0 left-0 top-16 z-40 flex w-72 flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 lg:static lg:top-0 lg:translate-x-0',
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-6 py-5 transition-colors">
@@ -166,7 +166,11 @@ export function AdminShell() {
 
       {/* Main Content Areas */}
       <div className="flex flex-1 flex-col transition-all">
-        <AppHeader isAdmin onMenuOpen={() => setIsSidebarOpen(true)} />
+        <AppHeader 
+          isAdmin 
+          onMenuOpen={() => setIsSidebarOpen(!isSidebarOpen)} 
+          isSidebarOpen={isSidebarOpen} 
+        />
 
         <main className="flex-1 bg-slate-50/50 dark:bg-slate-900/50 transition-colors">
           <div className="mx-auto max-w-7xl">
