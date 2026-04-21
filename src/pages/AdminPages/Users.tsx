@@ -48,8 +48,9 @@ const getRoleName = (roleId: number): string => {
   }
 };
 
-const getStatusBadgeVariant = (status: string): BadgeVariant => {
-  switch (status.toLowerCase()) {
+const getStatusBadgeVariant = (status: string | null | undefined): BadgeVariant => {
+  const s = status || 'active';
+  switch (s.toLowerCase()) {
     case 'active': return 'success';
     case 'inactive': return 'warning';
     case 'suspended': return 'danger';
@@ -91,7 +92,7 @@ const Users = () => {
         user.name.toLowerCase().includes(q) ||
         user.email.toLowerCase().includes(q) ||
         getRoleName(user.role_id).toLowerCase().includes(q) ||
-        user.status.toLowerCase().includes(q)
+        (user.status || '').toLowerCase().includes(q)
     );
   }, [users, searchQuery]);
 

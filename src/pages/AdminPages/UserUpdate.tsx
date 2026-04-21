@@ -14,7 +14,11 @@ import {
     XCircle,
     AlertCircle,
     Clock,
-    Settings
+    Settings,
+    BookOpen,
+    Trash2,
+    Check,
+    X
 } from 'lucide-react';
 import {
     Button,
@@ -32,6 +36,7 @@ import {
 import { PageHeader, Stack } from '../../components/layout';
 import { userService, type User, type UpdateUserData } from '../../services/userService';
 import { roleService, type Role } from '../../services/roleService';
+import accessRequestService, { type AccessRequest } from '../../services/accessRequestService';
 
 const UserUpdate = () => {
     const { id } = useParams<{ id: string }>();
@@ -43,6 +48,8 @@ const UserUpdate = () => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [roles, setRoles] = useState<Role[]>([]);
+    const [userRequests, setUserRequests] = useState<AccessRequest[]>([]);
+    const [updatingRequestId, setUpdatingRequestId] = useState<number | null>(null);
 
     const [formData, setFormData] = useState({
         role_id: 1,
@@ -53,21 +60,26 @@ const UserUpdate = () => {
         if (!id) return;
         try {
             setLoading(true);
-            const [userRes, rolesRes] = await Promise.all([
+            const [userRes, rolesRes, requestsRes] = await Promise.all([
                 userService.getUserById(Number(id)),
-                roleService.getAllRoles()
+                roleService.getAllRoles(),
+                accessRequestService.getAllAccessRequests({ user_id: Number(id) })
             ]);
 
             if (userRes.success && userRes.user) {
                 setUser(userRes.user);
                 setFormData({
                     role_id: userRes.user.role_id,
-                    status: userRes.user.status.toLowerCase()
+                    status: (userRes.user.status || 'active').toLowerCase()
                 });
             }
 
             if (rolesRes.success && rolesRes.roles) {
                 setRoles(rolesRes.roles);
+            }
+
+            if (requestsRes.success && Array.isArray(requestsRes.data)) {
+                setUserRequests(requestsRes.data);
             }
         } catch (err: any) {
             setError(err.message || 'Failed to fetch required data');
@@ -106,14 +118,40 @@ const UserUpdate = () => {
                         status: updateData.status as string
                     });
                 }
-
-                // Optional: Navigate back after success
-                // setTimeout(() => navigate('/admin/users'), 2000);
             }
         } catch (err: any) {
             setError(err.message || 'Failed to update user');
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleUpdateEnrollmentStatus = async (requestId: number, newStatus: 'approved' | 'rejected') => {
+        try {
+            setUpdatingRequestId(requestId);
+            const res = await accessRequestService.updateAccessRequestStatus(requestId, { status: newStatus });
+            if (res.success) {
+                setUserRequests(prev => prev.map(req => req.request_id === requestId ? { ...req, status: newStatus } : req));
+            }
+        } catch (err: any) {
+            console.error("Failed to update enrollment status:", err);
+        } finally {
+            setUpdatingRequestId(null);
+        }
+    };
+
+    const handleDeleteEnrollment = async (requestId: number) => {
+        if (!window.confirm("Remove this course enrollment entirely?")) return;
+        try {
+            setUpdatingRequestId(requestId);
+            const res = await accessRequestService.deleteAccessRequest(requestId);
+            if (res.success) {
+                setUserRequests(prev => prev.filter(req => req.request_id !== requestId));
+            }
+        } catch (err: any) {
+            console.error("Failed to delete enrollment:", err);
+        } finally {
+            setUpdatingRequestId(null);
         }
     };
 
@@ -400,6 +438,101 @@ const UserUpdate = () => {
                             </form>
                         </CardContent>
                     </Card>
+                    
+                    {/* Course Access Overrides Section */}
+                    {user && (
+                        <Card className="mt-8 border-slate-200/60 shadow-lg border-t-4 border-t-primary/20">
+                            <CardHeader className="flex flex-row items-center justify-between pb-4">
+                                <div>
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <div className="p-1 px-2 rounded-md bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">Overrides</div>
+                                        <CardTitle className="text-lg font-bold">Course Access Overrides</CardTitle>
+                                    </div>
+                                    <CardDescription>Individual enrollment records that bypass role-based restrictions.</CardDescription>
+                                </div>
+                                <BookOpen className="size-5 text-slate-300" />
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                {userRequests.length > 0 ? (
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr className="bg-slate-50/50 border-b border-slate-100 dark:border-slate-800">
+                                                    <th className="text-[10px] font-black uppercase tracking-widest text-slate-500 py-4 px-6">Course</th>
+                                                    <th className="text-[10px] font-black uppercase tracking-widest text-slate-500 py-4 px-4">Price</th>
+                                                    <th className="text-[10px] font-black uppercase tracking-widest text-slate-500 py-4 px-4">Status</th>
+                                                    <th className="text-[10px] font-black uppercase tracking-widest text-slate-500 py-4 text-right px-6">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                                                {userRequests.map((req) => (
+                                                    <tr key={req.request_id} className="hover:bg-slate-50/30 dark:hover:bg-slate-800/20 transition-colors">
+                                                        <td className="py-4 px-6">
+                                                            <div className="font-bold text-slate-700 dark:text-slate-200">{req.course_title}</div>
+                                                            <div className="text-[10px] font-medium text-slate-400 dark:text-slate-500 mt-0.5">ID: {req.course_id} • Requested: {new Date(req.requested_at).toLocaleDateString()}</div>
+                                                        </td>
+                                                        <td className="py-4 px-4">
+                                                            <span className="font-black text-slate-900 dark:text-slate-100">{req.payment_amount}</span>
+                                                        </td>
+                                                        <td className="py-4 px-4">
+                                                            <Badge 
+                                                                variant={req.status === 'approved' ? 'success' : (req.status === 'rejected' ? 'danger' : 'warning')}
+                                                                className="uppercase text-[9px] font-black px-2 py-0.5"
+                                                            >
+                                                                {req.status}
+                                                            </Badge>
+                                                        </td>
+                                                        <td className="py-4 text-right px-6">
+                                                            <div className="flex items-center justify-end gap-1.5">
+                                                                {req.status !== 'approved' && (
+                                                                    <Button 
+                                                                        size="sm" 
+                                                                        variant="outline" 
+                                                                        className="size-8 p-0 rounded-lg text-emerald-600 hover:bg-emerald-50 border-emerald-100 dark:border-emerald-900/30 group/btn"
+                                                                        onClick={() => handleUpdateEnrollmentStatus(req.request_id, 'approved')}
+                                                                        isLoading={updatingRequestId === req.request_id}
+                                                                        title="Approve Access"
+                                                                    >
+                                                                        <Check size={14} className="group-hover/btn:scale-110 transition-transform" />
+                                                                    </Button>
+                                                                )}
+                                                                {req.status !== 'rejected' && (
+                                                                    <Button 
+                                                                        size="sm" 
+                                                                        variant="outline" 
+                                                                        className="size-8 p-0 rounded-lg text-rose-600 hover:bg-rose-50 border-rose-100 dark:border-rose-900/30 group/btn"
+                                                                        onClick={() => handleUpdateEnrollmentStatus(req.request_id, 'rejected')}
+                                                                        isLoading={updatingRequestId === req.request_id}
+                                                                        title="Reject Access"
+                                                                    >
+                                                                        <X size={14} className="group-hover/btn:scale-110 transition-transform" />
+                                                                    </Button>
+                                                                )}
+                                                                <Button 
+                                                                    size="sm" 
+                                                                    variant="ghost" 
+                                                                    className="size-8 p-0 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/10 group/btn"
+                                                                    onClick={() => handleDeleteEnrollment(req.request_id)}
+                                                                    isLoading={updatingRequestId === req.request_id}
+                                                                    title="Delete Entry"
+                                                                >
+                                                                    <Trash2 size={14} className="group-hover/btn:rotate-12 transition-transform" />
+                                                                </Button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ) : (
+                                    <div className="p-12 text-center text-slate-400 italic text-sm">
+                                        No manual course overrides found for this user.
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    )}
                 </div>
             </div>
         </Stack>
