@@ -18,42 +18,100 @@ import { Card, CardContent, CardHeader } from '../../components/ui';
 import { videoService, type Video } from '../../services/videoService';
 import { courseService } from '../../services/courseService';
 
-/* Simple VideoPlayer Component with Click-Shield to prevent YouTube redirects */
-const VideoPlayer = ({ youtubeUrl, title }: { youtubeUrl: string; title?: string }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+/* Robust Custom VideoPlayer — No YouTube branding or redirects */
+const VideoPlayer = ({ youtubeUrl, title, initialDuration }: { youtubeUrl: string; title?: string; initialDuration?: number }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(initialDuration || 0);
   const videoId = videoService.extractYouTubeId(youtubeUrl);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const postCommand = (func: string, args: any[] = [], id: number = 0) => {
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func, args, id }),
+      '*'
+    );
+  };
 
   const togglePlay = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    const newPath = !isPlaying ? 'playVideo' : 'pauseVideo';
-    iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: 'command', func: newPath, args: [] }),
-      '*'
-    );
-    setIsPlaying(!isPlaying);
+    const next = !isPlaying;
+    postCommand(next ? 'playVideo' : 'pauseVideo');
+    setIsPlaying(next);
   };
 
-  const toggleFullscreen = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const seek = (time: number) => {
+    postCommand('seekTo', [time, true]);
+    setCurrentTime(time);
+  };
+
+  const toggleFullscreen = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     if (!document.fullscreenElement) {
-      containerRef.current?.requestFullscreen().catch((err) => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-      setIsFullscreen(true);
+      containerRef.current?.requestFullscreen().catch(() => { });
     } else {
       document.exitFullscreen();
-      setIsFullscreen(false);
     }
   };
 
-  // Sync fullscreen state with escape key etc.
   useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (!event.origin.includes('youtube')) return;
+      try {
+        const data = JSON.parse(event.data);
+
+        // 1. infoDelivery is the automatic push
+        if (data.event === 'infoDelivery' && data.info) {
+          if (data.info.currentTime !== undefined) setCurrentTime(data.info.currentTime);
+          if (data.info.duration !== undefined) setDuration(data.info.duration);
+          if (data.info.playerState !== undefined) setIsPlaying(data.info.playerState === 1);
+        }
+
+        // 2. onStateChange for play/pause sync
+        if (data.event === 'onStateChange') {
+          setIsPlaying(data.info === 1);
+        }
+
+        // 3. Handle explicit command results (e.g. from getCurrentTime)
+        if (data.id === 1 && data.result !== undefined) {
+          setCurrentTime(data.result);
+        }
+        if (data.id === 2 && data.result !== undefined) {
+          setDuration(data.result);
+        }
+      } catch (err) { }
+    };
+
     const handleFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+
+    window.addEventListener('message', handleMessage);
     document.addEventListener('fullscreenchange', handleFsChange);
-    return () => document.removeEventListener('fullscreenchange', handleFsChange);
+
+    // Heartbeat: Poll for player info as YouTube doesn't always push it frequently
+    const heartbeat = setInterval(() => {
+      postCommand('getCurrentTime', [], 1);
+      postCommand('getDuration', [], 2);
+    }, 500);
+
+    // Initial signal to activate API
+    const init = setTimeout(() => {
+      postCommand('listening');
+    }, 500);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      document.removeEventListener('fullscreenchange', handleFsChange);
+      clearInterval(heartbeat);
+      clearTimeout(init);
+    };
   }, []);
 
   if (!videoId) return <div className="aspect-video bg-slate-900 flex items-center justify-center text-white">Invalid video URL</div>;
@@ -63,58 +121,79 @@ const VideoPlayer = ({ youtubeUrl, title }: { youtubeUrl: string; title?: string
       ref={containerRef}
       className={`relative aspect-video w-full overflow-hidden bg-black shadow-2xl group transition-all duration-300 ${isFullscreen ? 'rounded-0' : 'rounded-2xl'}`}
     >
-      {/* 1. The Iframe with pointer-events disabled */}
+      {/* 1. The Iframe: Controls=0 and Pointer-Events=None makes it unclickable */}
       <iframe
         ref={iframeRef}
-        className="absolute inset-0 h-full w-full pointer-events-none"
+        className="absolute inset-0 h-full w-full pointer-events-none scale-[1.01]"
         src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&iv_load_policy=3&controls=0&showinfo=0&disablekb=1&enablejsapi=1`}
         title={title || "Video Player"}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       />
 
-      {/* 2. Transparent Shield */}
-      <div
-        className="absolute inset-0 z-10 cursor-pointer"
-        onClick={() => togglePlay()}
-        aria-label={isPlaying ? "Pause video" : "Play video"}
-      />
+      {/* 2. Full Shield: Capture all clicks for play/pause, prevents secondary interaction */}
+      <div className="absolute inset-0 z-10 cursor-pointer" onClick={togglePlay} />
 
-      {/* 3. Custom UI Overlay for feedback */}
+      {/* 3. Custom Controls Overlay */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+        {/* Tracker / Progress Bar */}
+        <div className="mb-4 flex items-center gap-4">
+          <span className="text-[11px] font-mono font-medium text-white/80 tabular-nums min-w-[40px]">
+            {formatTime(currentTime)}
+          </span>
+          <div className="relative flex-1">
+            <input
+              type="range"
+              min={0}
+              max={duration || 100}
+              value={currentTime}
+              onChange={(e) => seek(parseFloat(e.target.value))}
+              className="w-full h-1.5 bg-white/20 rounded-full appearance-none cursor-pointer accent-[var(--color-brand)] transition-all hover:h-2"
+              style={{
+                background: `linear-gradient(to right, var(--color-brand) ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.2) ${(currentTime / (duration || 1)) * 100}%)`
+              }}
+            />
+          </div>
+          <span className="text-[11px] font-mono font-medium text-white/80 tabular-nums min-w-[40px]">
+            {formatTime(duration)}
+          </span>
+        </div>
+
+        {/* Lower Controls */}
+        <div className="flex items-center justify-between pointer-events-auto">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={togglePlay}
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm transition-all active:scale-95"
+            >
+              {isPlaying ? <Pause className="size-4 text-white fill-white" /> : <Play className="size-4 text-white fill-white" />}
+              <span className="text-xs font-semibold text-white tracking-wider uppercase">
+                {isPlaying ? "Pause" : "Play"}
+              </span>
+            </button>
+          </div>
+
+          <button
+            onClick={toggleFullscreen}
+            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm transition-all active:scale-95"
+          >
+            {isFullscreen ? <Minimize2 className="size-4 text-white" /> : <Maximize2 className="size-4 text-white" />}
+            <span className="text-xs font-semibold text-white tracking-wider uppercase">
+              {isFullscreen ? "Exit" : "Maximize"}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* Play/Pause Large indicator in center */}
       {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-20 pointer-events-none transition-opacity">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none group-hover:opacity-100 transition-opacity">
           <div className="rounded-full bg-white/20 p-6 backdrop-blur-md border border-white/30 shadow-xl">
             <Play className="size-12 text-white fill-white" />
           </div>
         </div>
       )}
-
-      {/* 4. Controls Toolbar (Bottom) */}
-      <div className="absolute bottom-4 left-6 right-6 z-20 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-        {/* Play/Pause indicator */}
-        <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm pointer-events-none">
-          {isPlaying ? <Pause className="size-4 text-white" /> : <Play className="size-4 text-white" />}
-          <span className="text-xs font-semibold text-white tracking-wider uppercase">
-            {isPlaying ? "Pause" : "Play"}
-          </span>
-        </div>
-
-        {/* Maximize Button */}
-        <button
-          onClick={toggleFullscreen}
-          className="flex items-center gap-2 bg-black/40 hover:bg-black/60 px-3 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm transition-all pointer-events-auto active:scale-95"
-          title={isFullscreen ? "Exit Fullscreen" : "Maximize Video"}
-        >
-          {isFullscreen ? (
-            <Minimize2 className="size-4 text-white" />
-          ) : (
-            <Maximize2 className="size-4 text-white" />
-          )}
-          <span className="text-xs font-semibold text-white tracking-wider uppercase">
-            {isFullscreen ? "Exit" : "Maximize"}
-          </span>
-        </button>
-      </div>
     </div>
   );
 };
@@ -238,7 +317,11 @@ const VideoDisplay = () => {
       </div>
 
       {/* 3. The Video Player Wrapper */}
-      <VideoPlayer youtubeUrl={video.youtube_url} title={video.title || "Lesson Player"} />
+      <VideoPlayer
+        youtubeUrl={video.youtube_url}
+        title={video.title || "Lesson Player"}
+        initialDuration={videoService.parseDuration(video.duration)}
+      />
 
       {/* 4. Lesson Description & Metadata */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
