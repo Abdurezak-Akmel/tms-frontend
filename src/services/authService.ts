@@ -48,7 +48,7 @@ export interface AuthResponse {
     role_id: number;
     status: string;
     email_verified: boolean;
-    registration_device: string;
+    device_id: string;
     created_at: string;
     verification_token?: string | null;
     verification_token_expiry?: string | null;
@@ -68,6 +68,14 @@ export const authService = {
       console.log('Registration data:', userData);
       const response = await api.post("/register", userData);
       console.log('Registration response:', response.data);
+      // Persist device_id returned from server for this client
+      if (response.data && response.data.success && response.data.user && response.data.user.device_id) {
+        try {
+          localStorage.setItem('device_id', response.data.user.device_id);
+        } catch (e) {
+          // ignore localStorage failures
+        }
+      }
       return response.data;
     } catch (error: any) {
       console.error('Registration error details:', error);
@@ -98,7 +106,11 @@ export const authService = {
     try {
       console.log('Making login request to:', API_BASE_URL);
       console.log('Login credentials:', { email: credentials.email, password: '***' });
-      const response = await api.post("/login", credentials);
+      // always send device_id from localStorage; ignore any device_id supplied in `credentials`
+      const storedDeviceId = localStorage.getItem('device_id');
+      const payload: any = { email: credentials.email, password: credentials.password };
+      if (storedDeviceId) payload.device_id = storedDeviceId;
+      const response = await api.post("/login", payload);
       console.log('Login response:', response.data);
 
       if (response.data.success && response.data.token && response.data.user) {
