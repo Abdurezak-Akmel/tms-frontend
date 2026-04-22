@@ -232,7 +232,17 @@ const UserCoursePreview = () => {
                   </div>
                   <div className="text-left">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Telegram</p>
-                    <p className="text-sm font-bold text-slate-700">@Zuzenith</p>
+                    <p className="text-sm font-bold text-slate-700">
+                      @Zuzenith and{' '}
+                      <a
+                        href="https://t.me/hilal_tech_and_tutor"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[var(--color-brand)] hover:underline"
+                      >
+                        t.me/hilal_tech_and_tutor
+                      </a>
+                    </p>
                   </div>
                 </div>
 
