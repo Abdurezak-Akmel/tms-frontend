@@ -15,6 +15,7 @@ const footerLinks: Record<string, FooterLinkItem[]> = {
     { label: 'Sign in', to: '/user-login' },
     { label: 'Create account', to: '/register' },
     { label: 'Forgot password', to: '/forget-password' },
+    { label: 'Admin login', to: '/admin-login' },
   ],
   Legal: [
     { label: 'Privacy', href: '#' },

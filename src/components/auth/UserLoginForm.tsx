@@ -208,15 +208,6 @@ export function UserLoginForm() {
 
         <div className="space-y-2 text-center text-sm text-slate-600">
           <p>
-            Need administrator access?{' '}
-            <Link
-              to="/admin-login"
-              className="font-semibold text-[var(--color-brand)] hover:underline"
-            >
-              Admin login
-            </Link>
-          </p>
-          <p>
             New here?{' '}
             <Link to="/register" className="font-semibold text-[var(--color-brand)] hover:underline">
               Create an account
